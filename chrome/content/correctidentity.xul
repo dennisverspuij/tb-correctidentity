@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay []>
+
+<overlay id="CorrectIdentityOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://correctidentity/content/correctidentity.js"/>
+</overlay>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:chrome="http://www.mozilla.org/rdf/chrome#">
+  
+  <RDF:Seq about="urn:mozilla:package:root">
+    <RDF:li resource="urn:mozilla:package:correctidentity"/>
+  </RDF:Seq>
+  
+  <RDF:Description about="urn:mozilla:package:correctidentity"
+    chrome:name="correctidentity"
+    chrome:displayName="Correct Identity"
+    chrome:extension="true"
+    chrome:author="Dennis Verspuij"
+    chrome:description="Does a better job on selecting the correct identity upon replying and forwarding messages."/>
+		   
+  <RDF:Seq about="urn:mozilla:overlays">
+    <RDF:li resource="chrome://messenger/content/messenger.xul"/>
+  </RDF:Seq>
+  <RDF:Seq about="chrome://messenger/content/messenger.xul">
+    <RDF:li>chrome://correctidentity/content/correctidentity.xul</RDF:li>
+  </RDF:Seq>
+  
+</RDF:RDF>
