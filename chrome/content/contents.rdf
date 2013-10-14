@@ -11,7 +11,7 @@
     chrome:displayName="Correct Identity"
     chrome:extension="true"
     chrome:author="Dennis Verspuij"
-    chrome:description="Does a better job on selecting the correct identity upon replying and forwarding messages."/>
+    chrome:description="Allows you to configure the identity that will be chosen upon composing mail."/>
 		   
   <RDF:Seq about="urn:mozilla:overlays">
     <RDF:li resource="chrome://messenger/content/messenger.xul"/>

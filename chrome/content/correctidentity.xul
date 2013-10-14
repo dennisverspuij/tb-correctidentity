@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
-<!DOCTYPE overlay []>
+<!DOCTYPE overlay  [
+  <!ENTITY % CorrectIdentityDTD SYSTEM "chrome://correctidentity/locale/correctidentity.dtd">
+  %CorrectIdentityDTD;
+]>
 
 <overlay id="CorrectIdentityOverlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://correctidentity/content/correctidentity.js"/>

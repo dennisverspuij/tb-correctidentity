@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://correctidentity/skin/options.css" type="text/css"?>
+
+<!DOCTYPE dialog [
+  <!ENTITY % CorrectIdentityDTD SYSTEM "chrome://correctidentity/locale/correctidentity.dtd">
+  %CorrectIdentityDTD;
+]>
+
+<dialog
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  id="CorrectIdentity.options"
+  title="&CorrectIdentity.title;"
+  onload="window.CorrectIdentity.initOptions()"
+  ondialogaccept="window.CorrectIdentity.applyOptions()"
+  width="&CorrectIdentity.width;"
+  height="&CorrectIdentity.height;"
+  persist="screenX screenY">
+
+  <script type="application/x-javascript" src="chrome://correctidentity/content/correctidentity.js"/>
+
+  <popupset>
+    <tooltip id="aliasesTooltip"><description class="plain">&CorrectIdentity.aliasesTooltip;</description></tooltip>
+  </popupset>
+
+  <dialogheader title="&CorrectIdentity.captionTitle;" description="&CorrectIdentity.captionDescription;"/>
+
+  <tabbox flex="1" handleCtrlTab="true">
+    <tabs id="tabs">
+      <tab label="&CorrectIdentity.accountsCaption;"/>
+      <tab label="&CorrectIdentity.detectionCaption;"/>
+    </tabs>
+
+    <tabpanels flex="1">
+      <tabpanel id="accountsTab" orient="vertical">
+        <description>&CorrectIdentity.accountsDescription;</description>
+
+        <groupbox flex="1">
+          <caption align="center">
+            <description class="plain" align="center">&CorrectIdentity.accountSelector;</description>
+            <menulist id="accountSelector" oncommand="window.CorrectIdentity.pickAccount(this.selectedItem.value)">
+              <menupopup><menuitem/></menupopup>
+            </menulist>
+          </caption>
+
+          <description>&CorrectIdentity.mechanismDescription;</description>
+          <radiogroup id="identityMechanism" oncommand="window.CorrectIdentity.updateMechanism()">
+            <radio id="defaultIdentity" label="&CorrectIdentity.mechanismDefault;"/>
+            <hbox>
+              <radio id="explicitIdentity" label="&CorrectIdentity.mechanismExplicit;"/>
+              <menulist id="explicitSelector" flex="1" sizetopopup="false" disabled="true">
+                <menupopup><menuitem/></menupopup>
+              </menulist>
+            </hbox>
+          </radiogroup>
+
+          <separator class="thin"/>
+          <separator class="thin"/>
+
+          <description>&CorrectIdentity.replyDescription;</description>
+          <hbox pack="start">
+            <checkbox id="replyFromRecipient" label="&CorrectIdentity.replyFromRecipient;"/>
+          </hbox>
+        </groupbox>
+      </tabpanel>
+
+      <tabpanel id="detectionTab" orient="vertical">
+        <description>&CorrectIdentity.detectionDescription;</description>
+
+        <groupbox flex="1">
+          <caption align="center">
+            <description class="plain" align="center">&CorrectIdentity.identitySelector;</description>
+            <menulist id="identitySelector" sizetopopup="false" width="&CorrectIdentity.identitySelectorWidth;"
+                      oncommand="window.CorrectIdentity.pickIdentity(this.selectedItem.value)">
+              <menupopup><menuitem/></menupopup>
+            </menulist>
+          </caption>
+
+          <hbox pack="start">
+            <checkbox id="detectable" label="&CorrectIdentity.identityDetectable;"
+                      oncommand="window.document.getElementById('aliases').disabled=(!this.checked)"/>
+          </hbox>
+
+          <separator class="thin"/>
+
+          <description>&CorrectIdentity.aliasesDescription;</description>
+          <textbox id="aliases" flex="1" multiline="true" disabled="true" tooltip="aliasesTooltip"/>
+        </groupbox>
+      </tabpanel>
+    </tabpanels>
+  </tabbox>
+
+</dialog>

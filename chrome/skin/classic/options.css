@@ -1,0 +1,12 @@
+@import url("chrome://global/skin/");
+@import url("chrome://messenger/skin/prefPanels.css");
+
+menulist:not([editable=true]) > hbox {
+  margin: 0px;
+  padding: 0px;
+}
+
+radio:not([label]) > .radio-label-box,
+checkbox:not([label]) > .checkbox-label-box {
+  display: none;
+}

@@ -1,0 +1,27 @@
+<!ENTITY CorrectIdentity.title "Correct Identity Options">
+<!ENTITY CorrectIdentity.width "494">
+<!ENTITY CorrectIdentity.height "342">
+
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3">
+<!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
+
+<!ENTITY CorrectIdentity.accountsCaption "Selection">
+<!ENTITY CorrectIdentity.accountsDescription "For every account you can specify the identity that will be chosen upon composing mail.">
+<!ENTITY CorrectIdentity.accountSelector "Account">
+<!ENTITY CorrectIdentity.mechanismDescription "When composing a new message">
+<!ENTITY CorrectIdentity.mechanismDefault "use the default identity of the account">
+<!ENTITY CorrectIdentity.mechanismExplicit "use">
+<!ENTITY CorrectIdentity.replyDescription "When replying a message">
+<!ENTITY CorrectIdentity.replyFromRecipient "attempt to find and use an identity that appears in its recipient list">
+
+<!ENTITY CorrectIdentity.detectionCaption "Detection">
+<!ENTITY CorrectIdentity.detectionDescription "For every identity you can specify whether and how it may be detected in a recipient list.">
+<!ENTITY CorrectIdentity.identitySelector "Identity">
+<!ENTITY CorrectIdentity.identitySelectorWidth "356">
+<!ENTITY CorrectIdentity.identityDetectable "allow this identity to be detected">
+<!ENTITY CorrectIdentity.aliasesDescription
+  "Specify aliases, domains or just words that, when found in the recipient list, will resolve to this identity.
+   Aliases are tried when detection failed on all enabled identity addresses.">
+<!ENTITY CorrectIdentity.aliasesTooltip
+  "Aliases are case insensitive and should be separated by new lines.<html:br/>
+   You can specify regular expressions between forward slashes (/.../).">
