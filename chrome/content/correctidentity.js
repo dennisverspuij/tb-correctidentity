@@ -1,6 +1,3 @@
-// Correct Identity v1.3.5
-// Copyright (c) Dennis Verspuij
-
 var CorrectIdentity = {
 
   /*** GENERAL ***/
@@ -11,29 +8,49 @@ var CorrectIdentity = {
   accountManager: Components.classes["@mozilla.org/messenger/account-manager;1"]
                     .getService(Components.interfaces.nsIMsgAccountManager),
 
+  getIdentityById: function(identities, idx)
+  {
+    return identities.queryElementAt
+             ? identities.queryElementAt(idx, Components.interfaces.nsIMsgIdentity)
+             : identities.GetElementAt(idx).QueryInterface(Components.interfaces.nsIMsgIdentity);
+  },
+
+  getIdentityCount: function(identities)
+  {
+    return (typeof identities.Count === 'undefined')
+           ? identities.length
+           : identities.Count();
+  },
+
   getAccountPreferences: function(oServer)
   {
-    var oPreferences = this.preferences;
+    let oPreferences = this.preferences;
 
     // Determine defaults for this account
-    var oIdentities = this.accountManager.GetIdentitiesForServer(oServer);
-    var oDefaultIdentity = this.accountManager.defaultAccount.defaultIdentity;
-    var oAccountPreferences = {
+    let oIdentities = this.accountManager.getIdentitiesForServer
+      ? this.accountManager.getIdentitiesForServer(oServer)
+      : this.accountManager.GetIdentitiesForServer(oServer);
+
+    let oDefaultIdentity = this.accountManager.defaultAccount.defaultIdentity;
+    let oDefaultId = this.getIdentityCount(oIdentities)
+                     ? this.getIdentityById(oIdentities, 0)
+                     : (oDefaultIdentity ? oDefaultIdentity : null);
+
+    let oAccountPreferences = {
       identityMechanism: oPreferences.getIntPref("identityMechanism"),
-      defaultIdentity: oIdentities.Count() ? oIdentities.QueryElementAt(0,Components.interfaces.nsIMsgIdentity).key
-                                           : (oDefaultIdentity ? oDefaultIdentity.key : ""),
+      defaultIdentity: oDefaultId ? oDefaultId.key : "",
       replyFromRecipient: oPreferences.getBoolPref("replyFromRecipient")
     };
     oAccountPreferences.explicitIdentity = oAccountPreferences.defaultIdentity ;
 
     // Override with valid persisted preferences from user preferences system
-    var sKey = "settings_"+oServer.key;
-    var aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
+    let sKey = "settings_" + oServer.key;
+    let aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
                        ? oPreferences.getCharPref(sKey).split(/\001/) : [];
     if ((aPreferences.length == 4) && (aPreferences[0] == oServer.type))
     {
       oAccountPreferences.identityMechanism = parseInt(aPreferences[1],10);
-      var oIdentity = this.accountManager.getIdentity(aPreferences[2]);
+      let oIdentity = this.accountManager.getIdentity(aPreferences[2]);
       if (oAccountPreferences.identityMechanism == 1)
         if (oIdentity && (oIdentity.email != null))
           oAccountPreferences.explicitIdentity = oIdentity.key;
@@ -51,18 +68,19 @@ var CorrectIdentity = {
 
   getIdentityPreferences: function(oIdentity)
   {
-    var oPreferences = this.preferences;
+    let oPreferences = this.preferences;
 
     // Determine defaults for this identity
-    var oIdentityPreferences = {
+    let oIdentityPreferences = {
       detectable: true,
       aliases: ""
     };
 
     // Override with valid persisted preferences from user preferences system
-    var sKey = "settings_"+oIdentity.key;
-    var aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
+    let sKey = "settings_" + oIdentity.key;
+    let aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
                        ? oPreferences.getCharPref(sKey).split(/\001/,2) : [];
+
     if (aPreferences.length == 2)
     {
       oIdentityPreferences.detectable = (aPreferences[0]=="true");
@@ -78,15 +96,15 @@ var CorrectIdentity = {
 
   disableInterface: function(oElm)
   {
-    var aTags = ["menulist","radiogroup","checkbox"];
-    for(var iTag=aTags.length; iTag--;)
-      for(var oElms=oElm.getElementsByTagName(aTags[iTag]), iElm=oElms.length; iElm--;)
+    let aTags = ["menulist","radiogroup","checkbox"];
+    for (let iTag=aTags.length; iTag--;)
+      for (let oElms=oElm.getElementsByTagName(aTags[iTag]), iElm=oElms.length; iElm--;)
         oElms.item(iElm).disabled = true;
   },
 
   initOptions: function()
   {
-    var oSettings = this.settings = {
+    let oSettings = this.settings = {
       currentAccount: "",
       accounts: {},
       currentIdentity: "",
@@ -94,19 +112,25 @@ var CorrectIdentity = {
     };
 
     // Select the most recently selected tab
-    var oTabsElm = window.document.getElementById('tabs');
+    let oTabsElm = window.document.getElementById('tabs');
     window.document.getElementById('tabs').selectedIndex = this.preferences.getIntPref("selectedTab");
     oTabsElm.onselect = function() { window.CorrectIdentity.preferences.setIntPref('selectedTab',this.selectedIndex); };
 
     // Populate accounts
-    var oAccountListElm = window.document.getElementById("accountSelector");
+    let oAccountListElm = window.document.getElementById("accountSelector");
     oAccountListElm.removeAllItems();
-    for(var oAccounts=this.accountManager.accounts, iNrAccounts=oAccounts.Count(), iCnt=0, iIndex=0; iCnt < iNrAccounts; iCnt++)
+    let accounts = this.accountManager.accounts;
+    let iNrAccounts = (typeof accounts.Count === 'undefined') ? accounts.length : accounts.Count();
+    let iIndex=0;
+    for (let iCnt = 0; iCnt < iNrAccounts; iCnt++)
     {
-      var oAccount = oAccounts.QueryElementAt(iCnt,Components.interfaces.nsIMsgAccount), oServer = oAccount.incomingServer;
+      let oAccount = accounts.queryElementAt ?
+        accounts.queryElementAt(iCnt, Components.interfaces.nsIMsgAccount) :
+        accounts.GetElementAt(iCnt).QueryInterface(Components.interfaces.nsIMsgAccount);
+      let oServer = oAccount.incomingServer;
       if (oServer && (!(oServer.key in oSettings.accounts)))
       {
-        var oAccountPreferences = oSettings.accounts[oServer.key] = this.getAccountPreferences(oServer);
+        let oAccountPreferences = oSettings.accounts[oServer.key] = this.getAccountPreferences(oServer);
         oAccountPreferences.index = iIndex++;
         oAccountPreferences.type = oServer.type;
         oAccountPreferences.prettyName = oServer.prettyName;
@@ -115,7 +139,7 @@ var CorrectIdentity = {
     }
 
     // Pick the most recently selected account
-    var sSelectedAccount = this.preferences.getCharPref("selectedAccount");
+    let sSelectedAccount = this.preferences.getCharPref("selectedAccount");
     oAccountListElm.selectedIndex = (sSelectedAccount in oSettings.accounts) ? oSettings.accounts[sSelectedAccount].index : 0;
     if (iIndex)
       setTimeout("window.CorrectIdentity.pickAccount(window.document.getElementById('accountSelector').selectedItem.value)", 0);
@@ -123,21 +147,27 @@ var CorrectIdentity = {
       this.disableInterface(window.document.getElementById("accountsTab"));
 
     // Populate identities
-    var oIdentityListElm = window.document.getElementById("identitySelector");
-    var oExplicitListElm = window.document.getElementById("explicitSelector");
+    let oIdentityListElm = window.document.getElementById("identitySelector");
+    let oExplicitListElm = window.document.getElementById("explicitSelector");
     oIdentityListElm.removeAllItems();
     oExplicitListElm.removeAllItems();
-    for(var oIdentities=this.accountManager.allIdentities, iNrIdentities=oIdentities.Count(), iCnt=0, oIdentity, iIndex=0; iCnt < iNrIdentities; iCnt++)
-      if ((oIdentity = oIdentities.QueryElementAt(iCnt,Components.interfaces.nsIMsgIdentity)).valid)
+    let oIdentities = this.accountManager.allIdentities;
+    let iNrIdentities = this.getIdentityCount(oIdentities);
+    let iIndex = 0;
+    for (let iCnt=0; iCnt < iNrIdentities; iCnt++)
+    {
+      let oIdentity = this.getIdentityById(oIdentities, iCnt);
+      if (oIdentity.valid)
       {
-        var oIdentityPreferences = oSettings.identities[oIdentity.key] = this.getIdentityPreferences(oIdentity);
+        let oIdentityPreferences = oSettings.identities[oIdentity.key] = this.getIdentityPreferences(oIdentity);
         oIdentityPreferences.index = iIndex++;
         oIdentityListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
         oExplicitListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
       }
+    }
 
     // Pick the most recently selected identity
-    var sSelectedIdentity = this.preferences.getCharPref("selectedIdentity");
+    let sSelectedIdentity = this.preferences.getCharPref("selectedIdentity");
     oIdentityListElm.selectedIndex = (sSelectedIdentity in oSettings.identities) ? oSettings.identities[sSelectedIdentity].index : 0;
     if (iIndex)
       setTimeout("window.CorrectIdentity.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value)", 0);
@@ -153,10 +183,10 @@ var CorrectIdentity = {
     // Persist preferences of all accounts to the user preferences system
     if (window.document.getElementById('accountSelector').selectedItem)
       this.pickAccount(window.document.getElementById('accountSelector').selectedItem.value);
-    var oAccounts = this.settings.accounts;
-    for(var sKey in oAccounts)
+    let oAccounts = this.settings.accounts;
+    for (let sKey in oAccounts)
     {
-      var oAccount = oAccounts[sKey];
+      let oAccount = oAccounts[sKey];
       this.preferences.setCharPref("settings_"+sKey,
         ([oAccount.type, oAccount.identityMechanism, oAccount.explicitIdentity, oAccount.replyFromRecipient ? "true" : "false"]).join("\001"));
     }
@@ -164,10 +194,10 @@ var CorrectIdentity = {
     // Persist preferences of all identities to the user preferences system
     if (window.document.getElementById('identitySelector').selectedItem)
       this.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value);
-    var oIdentities = this.settings.identities;
-    for(var sKey in oIdentities)
+    let oIdentities = this.settings.identities;
+    for (let sKey in oIdentities)
     {
-      var oIdentity = oIdentities[sKey];
+      let oIdentity = oIdentities[sKey];
       this.preferences.setCharPref("settings_"+sKey,
         ([oIdentity.detectable ? "true" : "false", oIdentity.aliases]).join("\001"));
     }
@@ -175,7 +205,7 @@ var CorrectIdentity = {
 
   pickAccount: function(sKey)
   {
-    var oSettings = this.settings, oAccount, oIdentity;
+    let oSettings = this.settings, oAccount, oIdentity;
     if (oAccount = oSettings.accounts[oSettings.currentAccount])
     {
       // Remember preferences of currently showed account
@@ -199,20 +229,21 @@ var CorrectIdentity = {
   updateMechanism: function()
   {
     // Update the form
-    var oAccountElm = window.document.getElementById('accountSelector').selectedItem;
-    var oMechanismRadioGroup = window.document.getElementById("identityMechanism");
-    var oExplicitSelector = window.document.getElementById("explicitSelector");
+    let oAccountElm = window.document.getElementById('accountSelector').selectedItem;
+    let oMechanismRadioGroup = window.document.getElementById("identityMechanism");
+    let oExplicitSelector = window.document.getElementById("explicitSelector");
     if ((oExplicitSelector.disabled = (oMechanismRadioGroup.selectedIndex != 1)) && oAccountElm)
     {
       // If not selected, restore the explicit identity to default identity for the account
-      var oIdentity = this.settings.accounts[oAccountElm.value].defaultIdentity;
+      let oIdentity = this.settings.accounts[oAccountElm.value].defaultIdentity;
       oExplicitSelector.selectedIndex = oIdentity ? this.settings.identities[oIdentity].index : 0;
     }
   },
 
   pickIdentity: function(sKey)
   {
-    var oSettings = this.settings, oIdentity;
+    let oSettings = this.settings;
+    let oIdentity;
     if (oIdentity = oSettings.identities[oSettings.currentIdentity])
     {
       // Remember preferences of currently showed identity
@@ -244,17 +275,18 @@ var CorrectIdentity = {
       window.CorrectIdentity.origgetIdentityForServer = window.getIdentityForServer;
       window.getIdentityForServer = window.CorrectIdentity.getIdentityForServer;
 
-      var appInfo = Components.classes['@mozilla.org/xre/app-info;1'].getService(Components.interfaces.nsIXULAppInfo);
+      let appInfo = Components.classes['@mozilla.org/xre/app-info;1'].getService(Components.interfaces.nsIXULAppInfo);
       window.CorrectIdentity.lastHintIsDeliveredTo = (appInfo.name == 'Thunderbird') && (parseInt(appInfo.version, 10) >= 13);
     }
   },
 
   lastHintIsDeliveredTo: false,
   origgetIdentityForServer: null,
+  // WARNING: This will override a global function, so don't use "this" because it will refer to window instead of the CorrectIdentity object!
   getIdentityForServer: function(server, optionalHint)
   {
-    var oAccountPreferences = window.CorrectIdentity.getAccountPreferences(server);
-    var oIdentity = null;
+    let oAccountPreferences = window.CorrectIdentity.getAccountPreferences(server);
+    let oIdentity = null;
 
     // First, select an identity using the prefered identity mechanism
     switch(oAccountPreferences.identityMechanism)
@@ -282,23 +314,30 @@ var CorrectIdentity = {
       optionalHint = optionalHint.toLowerCase();
       if (!(oIdentity && (oIdentity.email.indexOf("@") != -1) && (optionalHint.indexOf(oIdentity.email.toLowerCase()) >= 0)))
       {
-        for(var oMatchingId=null, oAliasedId=null, allIdentities=window.accountManager.allIdentities, iCnt=allIdentities.Count(); iCnt--;)
+        let oMatchingId = null;
+        let oAliasedId = null;
+        let allIdentities=window.accountManager.allIdentities;
+        for (let iCnt = CorrectIdentity.getIdentityCount(allIdentities)-1; iCnt >= 0; iCnt--)
         {
-          var oThisIdentity = allIdentities.QueryElementAt(iCnt,Components.interfaces.nsIMsgIdentity);
-          var oIdentityPreferences = window.CorrectIdentity.getIdentityPreferences(oThisIdentity);
+          let oThisIdentity = CorrectIdentity.getIdentityById(allIdentities, iCnt);
+          let oIdentityPreferences = window.CorrectIdentity.getIdentityPreferences(oThisIdentity);
 
           // Process identity unless preferred never to detect it
           if (oThisIdentity.email && oIdentityPreferences.detectable)
           {
             // Scan identity email address
-            var sEmail = oThisIdentity.email.toLowerCase();
+            let sEmail = oThisIdentity.email.toLowerCase();
             if ((sEmail.indexOf("@") != -1) && (optionalHint.indexOf(sEmail) >= 0))
               oMatchingId = oThisIdentity;
-            
+
             // Scan identity aliases
             if (!oMatchingId)
-              for(var aAliases=oIdentityPreferences.aliases.split(/\n+/), sAlias, iNr=aAliases.length; iNr--;)
-                if ((sAlias = aAliases[iNr]) != "")
+            {
+              let aAliases=oIdentityPreferences.aliases.split(/\n+/);
+              for (let iNr = aAliases.length; iNr >= 0; iNr--)
+              {
+                let sAlias = aAliases[iNr];
+                if (sAlias != "")
                   if (/^\/(.*)\/$/.exec(sAlias))
                   {
                     try {
@@ -314,6 +353,8 @@ var CorrectIdentity = {
                   }
                   else if (optionalHint.indexOf(sAlias) >= 0)
                     oAliasedId = oThisIdentity;
+              }
+            }
           }
         }
         oIdentity = oMatchingId ? oMatchingId : (oAliasedId ? oAliasedId : oIdentity); // Select the best match
@@ -325,4 +366,4 @@ var CorrectIdentity = {
 
 };
 
-window.addEventListener('load',CorrectIdentity.init,false);
+window.addEventListener('load', CorrectIdentity.init,false);
