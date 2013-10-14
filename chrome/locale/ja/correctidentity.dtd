@@ -1,0 +1,24 @@
+<!ENTITY CorrectIdentity.title "Correct Identity オプション">
+<!ENTITY CorrectIdentity.width "554">
+<!ENTITY CorrectIdentity.height "442">
+
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3.2">
+<!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
+
+<!ENTITY CorrectIdentity.accountsCaption "選択">
+<!ENTITY CorrectIdentity.accountsDescription "あらゆるアカウントでメール作成時のアイデンティティを指定することができます">
+<!ENTITY CorrectIdentity.accountSelector "アカウント">
+<!ENTITY CorrectIdentity.mechanismDescription "新規メッセージの作成時">
+<!ENTITY CorrectIdentity.mechanismDefault "アカウントのデフォルトアイデンティティ を使用">
+<!ENTITY CorrectIdentity.mechanismExplicit "アイデンティティ指定">
+<!ENTITY CorrectIdentity.replyDescription "返信メッセージの作成時">
+<!ENTITY CorrectIdentity.replyFromRecipient "返信元のメッセージからアイデンティティの同一性を検出して適用する">
+
+<!ENTITY CorrectIdentity.detectionCaption "検出">
+<!ENTITY CorrectIdentity.detectionDescription "検出されたリストのアイデンティティから指定できます">
+<!ENTITY CorrectIdentity.identitySelector "アイデンティティ">
+<!ENTITY CorrectIdentity.identitySelectorWidth "356">
+<!ENTITY CorrectIdentity.identityDetectable "アイデンティティの検出を可能にする">
+<!ENTITY CorrectIdentity.aliasesDescription "別名としてドメインまたはリストの中にあるアイデンティティに関連付ける単語を指定してください。この別名は検出可能なアイデンティティアドレスでの検出に失敗したときに適用が試みられます。">
+<!ENTITY CorrectIdentity.aliasesTooltip
+  "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)">

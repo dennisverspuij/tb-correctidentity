@@ -1,0 +1,26 @@
+<!ENTITY CorrectIdentity.title "Correct Identity Instellingen">
+<!ENTITY CorrectIdentity.width "554">
+<!ENTITY CorrectIdentity.height "442">
+
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3.2">
+<!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
+
+<!ENTITY CorrectIdentity.accountsCaption "Selectie">
+<!ENTITY CorrectIdentity.accountsDescription "Je kunt voor elke account aangeven welke identiteit wordt gebruikt bij het opstellen van een bericht.">
+<!ENTITY CorrectIdentity.accountSelector "Account">
+<!ENTITY CorrectIdentity.mechanismDescription "Bij het opstellen van een nieuw bericht">
+<!ENTITY CorrectIdentity.mechanismDefault "gebruik de standaard-identiteit van de account">
+<!ENTITY CorrectIdentity.mechanismExplicit "gebruik">
+<!ENTITY CorrectIdentity.replyDescription "Bij het beantwoorden van een bericht">
+<!ENTITY CorrectIdentity.replyFromRecipient "detecteer en gebruik de identiteit die voorkomt in de ontvangerslijst">
+
+<!ENTITY CorrectIdentity.detectionCaption "Detectie">
+<!ENTITY CorrectIdentity.detectionDescription "Je kunt voor elke identiteit aangeven of, en zo ja hoe, deze mag worden gedetecteerd in een ontvangerslijst.">
+<!ENTITY CorrectIdentity.identitySelector "Identiteit">
+<!ENTITY CorrectIdentity.identitySelectorWidth "356">
+<!ENTITY CorrectIdentity.identityDetectable "deze identiteit mag worden gedetecteerd">
+<!ENTITY CorrectIdentity.aliasesDescription
+  "Geef aliassen, domeinen of simpelweg woorden op waarmee de identiteit additioneel gedetecteerd mag worden.
+   Aliassen worden alleen benut als geen van de adressen van de identiteiten zelf gedetecteerd worden.">
+<!ENTITY CorrectIdentity.aliasesTooltip
+  "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../).">

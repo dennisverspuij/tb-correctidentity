@@ -1,8 +1,8 @@
 <!ENTITY CorrectIdentity.title "Correct Identity Options">
-<!ENTITY CorrectIdentity.width "494">
-<!ENTITY CorrectIdentity.height "342">
+<!ENTITY CorrectIdentity.width "554">
+<!ENTITY CorrectIdentity.height "442">
 
-<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3.1">
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3.2">
 <!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
 
 <!ENTITY CorrectIdentity.accountsCaption "Selection">
@@ -23,5 +23,4 @@
   "Specify aliases, domains or just words that, when found in the recipient list, will resolve to this identity.
    Aliases are tried when detection failed on all enabled identity addresses.">
 <!ENTITY CorrectIdentity.aliasesTooltip
-  "Aliases are case insensitive and should be separated by new lines.<html:br/>
-   You can specify regular expressions between forward slashes (/.../).">
+  "Aliases are case insensitive and should be separated by new lines. You can specify regular expressions between forward slashes (/.../).">

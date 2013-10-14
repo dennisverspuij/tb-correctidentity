@@ -1,6 +1,11 @@
-content correctidentity             chrome/content/
-locale  correctidentity en-US       chrome/locale/en-US/
+content correctidentity chrome/content/
+
+overlay chrome://messenger/content/messenger.xul     chrome://correctidentity/content/
+overlay chrome://messenger/content/messageWindow.xul chrome://correctidentity/content/
+
 skin    correctidentity classic/1.0 chrome/skin/classic/
 
-overlay	chrome://messenger/content/messenger.xul      chrome://correctidentity/content/
-overlay	chrome://messenger/content/messageWindow.xul  chrome://correctidentity/content/
+locale  correctidentity en-US chrome/locale/en-US/
+locale  correctidentity nl-NL chrome/locale/nl-NL/
+locale  correctidentity de-DE chrome/locale/de-DE/
+locale  correctidentity ja    chrome/locale/ja/

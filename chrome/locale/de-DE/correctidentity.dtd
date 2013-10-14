@@ -1,0 +1,26 @@
+<!ENTITY CorrectIdentity.title "Correct Identity Optionen">
+<!ENTITY CorrectIdentity.width "554">
+<!ENTITY CorrectIdentity.height "442">
+
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.3.2">
+<!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
+
+<!ENTITY CorrectIdentity.accountsCaption "Auswahl">
+<!ENTITY CorrectIdentity.accountsDescription "Sie können für jedes Konto eine Identität auswählen, die standardmäßig beim Verfassen einer neuen Nachricht verwendet wird.">
+<!ENTITY CorrectIdentity.accountSelector "Konto">
+<!ENTITY CorrectIdentity.mechanismDescription "Beim Verfassen einer Nachricht">
+<!ENTITY CorrectIdentity.mechanismDefault "die Standardidentität des Kontos verwenden">
+<!ENTITY CorrectIdentity.mechanismExplicit "verwende">
+<!ENTITY CorrectIdentity.replyDescription "Wenn auf eine Nachricht geantwortet wird">
+<!ENTITY CorrectIdentity.replyFromRecipient "versuchen, die Identität zu suchen und zu benutzen, die in der Empfängerliste erscheint">
+
+<!ENTITY CorrectIdentity.detectionCaption "Erkennung">
+<!ENTITY CorrectIdentity.detectionDescription "Sie können für jede Identität angeben, ob und inwiefern diese in der Empfängerliste erfasst werden darf.">
+<!ENTITY CorrectIdentity.identitySelector "Identität">
+<!ENTITY CorrectIdentity.identitySelectorWidth "356">
+<!ENTITY CorrectIdentity.identityDetectable "diese Identität darf erfasst werden">
+<!ENTITY CorrectIdentity.aliasesDescription
+  "Geben Sie Aliases, Domains oder einfach nur Wörter an, die, wenn Sie in der Empfängerliste gefunden werden, einer bestimmten Identität zugeordnet werden.
+   Aliases werden benutzt, wenn die Erkennung bei allen aktivierten Identitäten fehlgeschlagen ist.">
+<!ENTITY CorrectIdentity.aliasesTooltip
+  "Aliases sind schreibungsunabhängig und sollten jeweils durch eine neue Zeile getrennt werden. Sie können reguläre Ausdrücke innerhalb von Vorwärtsschrägstrichen verwenden (/.../).">

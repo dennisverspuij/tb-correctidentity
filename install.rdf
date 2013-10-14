@@ -4,29 +4,34 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
 
-    <em:name>Correct Identity</em:name>
     <em:id>{47ef7cc0-2201-11da-8cd6-0800200c9a66}</em:id>
-    <em:version>1.3.1</em:version>
+    <em:name>Correct Identity</em:name>
+    <em:version>1.3.2</em:version>
     <em:type>2</em:type>
+    <em:description>Allows you to configure the identity that will be chosen upon composing mail.</em:description>
+    <em:creator>Dennis Verspuij</em:creator>
+    <em:contributor>Alan Boey (TB3 compatability)</em:contributor>
+    <em:contributor>Tobias Markus (de-DE locale)</em:contributor>
+    <em:contributor>Premier.jp (ja locale)</em:contributor>
+    <em:optionsURL>chrome://correctidentity/content/options.xul</em:optionsURL>
+    <em:homepageURL/>
 
     <em:targetApplication>
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>1.0</em:minVersion>
-        <em:maxVersion>3.0a1</em:maxVersion>
+        <em:maxVersion>3.1.*</em:maxVersion>
       </Description>
     </em:targetApplication>
-
-    <em:description>Allows you to configure the identity that will be chosen upon composing mail.</em:description>
-    <em:creator>Dennis Verspuij</em:creator>
-    <em:optionsURL>chrome://correctidentity/content/options.xul</em:optionsURL>
-    <em:homepageURL/>
 
     <em:file>
       <Description about="urn:mozilla:extension:file:correctidentity.jar">
         <em:package>content/</em:package>
-        <em:locale>locale/en-US/</em:locale>
         <em:skin>skin/classic/</em:skin>
+        <em:locale>locale/en-US/</em:locale>
+        <em:locale>locale/nl-NL/</em:locale>
+        <em:locale>locale/de-DE/</em:locale>
+        <em:locale>locale/ja/</em:locale>
       </Description>
     </em:file>
 

@@ -1,5 +1,5 @@
-// Correct Identity v1.3.1
-// Copyright (c) 2005-2007 Dennis Verspuij
+// Correct Identity v1.3.2
+// Copyright (c) 2005-2010 Dennis Verspuij
 
 var CorrectIdentity = {
 
