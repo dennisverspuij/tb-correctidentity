@@ -15,9 +15,17 @@
 		   
   <RDF:Seq about="urn:mozilla:overlays">
     <RDF:li resource="chrome://messenger/content/messenger.xul"/>
+    <RDF:li resource="chrome://messenger/content/messengercompose/addressingWidgetOverlay.xul"/>
+    <RDF:li resource="chrome://messenger/content/messengercompose/messengercompose.xul"/>
     <RDF:li resource="chrome://messenger/content/messageWindow.xul"/>
   </RDF:Seq>
   <RDF:Seq about="chrome://messenger/content/messenger.xul">
+    <RDF:li>chrome://correctidentity/content/correctidentity.xul</RDF:li>
+  </RDF:Seq>
+  <RDF:Seq about="chrome://messenger/content/messengercompose/addressingWidgetOverlay.xul">
+    <RDF:li>chrome://correctidentity/content/correctidentity.xul</RDF:li>
+  </RDF:Seq>
+  <RDF:Seq about="chrome://messenger/content/messengercompose/messengercompose.xul">
     <RDF:li>chrome://correctidentity/content/correctidentity.xul</RDF:li>
   </RDF:Seq>
   <RDF:Seq about="chrome://messenger/content/messageWindow.xul">
