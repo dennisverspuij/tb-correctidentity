@@ -7,12 +7,12 @@
     <RDF:li resource="urn:mozilla:locale:de-DE"/>
   </RDF:Seq>
 
-	<RDF:Description about="urn:mozilla:locale:de-DE">
-		<chrome:packages>
-			<RDF:Seq about="urn:mozilla:locale:de-DE:packages">
-				<RDF:li resource="urn:mozilla:locale:de-DE:correctidentity"/>
-			</RDF:Seq>
-		</chrome:packages>
-	</RDF:Description>
+  <RDF:Description about="urn:mozilla:locale:de-DE">
+    <chrome:packages>
+      <RDF:Seq about="urn:mozilla:locale:de-DE:packages">
+        <RDF:li resource="urn:mozilla:locale:de-DE:correctidentity"/>
+      </RDF:Seq>
+    </chrome:packages>
+  </RDF:Description>
 
 </RDF:RDF>

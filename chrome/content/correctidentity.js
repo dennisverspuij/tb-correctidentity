@@ -391,11 +391,11 @@ var CorrectIdentity = {
       if (msgCompFields)
       {
         Recipients2CompFields(msgCompFields);
-                
+
         var currentidentity = this.accountManager.getIdentity(document.getElementById("msgIdentity").value);
         var servers = this.accountManager.getServersForIdentity(currentidentity);
         var identity = window.CorrectIdentity.getIdentityForServer(servers.queryElementAt(0, Components.interfaces.nsIMsgIncomingServer), msgCompFields.to + "," + msgCompFields.cc);
-        
+
         dump("window: " + window + ", " + window.CorrectIdentity.changed + "\n");
         if (!window.CorrectIdentity.changed && identity && (currentidentity != identity))
         {
@@ -411,13 +411,13 @@ var CorrectIdentity = {
     window.CorrectIdentity.origsetupAutocomplete();
     window.CorrectIdentity.redoIdentity();
   },
-  
+
   origawAddRecipient: null,
   awAddRecipient: function(recipientType, address) {
     window.CorrectIdentity.origawAddRecipient(recipientType, address);
     window.CorrectIdentity.redoIdentity();
   },
-  
+
   origLoadIdentity: null,
   LoadIdentity: function(startup) {
     window.CorrectIdentity.changed = !startup;
