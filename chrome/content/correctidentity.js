@@ -8,8 +8,6 @@ var CorrectIdentity = {
   accountManager: Components.classes["@mozilla.org/messenger/account-manager;1"]
                     .getService(Components.interfaces.nsIMsgAccountManager),
 
-  changed: false,
-
   getIdentityById: function(identities, idx)
   {
     return identities.queryElementAt
@@ -300,7 +298,7 @@ var CorrectIdentity = {
   lastHintIsDeliveredTo: false,
   origgetIdentityForServer: null,
   // WARNING: This will override a global function, so don't use "this" because it will refer to window instead of the CorrectIdentity object!
-  getIdentityForServer: function(server, optionalHint)
+  getIdentityForServer: function(server, optionalHint, manualAddressing)
   {
     let oAccountPreferences = window.CorrectIdentity.getAccountPreferences(server);
     let oIdentity = null;
@@ -345,9 +343,9 @@ var CorrectIdentity = {
           // Process identity unless preferred never to detect it
           if (oThisIdentity.email && oIdentityPreferences.detectable)
           {
-            // Scan identity email address
+            // Scan identity email address when scanning hint from message to reply on
             let sEmail = oThisIdentity.email.toLowerCase();
-            if ((sEmail.indexOf("@") != -1) && (optionalHint.indexOf(sEmail) >= 0))
+            if ((!manualAddressing) && (sEmail.indexOf("@") != -1) && (optionalHint.indexOf(sEmail) >= 0))
               oMatchingId = oThisIdentity;
 
             // Scan identity aliases
@@ -384,23 +382,42 @@ var CorrectIdentity = {
     return oIdentity;
   },
 
+  explicitIdentityChosen: null,  // Explicit identity chosen?: null==no and unitialized, false==no, true==yes
+  initialIdentity: null,
   redoIdentity: function() {
-    if (gMsgCompose != null)
+    if ((this.explicitIdentityChosen !== true) && (gMsgCompose != null))
     {
       var msgCompFields = gMsgCompose.compFields;
       if (msgCompFields)
       {
         Recipients2CompFields(msgCompFields);
 
-        var currentidentity = this.accountManager.getIdentity(document.getElementById("msgIdentity").value);
-        var servers = this.accountManager.getServersForIdentity(currentidentity);
-        var identity = window.CorrectIdentity.getIdentityForServer(servers.queryElementAt(0, Components.interfaces.nsIMsgIncomingServer), msgCompFields.to + "," + msgCompFields.cc);
+        let currentIdentityKey = document.getElementById("msgIdentity").value;
 
-        dump("window: " + window + ", " + window.CorrectIdentity.changed + "\n");
-        if (!window.CorrectIdentity.changed && identity && (currentidentity != identity))
+        if (this.explicitIdentityChosen === null)
+        {
+          // Remember initial identity to revert to when no suggestion is returned
+          this.explicitIdentityChosen = false;
+          this.initialIdentity = this.accountManager.getIdentity(currentIdentityKey);
+          //Components.classes["@mozilla.org/consoleservice;1"]
+          //  .getService(Components.interfaces.nsIConsoleService)
+          //  .logStringMessage('window: '+window+', def: '+this.initialIdentity);
+        }
+
+        let identity = this.getIdentityForServer(
+          this.accountManager.getServersForIdentity(this.initialIdentity).queryElementAt(0, Components.interfaces.nsIMsgIncomingServer),
+          msgCompFields.to + ',' + msgCompFields.cc + ',' + msgCompFields.bcc,
+          true
+        );
+        //Components.classes["@mozilla.org/consoleservice;1"]
+        //  .getService(Components.interfaces.nsIConsoleService)
+        //  .logStringMessage('window: '+window+', def: '+this.initialIdentity+', suggested: '+identity);
+        if (!identity)
+          identity = this.initialIdentity;
+        if (identity.key != currentIdentityKey)
         {
           document.getElementById("msgIdentity").value = identity.key;
-          window.CorrectIdentity.origLoadIdentity(false);
+          this.origLoadIdentity(false);
         }
       }
     }
@@ -420,7 +437,7 @@ var CorrectIdentity = {
 
   origLoadIdentity: null,
   LoadIdentity: function(startup) {
-    window.CorrectIdentity.changed = !startup;
+    window.CorrectIdentity.explicitIdentityChosen = startup ? null : true;
     window.CorrectIdentity.origLoadIdentity(startup);
   }
 
