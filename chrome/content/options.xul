@@ -21,6 +21,7 @@
 
   <popupset>
     <tooltip id="aliasesTooltip"><description class="plain">&CorrectIdentity.aliasesTooltip;</description></tooltip>
+    <tooltip id="warningAliasesTooltip"><description class="plain">&CorrectIdentity.warningAliasesTooltip;</description></tooltip>
   </popupset>
 
   <dialogheader title="&CorrectIdentity.captionTitle;" description="&CorrectIdentity.captionDescription;"/>
@@ -29,6 +30,7 @@
     <tabs id="tabs">
       <tab label="&CorrectIdentity.accountsCaption;"/>
       <tab label="&CorrectIdentity.detectionCaption;"/>
+      <tab label="&CorrectIdentity.safetyCaption;"/>
     </tabs>
 
     <tabpanels flex="1">
@@ -85,6 +87,23 @@
 
           <description>&CorrectIdentity.aliasesDescription;</description>
           <textbox id="aliases" flex="1" multiline="true" disabled="true" tooltip="aliasesTooltip"/>
+        </groupbox>
+      </tabpanel>
+
+      <tabpanel id="safetyTab" orient="vertical">
+        <description>&CorrectIdentity.safetyDescription;</description>
+
+        <groupbox flex="1">
+          <caption align="center">
+            <description class="plain" align="center">&CorrectIdentity.identitySelector;</description>
+            <menulist id="safetyIdentitySelector" sizetopopup="false" width="&CorrectIdentity.identitySelectorWidth;"
+                      oncommand="window.CorrectIdentity.pickSafetyIdentity(this.selectedItem.value)">
+              <menupopup><menuitem/></menupopup>
+            </menulist>
+          </caption>
+
+          <description>&CorrectIdentity.warningAliasesDescription;</description>
+          <textbox id="warningAliases" flex="1" multiline="true" disabled="true" tooltip="warningAliasesTooltip"/>
         </groupbox>
       </tabpanel>
     </tabpanels>

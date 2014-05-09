@@ -8,6 +8,13 @@ var CorrectIdentity = {
   accountManager: Components.classes["@mozilla.org/messenger/account-manager;1"]
                     .getService(Components.interfaces.nsIMsgAccountManager),
 
+  prompts: Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+             .getService (Components.interfaces.nsIPromptService),
+
+  i18nBundle: Components.classes["@mozilla.org/intl/stringbundle;1"]
+          .getService(Components.interfaces.nsIStringBundleService)
+          .createBundle("chrome://correctidentity/locale/correctidentity.properties"),
+
   getIdentityById: function(identities, idx)
   {
     return identities.queryElementAt
@@ -73,18 +80,21 @@ var CorrectIdentity = {
     // Determine defaults for this identity
     let oIdentityPreferences = {
       detectable: true,
-      aliases: ""
+      aliases: "",
+      warningAliases: ""
     };
 
     // Override with valid persisted preferences from user preferences system
     let sKey = "settings_" + oIdentity.key;
     let aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
-                       ? oPreferences.getCharPref(sKey).split(/\x01/, 2) : [];
+                       ? oPreferences.getCharPref(sKey).split(/\x01/, 3) : [];
 
-    if (aPreferences.length == 2)
+    if (aPreferences.length >= 2)
     {
       oIdentityPreferences.detectable = (aPreferences[0] == "true");
       oIdentityPreferences.aliases = aPreferences[1];
+      if (aPreferences.length == 3)
+        oIdentityPreferences.warningAliases = aPreferences[2];
     }
 
     // Return
@@ -108,6 +118,7 @@ var CorrectIdentity = {
       currentAccount: "",
       accounts: {},
       currentIdentity: "",
+      currentSafetyIdentity: "",
       identities: {}
     };
 
@@ -147,10 +158,12 @@ var CorrectIdentity = {
       this.disableInterface(window.document.getElementById("accountsTab"));
 
     // Populate identities
-    let oIdentityListElm = window.document.getElementById("identitySelector");
     let oExplicitListElm = window.document.getElementById("explicitSelector");
-    oIdentityListElm.removeAllItems();
+    let oIdentityListElm = window.document.getElementById("identitySelector");
+    let oSafetyIdentityListElm = window.document.getElementById("safetyIdentitySelector");
     oExplicitListElm.removeAllItems();
+    oIdentityListElm.removeAllItems();
+    oSafetyIdentityListElm.removeAllItems();
     let oIdentities = this.accountManager.allIdentities;
     let iNrIdentities = this.getIdentityCount(oIdentities);
     let iIndex = 0;
@@ -161,22 +174,27 @@ var CorrectIdentity = {
       {
         let oIdentityPreferences = oSettings.identities[oIdentity.key] = this.getIdentityPreferences(oIdentity);
         oIdentityPreferences.index = iIndex++;
-        oIdentityListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
         oExplicitListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
+        oIdentityListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
+        oSafetyIdentityListElm.appendItem(oIdentity.identityName).value = oIdentity.key; // Assign value to resolve bug that TB thinks it doesn't have one on first use
       }
     }
 
-    // Pick the most recently selected identity
+    // Pick the most recently selected identities on the detection and safety tabs
     let sSelectedIdentity = this.preferences.getCharPref("selectedIdentity");
     oIdentityListElm.selectedIndex = (sSelectedIdentity in oSettings.identities) ? oSettings.identities[sSelectedIdentity].index : 0;
+    let sSelectedSafetyIdentity = this.preferences.getCharPref("selectedSafetyIdentity");
+    oSafetyIdentityListElm.selectedIndex = (sSelectedSafetyIdentity in oSettings.identities) ? oSettings.identities[sSelectedSafetyIdentity].index : 0;
     if (iIndex)
       setTimeout(function() {
                    window.CorrectIdentity.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value);
+                   window.CorrectIdentity.pickSafetyIdentity(window.document.getElementById('safetyIdentitySelector').selectedItem.value);
                  }, 0);
     else
     {
       window.document.getElementById("explicitIdentity").disabled = true;
       this.disableInterface(window.document.getElementById("detectionTab"));
+      this.disableInterface(window.document.getElementById("safetyTab"));
     }
   },
 
@@ -195,16 +213,18 @@ var CorrectIdentity = {
       );
     }
 
-    // Persist preferences of all identities to the user preferences system
+    // Persist detection and safety preferences of all identities to the user preferences system
     if (window.document.getElementById('identitySelector').selectedItem)
       this.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value);
+    if (window.document.getElementById('safetyIdentitySelector').selectedItem)
+      this.pickSafetyIdentity(window.document.getElementById('safetyIdentitySelector').selectedItem.value);
     let oIdentities = this.settings.identities;
     for (let sKey in oIdentities)
     {
       let oIdentity = oIdentities[sKey];
       this.preferences.setCharPref(
         "settings_" + sKey,
-        ([oIdentity.detectable ? "true" : "false", oIdentity.aliases]).join("\x01")
+        ([oIdentity.detectable ? "true" : "false", oIdentity.aliases, oIdentity.warningAliases]).join("\x01")
       );
     }
   },
@@ -264,6 +284,20 @@ var CorrectIdentity = {
     window.document.getElementById("aliases").disabled = (!oSettings.identities[sKey].detectable);
   },
 
+  pickSafetyIdentity: function(sKey)
+  {
+    let oSettings = this.settings;
+    let oIdentity;
+    if (oIdentity = oSettings.identities[oSettings.currentSafetyIdentity])
+      // Remember preferences of currently showed identity
+      oIdentity.warningAliases = window.document.getElementById("warningAliases").value.replace(/^\n+|\n+$/g, "").replace(/\n{2,}/, "\n");
+
+    // Fetch the remembered aliases for the picked identity and update the form
+    this.preferences.setCharPref("selectedSafetyIdentity", oSettings.currentSafetyIdentity = sKey);
+    window.document.getElementById("warningAliases").value = oSettings.identities[sKey].warningAliases;
+    window.document.getElementById("warningAliases").disabled = false;
+  },
+
 
   /*** COMPOSE HANDLING ***/
 
@@ -298,6 +332,21 @@ var CorrectIdentity = {
       // Overlay function LoadIdentity of chrome://messenger/content/messengercompose/MsgComposeCommands.js
       window.CorrectIdentity.origLoadIdentity = window.LoadIdentity;
       window.LoadIdentity = window.CorrectIdentity.LoadIdentity;
+    }
+    if (window.SendMessage && (window.CorrectIdentity.origSendMessage == null)) {
+      // Overlay function SendMessage of chrome://messenger/content/messengercompose/MsgComposeCommands.js
+      window.CorrectIdentity.origSendMessage = window.SendMessage;
+      window.SendMessage = window.CorrectIdentity.SendMessage;
+    }
+    if (window.SendMessageWithCheck && (window.CorrectIdentity.origSendMessageWithCheck == null)) {
+      // Overlay function SendMessageWithCheck of chrome://messenger/content/messengercompose/MsgComposeCommands.js
+      window.CorrectIdentity.origSendMessageWithCheck = window.SendMessageWithCheck;
+      window.SendMessageWithCheck = window.CorrectIdentity.SendMessageWithCheck;
+    }
+    if (window.SendMessageLater && (window.CorrectIdentity.origSendMessageLater == null)) {
+      // Overlay function SendMessageLater of chrome://messenger/content/messengercompose/MsgComposeCommands.js
+      window.CorrectIdentity.origSendMessageLater = window.SendMessageLater;
+      window.SendMessageLater = window.CorrectIdentity.SendMessageLater;
     }
   },
 
@@ -445,6 +494,61 @@ var CorrectIdentity = {
   LoadIdentity: function(startup) {
     window.CorrectIdentity.explicitIdentityChosen = startup ? null : true;
     window.CorrectIdentity.origLoadIdentity(startup);
+  },
+
+  SendConfirm: function() {
+    let currentIdentityKey = document.getElementById("msgIdentity").value;
+    let oThisIdentity = this.accountManager.getIdentity(currentIdentityKey);
+    if (!(oThisIdentity.email && gMsgCompose))
+      return true;
+
+    let msgCompFields = gMsgCompose.compFields;
+    let aRecipients = msgCompFields.splitRecipients(msgCompFields.to + ',' + msgCompFields.cc + ',' + msgCompFields.bcc, false, {});
+    let aWarningAliases = window.CorrectIdentity.getIdentityPreferences(oThisIdentity).warningAliases.split(/\n+/);
+    let sWarnRecipients = "";
+
+    for(let iNrRecipients = aRecipients.length, iCnt = 0; iCnt < iNrRecipients; iCnt++)
+      for(let sRecipient = aRecipients[iCnt], iNr = aWarningAliases.length, sAlias; iNr--;)
+        if ((sAlias = aWarningAliases[iNr]) != '')
+          if (/^\/(.*)\/$/.exec(sAlias)) {
+            try {
+              if (sRecipient.match(new RegExp(RegExp.$1,"i")))
+                sWarnRecipients += "\n- " + sRecipient;
+            }
+            catch(vErr) {
+              alert(
+                "Ignoring invalid regular expression:\n\n" +
+                "identity:  " + oThisIdentity.identityName + "\n" +
+                "regexp:  " + sAlias.replace(/\\/g,"\\\\") + "\n\n" +
+                "Please adjust in the Correct Identity Safety settings!"
+              );
+              aWarningAliases[iNr] = ''; // Skip this alias next recipient
+            }
+          }
+          else if (sRecipient.indexOf(sAlias) >= 0)
+            sWarnRecipients += "\n" + sRecipient;
+
+    return (sWarnRecipients == '')
+           ? true
+           : this.prompts.confirm(window, 'Correct Identity', this.i18nBundle.formatStringFromName('warning', [oThisIdentity.email, sWarnRecipients], 2));
+  },
+
+  origSendMessage: null,
+  SendMessage: function() {
+    if (window.CorrectIdentity.SendConfirm())
+      window.CorrectIdentity.origSendMessage.apply(this, arguments);
+  },
+
+  origSendMessageWithCheck: null,
+  SendMessageWithCheck: function() {
+    if (window.CorrectIdentity.SendConfirm())
+      window.CorrectIdentity.origSendMessageWithCheck.apply(this, arguments);
+  },
+
+  origSendMessageLater: null,
+  SendMessageLater: function() {
+    if (window.CorrectIdentity.SendConfirm())
+      window.CorrectIdentity.origSendMessageLater.apply(this, arguments);
   }
 
 };

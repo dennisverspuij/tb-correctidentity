@@ -2,7 +2,7 @@
 <!ENTITY CorrectIdentity.width "554">
 <!ENTITY CorrectIdentity.height "442">
 
-<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.1">
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.2">
 <!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
 
 <!ENTITY CorrectIdentity.accountsCaption "Selectie">
@@ -14,13 +14,16 @@
 <!ENTITY CorrectIdentity.replyDescription "Bij het beantwoorden van een bericht">
 <!ENTITY CorrectIdentity.replyFromRecipient "detecteer en gebruik de identiteit die voorkomt in de ontvangerslijst">
 
-<!ENTITY CorrectIdentity.detectionCaption "Detectie">
-<!ENTITY CorrectIdentity.detectionDescription "Je kunt voor elke identiteit aangeven of, en zo ja hoe, deze mag worden gedetecteerd in een ontvangerslijst.">
 <!ENTITY CorrectIdentity.identitySelector "Identiteit">
 <!ENTITY CorrectIdentity.identitySelectorWidth "356">
+
+<!ENTITY CorrectIdentity.detectionCaption "Detectie">
+<!ENTITY CorrectIdentity.detectionDescription "Je kunt voor elke identiteit aangeven of, en zo ja hoe, deze mag worden gedetecteerd in een ontvangerslijst.">
 <!ENTITY CorrectIdentity.identityDetectable "deze identiteit mag worden gedetecteerd">
-<!ENTITY CorrectIdentity.aliasesDescription
-  "Geef aliassen, domeinen of simpelweg woorden op waarmee de identiteit additioneel gedetecteerd mag worden.
-   Aliassen worden alleen benut als geen van de adressen van de identiteiten zelf gedetecteerd worden.">
-<!ENTITY CorrectIdentity.aliasesTooltip
-  "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../).">
+<!ENTITY CorrectIdentity.aliasesDescription "Geef aliassen, domeinen of simpelweg woorden op waarmee de identiteit additioneel gedetecteerd mag worden. Aliassen worden alleen benut als geen van de adressen van de identiteiten zelf gedetecteerd worden.">
+<!ENTITY CorrectIdentity.aliasesTooltip "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../).">
+
+<!ENTITY CorrectIdentity.safetyCaption "Veiligheid">
+<!ENTITY CorrectIdentity.safetyDescription "Je kunt voor elke identiteit voorkomen dat naar bepaalde ontvangers wordt verstuurd.">
+<!ENTITY CorrectIdentity.warningAliasesDescription "Je wordt gewaarschuwd voordat je gaat versturen naar ontvangers die overeenkomen met de volgende zoektermen.">
+<!ENTITY CorrectIdentity.warningAliasesTooltip "Begin zoektermen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../).">

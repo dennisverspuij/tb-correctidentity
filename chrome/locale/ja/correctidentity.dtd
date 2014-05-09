@@ -2,7 +2,7 @@
 <!ENTITY CorrectIdentity.width "554">
 <!ENTITY CorrectIdentity.height "442">
 
-<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.1">
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.2">
 <!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
 
 <!ENTITY CorrectIdentity.accountsCaption "選択">
@@ -14,11 +14,16 @@
 <!ENTITY CorrectIdentity.replyDescription "返信メッセージの作成時">
 <!ENTITY CorrectIdentity.replyFromRecipient "返信元のメッセージからアイデンティティの同一性を検出して適用する">
 
-<!ENTITY CorrectIdentity.detectionCaption "検出">
-<!ENTITY CorrectIdentity.detectionDescription "検出されたリストのアイデンティティから指定できます">
 <!ENTITY CorrectIdentity.identitySelector "アイデンティティ">
 <!ENTITY CorrectIdentity.identitySelectorWidth "356">
+
+<!ENTITY CorrectIdentity.detectionCaption "検出">
+<!ENTITY CorrectIdentity.detectionDescription "検出されたリストのアイデンティティから指定できます">
 <!ENTITY CorrectIdentity.identityDetectable "アイデンティティの検出を可能にする">
 <!ENTITY CorrectIdentity.aliasesDescription "別名としてドメインまたはリストの中にあるアイデンティティに関連付ける単語を指定してください。この別名は検出可能なアイデンティティアドレスでの検出に失敗したときに適用が試みられます。">
-<!ENTITY CorrectIdentity.aliasesTooltip
-  "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)">
+<!ENTITY CorrectIdentity.aliasesTooltip "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)">
+
+<!ENTITY CorrectIdentity.safetyCaption "安全">
+<!ENTITY CorrectIdentity.safetyDescription "あなたは、特定の受信者に送信し、各アイデンティティを保護することができます。">
+<!ENTITY CorrectIdentity.warningAliasesDescription "あなたが前に、名前および/またはアドレス次の用語のいずれかと一致した受信者に送信する警告が表示されます。">
+<!ENTITY CorrectIdentity.warningAliasesTooltip "検索用語は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)">

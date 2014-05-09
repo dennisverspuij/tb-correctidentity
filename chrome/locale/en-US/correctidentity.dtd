@@ -2,7 +2,7 @@
 <!ENTITY CorrectIdentity.width "554">
 <!ENTITY CorrectIdentity.height "442">
 
-<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.1">
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.2">
 <!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
 
 <!ENTITY CorrectIdentity.accountsCaption "Selection">
@@ -14,13 +14,16 @@
 <!ENTITY CorrectIdentity.replyDescription "When replying a message">
 <!ENTITY CorrectIdentity.replyFromRecipient "attempt to find and use an identity that appears in its recipient list">
 
-<!ENTITY CorrectIdentity.detectionCaption "Detection">
-<!ENTITY CorrectIdentity.detectionDescription "For every identity you can specify whether and how it may be detected in a recipient list.">
 <!ENTITY CorrectIdentity.identitySelector "Identity">
 <!ENTITY CorrectIdentity.identitySelectorWidth "356">
+
+<!ENTITY CorrectIdentity.detectionCaption "Detection">
+<!ENTITY CorrectIdentity.detectionDescription "For every identity you can specify whether and how it may be detected in a recipient list.">
 <!ENTITY CorrectIdentity.identityDetectable "allow this identity to be detected">
-<!ENTITY CorrectIdentity.aliasesDescription
-  "Specify aliases, domains or just words that, when found in the recipient list, will resolve to this identity.
-   Aliases are tried when detection failed on all enabled identity addresses.">
-<!ENTITY CorrectIdentity.aliasesTooltip
-  "Aliases are case insensitive and should be separated by new lines. You can specify regular expressions between forward slashes (/.../).">
+<!ENTITY CorrectIdentity.aliasesDescription "Specify aliases, domains or just words that, when found in the recipient list, will resolve to this identity. Aliases are tried when detection failed on all enabled identity addresses.">
+<!ENTITY CorrectIdentity.aliasesTooltip "Aliases are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/.../).">
+
+<!ENTITY CorrectIdentity.safetyCaption "Safety">
+<!ENTITY CorrectIdentity.safetyDescription "You can protect each identity from sending to certain recipients.">
+<!ENTITY CorrectIdentity.warningAliasesDescription "You will be warned prior to sending to recipients whose names and/or addresses match one of the following search terms.">
+<!ENTITY CorrectIdentity.warningAliasesTooltip "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/.../).">
