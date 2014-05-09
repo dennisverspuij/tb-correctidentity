@@ -358,7 +358,7 @@ var CorrectIdentity = {
             if (!oMatchingId)
             {
               let aAliases = oIdentityPreferences.aliases.split(/\n+/);
-              for (let iNr = aAliases.length; iNr >= 0; iNr--)
+              for (let iNr = aAliases.length; iNr--;)
               {
                 let sAlias = aAliases[iNr];
                 if (sAlias != "")
