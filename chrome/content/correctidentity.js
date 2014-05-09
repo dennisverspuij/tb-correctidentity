@@ -11,8 +11,8 @@ var CorrectIdentity = {
   getIdentityById: function(identities, idx)
   {
     return identities.queryElementAt
-             ? identities.queryElementAt(idx, Components.interfaces.nsIMsgIdentity)
-             : identities.GetElementAt(idx).QueryInterface(Components.interfaces.nsIMsgIdentity);
+           ? identities.queryElementAt(idx, Components.interfaces.nsIMsgIdentity)
+           : identities.GetElementAt(idx).QueryInterface(Components.interfaces.nsIMsgIdentity);
   },
 
   getIdentityCount: function(identities)
@@ -46,10 +46,10 @@ var CorrectIdentity = {
     // Override with valid persisted preferences from user preferences system
     let sKey = "settings_" + oServer.key;
     let aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
-                       ? oPreferences.getCharPref(sKey).split(/\001/) : [];
+                       ? oPreferences.getCharPref(sKey).split(/\x01/) : [];
     if ((aPreferences.length == 4) && (aPreferences[0] == oServer.type))
     {
-      oAccountPreferences.identityMechanism = parseInt(aPreferences[1],10);
+      oAccountPreferences.identityMechanism = parseInt(aPreferences[1], 10);
       let oIdentity = this.accountManager.getIdentity(aPreferences[2]);
       if (oAccountPreferences.identityMechanism == 1)
         if (oIdentity && (oIdentity.email != null))
@@ -57,7 +57,7 @@ var CorrectIdentity = {
         else
           // Revert to default mechanism if the explicit identity was removed
           oAccountPreferences.identityMechanism = 0;
-      oAccountPreferences.replyFromRecipient = (aPreferences[3]=="true");
+      oAccountPreferences.replyFromRecipient = (aPreferences[3] == "true");
     }
 
     // Check and return
@@ -79,11 +79,11 @@ var CorrectIdentity = {
     // Override with valid persisted preferences from user preferences system
     let sKey = "settings_" + oIdentity.key;
     let aPreferences = (oPreferences.getPrefType(sKey) == oPreferences.PREF_STRING)
-                       ? oPreferences.getCharPref(sKey).split(/\001/,2) : [];
+                       ? oPreferences.getCharPref(sKey).split(/\x01/, 2) : [];
 
     if (aPreferences.length == 2)
     {
-      oIdentityPreferences.detectable = (aPreferences[0]=="true");
+      oIdentityPreferences.detectable = (aPreferences[0] == "true");
       oIdentityPreferences.aliases = aPreferences[1];
     }
 
@@ -96,9 +96,9 @@ var CorrectIdentity = {
 
   disableInterface: function(oElm)
   {
-    let aTags = ["menulist","radiogroup","checkbox"];
-    for (let iTag=aTags.length; iTag--;)
-      for (let oElms=oElm.getElementsByTagName(aTags[iTag]), iElm=oElms.length; iElm--;)
+    let aTags = ["menulist", "radiogroup", "checkbox"];
+    for (let iTag = aTags.length; iTag--;)
+      for (let oElms = oElm.getElementsByTagName(aTags[iTag]), iElm = oElms.length; iElm--;)
         oElms.item(iElm).disabled = true;
   },
 
@@ -114,14 +114,14 @@ var CorrectIdentity = {
     // Select the most recently selected tab
     let oTabsElm = window.document.getElementById('tabs');
     window.document.getElementById('tabs').selectedIndex = this.preferences.getIntPref("selectedTab");
-    oTabsElm.onselect = function() { window.CorrectIdentity.preferences.setIntPref('selectedTab',this.selectedIndex); };
+    oTabsElm.onselect = function() { window.CorrectIdentity.preferences.setIntPref('selectedTab', this.selectedIndex); };
 
     // Populate accounts
     let oAccountListElm = window.document.getElementById("accountSelector");
     oAccountListElm.removeAllItems();
     let accounts = this.accountManager.accounts;
     let iNrAccounts = (typeof accounts.Count === 'undefined') ? accounts.length : accounts.Count();
-    let iIndex=0;
+    let iIndex = 0;
     for (let iCnt = 0; iCnt < iNrAccounts; iCnt++)
     {
       let oAccount = accounts.queryElementAt ?
@@ -142,7 +142,7 @@ var CorrectIdentity = {
     let sSelectedAccount = this.preferences.getCharPref("selectedAccount");
     oAccountListElm.selectedIndex = (sSelectedAccount in oSettings.accounts) ? oSettings.accounts[sSelectedAccount].index : 0;
     if (iIndex)
-      setTimeout("window.CorrectIdentity.pickAccount(window.document.getElementById('accountSelector').selectedItem.value)", 0);
+      setTimeout(function() { window.CorrectIdentity.pickAccount(window.document.getElementById('accountSelector').selectedItem.value); }, 0);
     else
       this.disableInterface(window.document.getElementById("accountsTab"));
 
@@ -154,7 +154,7 @@ var CorrectIdentity = {
     let oIdentities = this.accountManager.allIdentities;
     let iNrIdentities = this.getIdentityCount(oIdentities);
     let iIndex = 0;
-    for (let iCnt=0; iCnt < iNrIdentities; iCnt++)
+    for (let iCnt = 0; iCnt < iNrIdentities; iCnt++)
     {
       let oIdentity = this.getIdentityById(oIdentities, iCnt);
       if (oIdentity.valid)
@@ -170,7 +170,9 @@ var CorrectIdentity = {
     let sSelectedIdentity = this.preferences.getCharPref("selectedIdentity");
     oIdentityListElm.selectedIndex = (sSelectedIdentity in oSettings.identities) ? oSettings.identities[sSelectedIdentity].index : 0;
     if (iIndex)
-      setTimeout("window.CorrectIdentity.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value)", 0);
+      setTimeout(function() {
+                   window.CorrectIdentity.pickIdentity(window.document.getElementById('identitySelector').selectedItem.value);
+                 }, 0);
     else
     {
       window.document.getElementById("explicitIdentity").disabled = true;
@@ -187,8 +189,10 @@ var CorrectIdentity = {
     for (let sKey in oAccounts)
     {
       let oAccount = oAccounts[sKey];
-      this.preferences.setCharPref("settings_"+sKey,
-        ([oAccount.type, oAccount.identityMechanism, oAccount.explicitIdentity, oAccount.replyFromRecipient ? "true" : "false"]).join("\001"));
+      this.preferences.setCharPref(
+        "settings_" + sKey,
+        ([oAccount.type, oAccount.identityMechanism, oAccount.explicitIdentity, oAccount.replyFromRecipient ? "true" : "false"]).join("\x01")
+      );
     }
 
     // Persist preferences of all identities to the user preferences system
@@ -198,8 +202,10 @@ var CorrectIdentity = {
     for (let sKey in oIdentities)
     {
       let oIdentity = oIdentities[sKey];
-      this.preferences.setCharPref("settings_"+sKey,
-        ([oIdentity.detectable ? "true" : "false", oIdentity.aliases]).join("\001"));
+      this.preferences.setCharPref(
+        "settings_" + sKey,
+        ([oIdentity.detectable ? "true" : "false", oIdentity.aliases]).join("\x01")
+      );
     }
   },
 
@@ -248,7 +254,7 @@ var CorrectIdentity = {
     {
       // Remember preferences of currently showed identity
       oIdentity.detectable = window.document.getElementById("detectable").checked;
-      oIdentity.aliases = window.document.getElementById("aliases").value.replace(/^\n+|\n+$/g,"").replace(/\n{2,}/,"\n");
+      oIdentity.aliases = window.document.getElementById("aliases").value.replace(/^\n+|\n+$/g, "").replace(/\n{2,}/, "\n");
     }
 
     // Fetch the remembered aliases for the picked identity and update the form
@@ -264,7 +270,7 @@ var CorrectIdentity = {
   init: function()
   {
     // Be hopefully the last to apply function overlays
-    setTimeout(window.CorrectIdentity.delayedInit,1);
+    setTimeout(window.CorrectIdentity.delayedInit, 1);
   },
 
   delayedInit: function()
@@ -327,15 +333,15 @@ var CorrectIdentity = {
       // Uncomment to view what hinted addresses are evaluated:
       //Components.classes["@mozilla.org/consoleservice;1"]
       //  .getService(Components.interfaces.nsIConsoleService)
-      //  .logStringMessage("CorrectIndentity evaluated hints:\n"+optionalHint);
+      //  .logStringMessage("CorrectIndentity evaluated hints:\n" + optionalHint);
 
       optionalHint = optionalHint.toLowerCase();
       if (!(oIdentity && (oIdentity.email.indexOf("@") != -1) && (optionalHint.indexOf(oIdentity.email.toLowerCase()) >= 0)))
       {
         let oMatchingId = null;
         let oAliasedId = null;
-        let allIdentities=window.accountManager.allIdentities;
-        for (let iCnt = CorrectIdentity.getIdentityCount(allIdentities)-1; iCnt >= 0; iCnt--)
+        let allIdentities = window.accountManager.allIdentities;
+        for (let iCnt = CorrectIdentity.getIdentityCount(allIdentities) - 1; iCnt >= 0; iCnt--)
         {
           let oThisIdentity = CorrectIdentity.getIdentityById(allIdentities, iCnt);
           let oIdentityPreferences = window.CorrectIdentity.getIdentityPreferences(oThisIdentity);
@@ -351,7 +357,7 @@ var CorrectIdentity = {
             // Scan identity aliases
             if (!oMatchingId)
             {
-              let aAliases=oIdentityPreferences.aliases.split(/\n+/);
+              let aAliases = oIdentityPreferences.aliases.split(/\n+/);
               for (let iNr = aAliases.length; iNr >= 0; iNr--)
               {
                 let sAlias = aAliases[iNr];
@@ -359,14 +365,14 @@ var CorrectIdentity = {
                   if (/^\/(.*)\/$/.exec(sAlias))
                   {
                     try {
-                      if (optionalHint.match(new RegExp(RegExp.$1,"i")))
+                      if (optionalHint.match(new RegExp(RegExp.$1, "i")))
                         oAliasedId = oThisIdentity;
                     }
                     catch(vErr) {
-                      alert("Ignoring invalid regular expression alias:\n\n"+
-                            "identity:  "+oThisIdentity.identityName+"\n"+
-                            "alias:  "+sAlias.replace(/\\/g,"\\\\")+"\n\n"+
-                            "Please adjust in the Correct Identity settings!");
+                      alert("Ignoring invalid regular expression:\n\n" +
+                            "identity:  " + oThisIdentity.identityName + "\n" +
+                            "regexp:  " + sAlias.replace(/\\/g, "\\\\") + "\n\n" +
+                            "Please adjust in the Correct Identity Detection settings!");
                     }
                   }
                   else if (optionalHint.indexOf(sAlias) >= 0)
@@ -401,7 +407,7 @@ var CorrectIdentity = {
           this.initialIdentity = this.accountManager.getIdentity(currentIdentityKey);
           //Components.classes["@mozilla.org/consoleservice;1"]
           //  .getService(Components.interfaces.nsIConsoleService)
-          //  .logStringMessage('window: '+window+', def: '+this.initialIdentity);
+          //  .logStringMessage('window: ' + window + ', def: ' + this.initialIdentity);
         }
 
         let identity = this.getIdentityForServer(
@@ -411,7 +417,7 @@ var CorrectIdentity = {
         );
         //Components.classes["@mozilla.org/consoleservice;1"]
         //  .getService(Components.interfaces.nsIConsoleService)
-        //  .logStringMessage('window: '+window+', def: '+this.initialIdentity+', suggested: '+identity);
+        //  .logStringMessage('window: ' + window + ', def: ' + this.initialIdentity + ', suggested: ' + identity);
         if (!identity)
           identity = this.initialIdentity;
         if (identity.key != currentIdentityKey)
@@ -443,4 +449,4 @@ var CorrectIdentity = {
 
 };
 
-window.addEventListener('load', CorrectIdentity.init,false);
+window.addEventListener('load', CorrectIdentity.init, false);

@@ -1,9 +1,9 @@
 content correctidentity chrome/content/
 
-overlay chrome://messenger/content/messenger.xul     chrome://correctidentity/content/
+overlay chrome://messenger/content/messenger.xul                                chrome://correctidentity/content/
 overlay chrome://messenger/content/messengercompose/addressingWidgetOverlay.xul chrome://correctidentity/content/
-overlay chrome://messenger/content/messengercompose/messengercompose.xul chrome://correctidentity/content/
-overlay chrome://messenger/content/messageWindow.xul chrome://correctidentity/content/
+overlay chrome://messenger/content/messengercompose/messengercompose.xul        chrome://correctidentity/content/
+overlay chrome://messenger/content/messageWindow.xul                            chrome://correctidentity/content/
 
 skin    correctidentity classic/1.0 chrome/skin/classic/
 
