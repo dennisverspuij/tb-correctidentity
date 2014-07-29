@@ -11,3 +11,4 @@ locale  correctidentity en-US chrome/locale/en-US/
 locale  correctidentity nl-NL chrome/locale/nl-NL/
 locale  correctidentity de-DE chrome/locale/de-DE/
 locale  correctidentity ja    chrome/locale/ja/
+locale  correctidentity fr-FR chrome/locale/fr-FR/

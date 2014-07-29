@@ -1,0 +1,29 @@
+<!ENTITY CorrectIdentity.title "Préférences de Correct Identity">
+<!ENTITY CorrectIdentity.width "554">
+<!ENTITY CorrectIdentity.height "442">
+
+<!ENTITY CorrectIdentity.captionTitle "Correct Identity v1.4.2">
+<!ENTITY CorrectIdentity.captionDescription "Dennis Verspuij">
+
+<!ENTITY CorrectIdentity.accountsCaption "Sélection">
+<!ENTITY CorrectIdentity.accountsDescription "Pour chaque compte, vous pouvez spécifier l’identité qui sera choisie lors de la rédaction d’un courriel.">
+<!ENTITY CorrectIdentity.accountSelector "Compte">
+<!ENTITY CorrectIdentity.mechanismDescription "Lorsque vous écrivez un nouveau message">
+<!ENTITY CorrectIdentity.mechanismDefault "utiliser l’identité par défaut du compte">
+<!ENTITY CorrectIdentity.mechanismExplicit "utiliser">
+<!ENTITY CorrectIdentity.replyDescription "Lorsque vous répondez à un message">
+<!ENTITY CorrectIdentity.replyFromRecipient "tenter de trouver et d’utiliser une identité qui apparaîtrait dans la liste des destinataires du message.">
+
+<!ENTITY CorrectIdentity.identitySelector "Identité">
+<!ENTITY CorrectIdentity.identitySelectorWidth "356">
+
+<!ENTITY CorrectIdentity.detectionCaption "Détection">
+<!ENTITY CorrectIdentity.detectionDescription "Pour chaque identité, vous pouvez spécifier quand et comment elle peut être détectée dans la liste des destinataires.">
+<!ENTITY CorrectIdentity.identityDetectable "permettre à cette identité d’être détectée.">
+<!ENTITY CorrectIdentity.aliasesDescription "Spécifier les alias, domaines ou simplement les mots qui, une fois trouvés dans la liste des destinataires, sélectionneront cette identité. Les alias ne seront essayés que lorsque la détection aura échouée sur toutes les adresses des identités activées.">
+<!ENTITY CorrectIdentity.aliasesTooltip "Les alias sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier des expressions régulières entre des barres obliques (/.../).">
+
+<!ENTITY CorrectIdentity.safetyCaption "Sécurité">
+<!ENTITY CorrectIdentity.safetyDescription "Pour chaque identité, l’envoi peut être empêché pour certains destinataires.">
+<!ENTITY CorrectIdentity.warningAliasesDescription "Vous serez averti avant l’envoi aux destinataires dont les noms ou/et les adresses correspondent à l’un des termes de recherche suivants :">
+<!ENTITY CorrectIdentity.warningAliasesTooltip "Les termes de recherche sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier spécifier des expressions régulières entre des barres obliques (/.../).">
