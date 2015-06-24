@@ -166,7 +166,7 @@ var CorrectIdentity = {
     oSafetyIdentityListElm.removeAllItems();
     let oIdentities = this.accountManager.allIdentities;
     let iNrIdentities = this.getIdentityCount(oIdentities);
-    let iIndex = 0;
+    iIndex = 0;
     for (let iCnt = 0; iCnt < iNrIdentities; iCnt++)
     {
       let oIdentity = this.getIdentityById(oIdentities, iCnt);
