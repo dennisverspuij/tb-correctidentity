@@ -447,7 +447,7 @@ var CorrectIdentity = {
       {
         Recipients2CompFields(msgCompFields);
 
-        let currentIdentityKey = document.getElementById("msgIdentity").value;
+        let currentIdentityKey = typeof(getCurrentIdentityKey) === 'function' ? getCurrentIdentityKey() : document.getElementById("msgIdentity").value;
 
         if (this.explicitIdentityChosen === null)
         {
@@ -459,8 +459,11 @@ var CorrectIdentity = {
           //  .logStringMessage('window: ' + window + ', def: ' + this.initialIdentity);
         }
 
+        let servers = this.accountManager.getServersForIdentity(this.initialIdentity);
         let identity = this.getIdentityForServer(
-          this.accountManager.getServersForIdentity(this.initialIdentity).queryElementAt(0, Components.interfaces.nsIMsgIncomingServer),
+          servers.queryElementAt
+            ? servers.queryElementAt(0, Components.interfaces.nsIMsgIncomingServer)
+            : servers.GetElementAt(0).QueryInterface(Components.interfaces.nsIMsgIncomingServer),
           msgCompFields.to + ',' + msgCompFields.cc + ',' + msgCompFields.bcc,
           true
         );
@@ -471,7 +474,11 @@ var CorrectIdentity = {
           identity = this.initialIdentity;
         if (identity.key != currentIdentityKey)
         {
-          document.getElementById("msgIdentity").value = identity.key;
+          let identityList = document.getElementById("msgIdentity");
+          if (typeof(getCurrentIdentityKey) === 'function')
+            identityList.selectedItem = identityList.getElementsByAttribute('identitykey', identity.key)[0];
+          else
+            identityList.value = identity.key;
           this.origLoadIdentity(false);
         }
       }
@@ -497,7 +504,7 @@ var CorrectIdentity = {
   },
 
   SendConfirm: function() {
-    let currentIdentityKey = document.getElementById("msgIdentity").value;
+    let currentIdentityKey = typeof(getCurrentIdentityKey) === 'function' ? getCurrentIdentityKey() : document.getElementById("msgIdentity").value;
     let oThisIdentity = this.accountManager.getIdentity(currentIdentityKey);
     if (!(oThisIdentity.email && gMsgCompose))
       return true;
