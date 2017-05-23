@@ -324,7 +324,7 @@ var CorrectIdentity = {
       window.setupAutocomplete = window.CorrectIdentity.setupAutocomplete;
     }
     if (window.awAddRecipient && (window.CorrectIdentity.origawAddRecipient == null)) {
-      // Overlay function setupAutocomplete of chrome://messenger/content/messengercompose/addressingWidgetOverlay.js
+      // Overlay function awAddRecipient of chrome://messenger/content/messengercompose/addressingWidgetOverlay.js
       window.CorrectIdentity.origawAddRecipient = window.awAddRecipient;
       window.awAddRecipient = window.CorrectIdentity.awAddRecipient;
     }
