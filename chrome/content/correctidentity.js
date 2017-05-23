@@ -328,6 +328,11 @@ var CorrectIdentity = {
       window.CorrectIdentity.origawAddRecipient = window.awAddRecipient;
       window.awAddRecipient = window.CorrectIdentity.awAddRecipient;
     }
+    if (window.onRecipientsChanged && (window.CorrectIdentity.origOnRecipientsChanged == null)) {
+      // Overlay function onRecipientsChanged of chrome://messenger/content/messengercompose/addressingWidgetOverlay.js
+      window.CorrectIdentity.origOnRecipientsChanged = window.onRecipientsChanged;
+      window.onRecipientsChanged = window.CorrectIdentity.onRecipientsChanged;
+    }
     if (window.LoadIdentity && (window.CorrectIdentity.origLoadIdentity == null)) {
       // Overlay function LoadIdentity of chrome://messenger/content/messengercompose/MsgComposeCommands.js
       window.CorrectIdentity.origLoadIdentity = window.LoadIdentity;
@@ -494,6 +499,12 @@ var CorrectIdentity = {
   origawAddRecipient: null,
   awAddRecipient: function(recipientType, address) {
     window.CorrectIdentity.origawAddRecipient(recipientType, address);
+    window.CorrectIdentity.redoIdentity();
+  },
+
+  origOnRecipientsChanged: null,
+  onRecipientsChanged: function() {
+    window.CorrectIdentity.origOnRecipientsChanged();
     window.CorrectIdentity.redoIdentity();
   },
 
