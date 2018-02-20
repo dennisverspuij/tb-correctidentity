@@ -6,7 +6,7 @@
 
     <em:id>{47ef7cc0-2201-11da-8cd6-0800200c9a66}</em:id>
     <em:name>Correct Identity</em:name>
-    <em:version>1.4.6</em:version>
+    <em:version>1.4.7</em:version>
     <em:type>2</em:type>
     <em:description>Allows you to configure the identity that will be chosen upon composing mail.</em:description>
     <em:creator>Dennis Verspuij</em:creator>
