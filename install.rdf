@@ -22,6 +22,7 @@
     <em:contributor>Mitar Milutinovic (as-you-type indentity and aliases matching for new messages)</em:contributor>
     <em:contributor>Bojan Čekrlić (warn when sending to certain recipients)</em:contributor>
     <em:contributor>Ludger (TB v52+ compatibility))</em:contributor>
+    <em:contributor>Martin Zillmer (TB v57+ compatibility))</em:contributor>
     <em:optionsURL>chrome://correctidentity/content/options.xul</em:optionsURL>
     <em:homepageURL/>
 
@@ -30,7 +31,7 @@
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>1.0</em:minVersion>
-        <em:maxVersion>38.*</em:maxVersion>
+        <em:maxVersion>59.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 

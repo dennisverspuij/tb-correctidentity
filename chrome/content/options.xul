@@ -17,7 +17,7 @@
   height="&CorrectIdentity.height;"
   persist="screenX screenY">
 
-  <script type="application/x-javascript;version = 1.7" src="chrome://correctidentity/content/correctidentity.js"/>
+  <script type="application/javascript" src="chrome://correctidentity/content/correctidentity.js"/>
 
   <popupset>
     <tooltip id="aliasesTooltip"><description class="plain">&CorrectIdentity.aliasesTooltip;</description></tooltip>
