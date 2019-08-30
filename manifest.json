@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "applications": {
+    "gecko": {
+      "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
+      "strict_min_version": "68.0"
+    }
+  },
+  "name": "Correct Identity",
+  "description": "Allows you to configure the identity that will be chosen upon composing mail.",
+  "version": "1.5.0",
+  "author": "Dennis Verspuij",
+  "homepage_url": "https://github.com/dennisverspuij/tb-correctidentity",
+
+  "legacy": {
+    "type": "xul",
+    "options": {
+      "page": "chrome://correctidentity/content/options.xul",
+      "open_in_tab": false
+    }
+  }
+}
