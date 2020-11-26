@@ -1,0 +1,85 @@
+{
+  "CorrectIdentity.accountSelector": {
+    "message": "Account"
+  },
+  "CorrectIdentity.accountsCaption": {
+    "message": "Selectie"
+  },
+  "CorrectIdentity.accountsDescription": {
+    "message": "Je kunt voor elke account aangeven welke identiteit wordt gebruikt bij het opstellen van een bericht."
+  },
+  "CorrectIdentity.aliasesDescription": {
+    "message": "Geef aliassen, domeinen of simpelweg woorden op waarmee de identiteit additioneel gedetecteerd mag worden. Aliassen worden alleen benut als geen van de adressen van de identiteiten zelf gedetecteerd worden."
+  },
+  "CorrectIdentity.aliasesTooltip": {
+    "message": "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../)."
+  },
+  "CorrectIdentity.captionDescription": {
+    "message": "Dennis Verspuij"
+  },
+  "CorrectIdentity.captionTitle": {
+    "message": "Correct Identity v1.4.7"
+  },
+  "CorrectIdentity.detectionCaption": {
+    "message": "Detectie"
+  },
+  "CorrectIdentity.detectionDescription": {
+    "message": "Je kunt voor elke identiteit aangeven of, en zo ja hoe, deze mag worden gedetecteerd in een ontvangerslijst."
+  },
+  "CorrectIdentity.height": {
+    "message": "442"
+  },
+  "CorrectIdentity.identityDetectable": {
+    "message": "deze identiteit mag worden gedetecteerd"
+  },
+  "CorrectIdentity.identitySelector": {
+    "message": "Identiteit"
+  },
+  "CorrectIdentity.identitySelectorWidth": {
+    "message": "356"
+  },
+  "CorrectIdentity.mechanismDefault": {
+    "message": "gebruik de standaard-identiteit van de account"
+  },
+  "CorrectIdentity.mechanismDescription": {
+    "message": "Bij het opstellen van een nieuw bericht"
+  },
+  "CorrectIdentity.mechanismExplicit": {
+    "message": "gebruik"
+  },
+  "CorrectIdentity.replyDescription": {
+    "message": "Bij het beantwoorden van een bericht"
+  },
+  "CorrectIdentity.replyFromRecipient": {
+    "message": "detecteer en gebruik de identiteit die voorkomt in de ontvangerslijst"
+  },
+  "CorrectIdentity.safetyCaption": {
+    "message": "Veiligheid"
+  },
+  "CorrectIdentity.safetyDescription": {
+    "message": "Je kunt voor elke identiteit voorkomen dat naar bepaalde ontvangers wordt verstuurd."
+  },
+  "CorrectIdentity.title": {
+    "message": "Correct Identity Instellingen"
+  },
+  "CorrectIdentity.warningAliasesDescription": {
+    "message": "Je wordt gewaarschuwd voordat je gaat versturen naar ontvangers die overeenkomen met de volgende zoektermen."
+  },
+  "CorrectIdentity.warningAliasesTooltip": {
+    "message": "Begin zoektermen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../)."
+  },
+  "CorrectIdentity.width": {
+    "message": "554"
+  },
+  "warning": {
+    "message": "LET OP: Je staat op het punt met identiteit $P1$ een bericht te sturen naar:<br>$P2$<br><br>Doorgaan?",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      },
+      "P2": {
+        "content": "$2"
+      }
+    }
+  }
+}

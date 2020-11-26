@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Correct Identity</title>
+  <script src="scripts/i18n.js"></script>
+  <script src="scripts/options.js"></script>
+  <style type="text/css">
+    .tooltip {
+        text-decoration:none;
+        position:relative;
+    }
+     .tooltip span {
+        display:none;
+    }
+     .tooltip:hover span {
+        width: 75%;
+        left: 20%;
+        bottom: 100%;
+        background-color: orange;
+        padding: 5px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: black;
+        display:block;
+        position:absolute;
+        overflow:hidden;
+    }
+     .invisible_box {
+        overflow: hidden;
+        visibility: hidden;
+        height: 0;
+        width: 0;
+    }
+  </style>
+</head>
+<body>
+<!-- 	<header>__MSG_CorrectIdentity.title__</header> -->
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.accountsCaption__</legend>
+
+		<div class="box">
+			<form>
+				__MSG_CorrectIdentity.accountSelector__ <select name="AccountSelector" id="accountSelector">
+				</select>
+			</form>
+		</div>
+
+		<div class="box">
+			<br>__MSG_CorrectIdentity.accountsDescription__<br> <input type="radio"
+				id="defaultIdentity" name="identityMechanism" value=0
+				checked="checked"> <label for="defaultIdentity">__MSG_CorrectIdentity.mechanismDefault__</label><br> <input type="radio"
+				id="explicitIdentity" name="identityMechanism" value=1> <label
+				for="explicitIdentity">__MSG_CorrectIdentity.mechanismExplicit__</label> <select name="ExplicitSelector"
+				id="explicitSelector">
+			</select>
+		</div>
+
+<!-- replyFromRecipient is not implemented (no idea how to get the recipients of the original to-be-replied message) -->
+ 		<div class="invisible_box">
+			<br>__MSG_CorrectIdentity.replyDescription__<br> <input type="checkbox"
+				id="replyFromRecipient" name="replyFromRecipient"
+				value="replyFromRecipient"> <label for="replyFromRecipient">__MSG_CorrectIdentity.replyFromRecipient__</label><br>
+		</div>
+ 	</fieldset>
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.detectionCaption__</legend>
+		__MSG_CorrectIdentity.detectionDescription__
+		<form>
+			__MSG_CorrectIdentity.identitySelector__ <select name="SelectedDetectionIdentity"
+				id="selectedDetectionIdentity">
+			</select>
+		</form>
+		<div class="box">
+			<input type="checkbox" id="detectable" name="detectable"
+				value="detectable"> <label for="detectable">__MSG_CorrectIdentity.identityDetectable__</label><br>
+		</div>
+		__MSG_CorrectIdentity.aliasesDescription__
+		<div class="tooltip">
+		<textarea id="detectionAliases" name="detectionAliases" rows="4"
+			cols="80"></textarea>
+			<span>__MSG_CorrectIdentity.aliasesTooltip__</span>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.safetyCaption__</legend>
+		__MSG_CorrectIdentity.safetyDescription__
+		<form>
+			__MSG_CorrectIdentity.identitySelector__ <select name="SelectedSafetyIdentity"
+				id="selectedSafetyIdentity">
+			</select>
+		</form>
+		__MSG_CorrectIdentity.warningAliasesDescription__
+		<div class="tooltip">
+		<textarea id="warningAliases" name="warningAliases" rows="4"
+			cols="80"></textarea>
+			<span>__MSG_CorrectIdentity.warningAliasesTooltip__</span>
+		</div>
+	</fieldset>
+</body>
+</html>

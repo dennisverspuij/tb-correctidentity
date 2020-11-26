@@ -1,0 +1,85 @@
+{
+  "CorrectIdentity.accountSelector": {
+    "message": "Compte"
+  },
+  "CorrectIdentity.accountsCaption": {
+    "message": "Sélection"
+  },
+  "CorrectIdentity.accountsDescription": {
+    "message": "Pour chaque compte, vous pouvez spécifier l’identité qui sera choisie lors de la rédaction d’un courriel."
+  },
+  "CorrectIdentity.aliasesDescription": {
+    "message": "Spécifier les alias, domaines ou simplement les mots qui, une fois trouvés dans la liste des destinataires, sélectionneront cette identité. Les alias ne seront essayés que lorsque la détection aura échouée sur toutes les adresses des identités activées."
+  },
+  "CorrectIdentity.aliasesTooltip": {
+    "message": "Les alias sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier des expressions régulières entre des barres obliques (/.../)."
+  },
+  "CorrectIdentity.captionDescription": {
+    "message": "Dennis Verspuij"
+  },
+  "CorrectIdentity.captionTitle": {
+    "message": "Correct Identity v1.4.7"
+  },
+  "CorrectIdentity.detectionCaption": {
+    "message": "Détection"
+  },
+  "CorrectIdentity.detectionDescription": {
+    "message": "Pour chaque identité, vous pouvez spécifier quand et comment elle peut être détectée dans la liste des destinataires."
+  },
+  "CorrectIdentity.height": {
+    "message": "442"
+  },
+  "CorrectIdentity.identityDetectable": {
+    "message": "permettre à cette identité d’être détectée."
+  },
+  "CorrectIdentity.identitySelector": {
+    "message": "Identité"
+  },
+  "CorrectIdentity.identitySelectorWidth": {
+    "message": "356"
+  },
+  "CorrectIdentity.mechanismDefault": {
+    "message": "utiliser l’identité par défaut du compte"
+  },
+  "CorrectIdentity.mechanismDescription": {
+    "message": "Lorsque vous écrivez un nouveau message"
+  },
+  "CorrectIdentity.mechanismExplicit": {
+    "message": "utiliser"
+  },
+  "CorrectIdentity.replyDescription": {
+    "message": "Lorsque vous répondez à un message"
+  },
+  "CorrectIdentity.replyFromRecipient": {
+    "message": "tenter de trouver et d’utiliser une identité qui apparaîtrait dans la liste des destinataires du message."
+  },
+  "CorrectIdentity.safetyCaption": {
+    "message": "Sécurité"
+  },
+  "CorrectIdentity.safetyDescription": {
+    "message": "Pour chaque identité, l’envoi peut être empêché pour certains destinataires."
+  },
+  "CorrectIdentity.title": {
+    "message": "Préférences de Correct Identity"
+  },
+  "CorrectIdentity.warningAliasesDescription": {
+    "message": "Vous serez averti avant l’envoi aux destinataires dont les noms ou/et les adresses correspondent à l’un des termes de recherche suivants :"
+  },
+  "CorrectIdentity.warningAliasesTooltip": {
+    "message": "Les termes de recherche sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier spécifier des expressions régulières entre des barres obliques (/.../)."
+  },
+  "CorrectIdentity.width": {
+    "message": "554"
+  },
+  "warning": {
+    "message": "ATTENTION : Vous allez utiliser l’identité $P1$ pour envoyer un message à :<br>$P2$<br><br>Êtes-vous sûr ?",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      },
+      "P2": {
+        "content": "$2"
+      }
+    }
+  }
+}

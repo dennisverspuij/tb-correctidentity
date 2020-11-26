@@ -1,0 +1,88 @@
+{
+  "CorrectIdentity.accountSelector": {
+    "message": "アカウント"
+  },
+  "CorrectIdentity.accountsCaption": {
+    "message": "選択"
+  },
+  "CorrectIdentity.accountsDescription": {
+    "message": "あらゆるアカウントでメール作成時のアイデンティティを指定することができます"
+  },
+  "CorrectIdentity.aliasesDescription": {
+    "message": "別名としてドメインまたはリストの中にあるアイデンティティに関連付ける単語を指定してください。この別名は検出可能なアイデンティティアドレスでの検出に失敗したときに適用が試みられます。"
+  },
+  "CorrectIdentity.aliasesTooltip": {
+    "message": "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)"
+  },
+  "CorrectIdentity.captionDescription": {
+    "message": "Dennis Verspuij"
+  },
+  "CorrectIdentity.captionTitle": {
+    "message": "Correct Identity v1.4.7"
+  },
+  "CorrectIdentity.detectionCaption": {
+    "message": "検出"
+  },
+  "CorrectIdentity.detectionDescription": {
+    "message": "検出されたリストのアイデンティティから指定できます"
+  },
+  "CorrectIdentity.height": {
+    "message": "442"
+  },
+  "CorrectIdentity.identityDetectable": {
+    "message": "アイデンティティの検出を可能にする"
+  },
+  "CorrectIdentity.identitySelector": {
+    "message": "アイデンティティ"
+  },
+  "CorrectIdentity.identitySelectorWidth": {
+    "message": "356"
+  },
+  "CorrectIdentity.mechanismDefault": {
+    "message": "アカウントのデフォルトアイデンティティ を使用"
+  },
+  "CorrectIdentity.mechanismDescription": {
+    "message": "新規メッセージの作成時"
+  },
+  "CorrectIdentity.mechanismExplicit": {
+    "message": "アイデンティティ指定"
+  },
+  "CorrectIdentity.replyDescription": {
+    "message": "返信メッセージの作成時"
+  },
+  "CorrectIdentity.replyFromRecipient": {
+    "message": "返信元のメッセージからアイデンティティの同一性を検出して適用する"
+  },
+  "CorrectIdentity.safetyCaption": {
+    "message": "安全"
+  },
+  "CorrectIdentity.safetyDescription": {
+    "message": "あなたは、特定の受信者に送信し、各アイデンティティを保護することができます。"
+  },
+  "CorrectIdentity.title": {
+    "message": "Correct Identity オプション"
+  },
+  "CorrectIdentity.warningAliasesDescription": {
+    "message": "あなたが前に、名前および/またはアドレス次の用語のいずれかと一致した受信者に送信する警告が表示されます。"
+  },
+  "CorrectIdentity.warningAliasesTooltip": {
+    "message": "検索用語は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)"
+  },
+  "CorrectIdentity.width": {
+    "message": "554"
+  },
+  "extensions.{47ef7cc0-2201-11da-8cd6-0800200c9a66}.description": {
+    "message": "\\u30E1\\u30C3\\u30BB\\u30FC\\u30B8\\u4F5C\\u6210\\u6642\\u306B\\u30A2\\u30A4\\u30C7\\u30F3\\u30C6\\u30A3\\u30C6\\u30A3\\u306E\\u81EA\\u52D5\\u9078\\u629E\\u3092\\u53EF\\u80FD\\u306B\\u3059\\u308B\\u62E1\\u5F35\\u6A5F\\u80FD\\u3067\\u3059"
+  },
+  "warning": {
+    "message": "警告。あなたは、メッセージを送信するためにアイデンティティ$P1$を使用しようとしています:<br>$P2$<br><br>続行しますか？",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      },
+      "P2": {
+        "content": "$2"
+      }
+    }
+  }
+}
