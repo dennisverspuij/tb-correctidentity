@@ -138,7 +138,6 @@ function initSettings() {
     }
   );
 }
-function window_closer(e) {}
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -362,27 +361,20 @@ function checkComposeTabs() {
 
 //test correct identity method
 function handleComposeTabChanged(tabId, identityId, toList) {
-result = getIdentity(tabId, identityId, toList);
-if (result.changed) {
-  // change identity
-  messenger.compose.getComposeDetails(tabId).then((details) => {
+  result = getIdentity(tabId, identityId, toList);
+  if (result.changed) {
+    // change identity
     composeTabStatus[tabId].changedByUs = true;
-    details.identityId = result.newIdentityId;
-    // workaround for error: "Only one of body and plainTextBody can be specified."
-    if (details.isPlainText) {
-      details.body = null;
-    } else {
-      details.plainTextBody = null;
-    }
+    details = {
+        identityId : result.newIdentityId,
+    };
     messenger.compose.setComposeDetails(tabId, details);
-  });
-}
+  }
 }
 
 function onIdentityChangedListener(tab, identityId) {
   if (composeTabStatus[tab.id].changedByUs) {
     composeTabStatus[tab.id].changedByUs = false;
-
   } else {
     composeTabStatus[tab.id].identitySetByUser = true;
   }

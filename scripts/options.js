@@ -111,7 +111,7 @@ function accountSelectorChanged(result) {
     guiState.currentAccountId
   );
   // Remember preferences of currently showed account
-  perAccountSettings.identityMechanism = document.getElementById("defaultIdentity").selected ? 0 : 1;
+  perAccountSettings.identityMechanism = document.getElementById("defaultIdentity").checked ? 0 : 1;
   if (document.getElementById("explicitSelector").selectedItem) {
     perAccountSettings.explicitIdentity = document.getElementById(
       "explicitSelector"
