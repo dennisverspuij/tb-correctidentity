@@ -29,6 +29,7 @@ var perIdentitySettings = {
 var settings = {
   accountSettings: {},
   identitySettings: {},
+  // migrate   ... property will be dynamically added if old prefs were migrated
 };
 
 //capture last recorded state of compose tab to detect changes to "identity" or to "to"
@@ -40,7 +41,7 @@ var dialogResults = {}; // key:windowId
 const BUTTON_OK = 1;
 const BUTTON_CANCEL = 2;
 
-//check that all fields are present (e.g. for upgrades)
+// check that all fields are present and valid(e.g. for upgrades)
 function checkSettings(inSettings) {
   for (let idx in inSettings.accountSettings) {
     as = inSettings.accountSettings[idx];
@@ -67,6 +68,41 @@ function checkSettings(inSettings) {
     }
   }
   return inSettings;
+}
+
+// check that all fields are present and valid(e.g. for upgrades)
+function checkGuiState(inGuiState) {
+  if (!(inGuiState.currentAccountId &&
+      accountsAndIdentities.accounts[inGuiState.currentAccountId])) {
+    // something undefined, so use default
+    inGuiState.currentAccountId = Object.keys(accountsAndIdentities.accounts)[0];
+  }
+
+  if (!(inGuiState.currentDetectionIdentity &&
+      accountsAndIdentities.identities[inGuiState.currentDetectionIdentity])) {
+    // something undefined, so use default
+    inGuiState.currentDetectionIdentity = Object.keys(accountsAndIdentities.identities)[0];
+  }
+
+  if (!(inGuiState.currentSafetyIdentity &&
+      accountsAndIdentities.identities[inGuiState.currentSafetyIdentity])) {
+    // something undefined,, so use default
+    inGuiState.currentSafetyIdentity = Object.keys(accountsAndIdentities.identities)[0];
+  }
+
+  return inGuiState;
+}
+
+// migrate settings from "user.pref" (Correct Identity version 1.xx.xx)
+function migrateSettings() {
+  // call experiment API to access old prefs
+  return browser.exp.migratePrefs().then((result) => {
+    guiState = checkGuiState(result.guiState);
+    settings = checkSettings(result.settings);
+    }, error => {
+      console.log("migrateSettings Error", error);
+    }
+  );
 }
 
 //read settings from storage
@@ -128,6 +164,13 @@ function initSettings() {
           } else {
             // defaults
             // leave empty at the moment
+          }
+          if (settings.migrate === undefined) {
+            // not yet called, call it once
+            migrateSettings().then( () => {
+              settings.migrate = true;
+              browser.storage.sync.set({ guiState, settings });
+            });
           }
         },
         (error) => console.log(`Error: storage get settings failed ${error}`)

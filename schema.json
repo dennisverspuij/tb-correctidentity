@@ -1,0 +1,14 @@
+[
+  {
+    "namespace": "exp",
+    "functions": [
+      {
+        "name": "migratePrefs",
+        "description": "Migrate preferences from preferences system to browser.storage",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      }
+    ]
+  }
+]

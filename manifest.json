@@ -12,6 +12,16 @@
   },
   "default_locale": "en-US",
   "permissions": ["accountsRead", "compose", "tabs", "storage"],
+  "experiment_apis": {
+    "exp": {
+      "schema": "schema.json",
+      "parent": {
+        "scopes": [ "addon_parent" ],
+        "paths": [ [ "exp" ] ],
+        "script": "scripts/exp_api.js"
+      }
+    }
+  },
   "background": {
     "scripts": ["scripts/background-script.js"]
   },
