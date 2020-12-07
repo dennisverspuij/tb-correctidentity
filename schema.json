@@ -4,10 +4,41 @@
     "functions": [
       {
         "name": "migratePrefs",
-        "description": "Migrate preferences from preferences system to browser.storage",
+        "description": "Migrate user preferences from pref.js to storage.sync",
         "type": "function",
         "async": true,
         "parameters": []
+      },
+      {
+        "name": "installGetIdentityForHeaderHook",
+        "description": "install Hook",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      }
+    ],
+    "events": [
+      {
+        "name": "onReplyHintCaptured",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "hint",
+            "type": "string"
+          },
+          {
+            "name": "origIdentityId",
+            "type": "string"
+          },
+          {
+            "name": "composeType",
+            "type": "integer"
+          },
+          {
+            "name": "subject",
+            "type": "string"
+          }
+        ]
       }
     ]
   }

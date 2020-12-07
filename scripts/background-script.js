@@ -1,5 +1,3 @@
-// TODO: replyFromRecipient handling
-
 var accountsAndIdentities = {
   accounts: {}, // key:id, values: prettyName, index, defaultIdentityId, type
   identities: {}, // key:id, values: email, accountId
@@ -33,17 +31,34 @@ var settings = {
 };
 
 //capture last recorded state of compose tab to detect changes to "identity" or to "to"
-var composeTabStatus = {}; // key:tabId values:identity, to, changedByUs, identitySetByUser
+var composeTabStatus = {}; // key:tabId values:identity, recipientsList, changedByUs, identitySetByUser, remainingPollsForAcceptingReplyHint
 
 var dialogResults = {}; // key:windowId
 
+/*
+replyHint = {
+    hint : hint,
+    origIdentityId : origIdentityId,
+    composeType : composeType,
+    subject : subject
+};
+*/
+var replyHints = [];
+
 // FIXME: are there somewhere global constants available?
+// used for interfacing to dialog.js
 const BUTTON_OK = 1;
 const BUTTON_CANCEL = 2;
 
 // check that all fields are present and valid(e.g. for upgrades)
 function checkSettings(inSettings) {
   for (let idx in inSettings.accountSettings) {
+    if (!(idx in accountsAndIdentities.accounts)) {
+      // unknown accountId
+      console.log("deleting accountSettings for ", idx);
+      delete inSettings.accountSettings[idx];
+      continue;
+    }
     as = inSettings.accountSettings[idx];
     if (as.identityMechanism === undefined) {
       as.identityMechanism = 0;
@@ -56,6 +71,12 @@ function checkSettings(inSettings) {
     }
   }
   for (let idx in inSettings.identitySettings) {
+    if (!(idx in accountsAndIdentities.identities)) {
+      // unknown identityId
+      console.log("deleting identitySettings for ", idx);
+      delete inSettings.identitySettings[idx];
+      continue;
+    }
     is = inSettings.identitySettings[idx];
     if (is.detectable === undefined) {
       is.detectable = true;
@@ -110,6 +131,7 @@ function initSettings() {
   // get all accounts and identitites from thunderbird
   messenger.accounts.list().then(
     (arrayMailAccounts) => {
+      // console.log("arrayMailAccounts:", arrayMailAccounts);
       let iIndex = 0;
       for (var i in arrayMailAccounts) {
         // determine default identity of this account
@@ -128,14 +150,20 @@ function initSettings() {
         };
 
         for (var j in arrayMailAccounts[i].identities) {
-          accountsAndIdentities.identities[
-            arrayMailAccounts[i].identities[j].id
-          ] = {
+          // append account name in italics and in gray as in compose window
+          var prettyName = arrayMailAccounts[i].identities[j].name +
+                           " &lt;"+ arrayMailAccounts[i].identities[j].email + "&gt; " +
+                           "<span style=\"color:#808080\"><i>" +
+                           arrayMailAccounts[i].name +
+                           "</i></span>";
+          accountsAndIdentities.identities[arrayMailAccounts[i].identities[j].id] = {
             email: arrayMailAccounts[i].identities[j].email,
+            prettyName: prettyName,
             accountId: arrayMailAccounts[i].id,
           };
         }
       }
+      // console.log("accountsAndIdentities:", accountsAndIdentities);
 
       // get stored settings
       browser.storage.sync.get("guiState").then(
@@ -155,7 +183,7 @@ function initSettings() {
             )[0];
           }
         },
-        (error) => console.log(`Error: storage get guiState failed ${error}`)
+        (error) => console.log("Error: storage get guiState failed ${error}")
       );
       browser.storage.sync.get("settings").then(
         (result) => {
@@ -169,11 +197,12 @@ function initSettings() {
             // not yet called, call it once
             migrateSettings().then( () => {
               settings.migrate = true;
+              console.log("settings migrated");
               browser.storage.sync.set({ guiState, settings });
             });
           }
         },
-        (error) => console.log(`Error: storage get settings failed ${error}`)
+        (error) => console.log("Error: storage get settings failed ${error}")
       );
     },
     (error) => {
@@ -236,11 +265,54 @@ async function firePopup(tabId, title, text, buttons) {
   return result;
 }
 
-function getIdentity(tabId, identityId, toList) {
+function patternSearch(haystack, needles, warnIdentityId, warnText) {
+  var isMatch = false;
+  for (var idx in needles) {
+    if (needles[idx] !== "") {
+      // checking alias
+      match = /^\/(.*)\/$/.exec(needles[idx]);
+      if (match) {
+        // maybe: we have a RegExp
+        try {
+          if (haystack.match(new RegExp(RegExp.$1, "i"))) {
+            isMatch = true;
+            break;
+          }
+        } catch (err) {
+          // called non blocking
+          firePopup(
+            tabId,
+            "Error in RegExp",
+            "Ignoring invalid regular expression:<br><br>" +
+              "identity:  " +
+              accountsAndIdentities.identities[warnIdentityId].email +
+              "<br>" +
+              "regexp:  " +
+              needles[idx].replace(/\\/g, "\\\\") +
+              "<br><br>" +
+              "Please adjust in the Correct Identity " + printout + " settings!",
+            BUTTON_OK
+          );
+          needles[idx] = ""; // Skip this alias
+        }
+      } else {
+        if (haystack.indexOf(needles[idx]) >= 0) {
+          isMatch = true;
+          break;
+        }
+      }
+    }
+  }
+  return isMatch;
+}
+
+function getIdentity(tabId, identityId, recipientsList, replyHint) {
   var changed = false;
   var newIdentityId = "";
   var aliasedId = "";
   var explicitId = "";
+  var replyId = "";
+
   accountId = accountsAndIdentities.identities[identityId].accountId;
 
   perAccountSettings = settings.accountSettings[accountId];
@@ -252,44 +324,21 @@ function getIdentity(tabId, identityId, toList) {
         break;
       // Room for more options in the future
     }
-  }
 
-  recipientsString = toList.join(" ").toLowerCase();
-  for (var idxIdentity in settings.identitySettings) {
-    perIdentitySettings = settings.identitySettings[idxIdentity];
-    if (perIdentitySettings.detectable) {
-      // could check hints here? from old code? lowercase?
-
-      let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-      for (var idxAlias in detectionAliases) {
-        if (detectionAliases[idxAlias] !== "") {
-          // checking alias
-          match = /^\/(.*)\/$/.exec(detectionAliases[idxAlias]);
-          if (match) {
-            // maybe: we have a RegExp
-            try {
-              if (recipientsString.match(new RegExp(RegExp.$1, "i"))) {
-                aliasedId = idxIdentity;
-              }
-            } catch (err) {
-              // called non blocking
-              firePopup(
-                tabId,
-                "Error in RegExp",
-                "Ignoring invalid regular expression:<br><br>" +
-                  "identity:  " +
-                  accountsAndIdentities.identities[idxIdentity].email +
-                  "<br>" +
-                  "regexp:  " +
-                  detectionAliases[idxAlias].replace(/\\/g, "\\\\") +
-                  "<br><br>" +
-                  "Please adjust in the Correct Identity Detection settings!",
-                BUTTON_OK
-              );
-            }
-          } else {
-            if (recipientsString.indexOf(detectionAliases[idxAlias]) >= 0) {
-              aliasedId = idxIdentity;
+    // check if we have a reply hint
+    if (perAccountSettings.replyFromRecipient && (replyHint !== "")) {
+      replyHint = replyHint.toLowerCase();
+      identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
+      if (!((identityEmail.indexOf("@") != -1) && (replyHint.indexOf(identityEmail) >= 0))) {
+        // the current identity email (=sender) is not in the replyHint
+        // so check if we find a match matching identity
+        for (let idxIdentity in settings.identitySettings) {
+          perIdentitySettings = settings.identitySettings[idxIdentity];
+          curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
+          if (perIdentitySettings.detectable) {
+            if ((curIdentityEmail.indexOf("@") != -1) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
+              // we found an identity that was mentioned in the hint
+              replyId = idxIdentity;
             }
           }
         }
@@ -297,7 +346,24 @@ function getIdentity(tabId, identityId, toList) {
     }
   }
 
-  if (aliasedId !== "") {
+  recipientsString = recipientsList.join(" ").toLowerCase();
+  for (let idxIdentity in settings.identitySettings) {
+    perIdentitySettings = settings.identitySettings[idxIdentity];
+    if (perIdentitySettings.detectable) {
+      let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
+      var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection");
+      if (isMatch) {
+        aliasedId = idxIdentity;
+      }
+    }
+  }
+
+  // prioritized selection of resulting identity
+  if (replyId !== "") {
+    // return the matched identity  from the replyHint
+    newIdentityId = replyId;
+    changed = true;
+  } else if (aliasedId !== "") {
     // we have a match from the alias list
     newIdentityId = aliasedId;
     changed = true;
@@ -325,36 +391,12 @@ async function sendConfirm(tabId, identityId, recipients) {
 
   for (var idxRecipient in recipients) {
     recipient = recipients[idxRecipient];
-    for (var idxWarningAlias in warningAliases) {
-      alias = warningAliases[idxWarningAlias];
-      if (alias !== "") {
-        if (/^\/(.*)\/$/.exec(alias)) {
-          try {
-            if (recipient.match(new RegExp(RegExp.$1, "i"))) {
-              warnRecipients += "<br>- " + recipient;
-            }
-          } catch (err) {
-            await firePopup(
-              tabId,
-              "Error in RegExp",
-              "Ignoring invalid regular expression:<br><br>" +
-                "identity:  " +
-                accountsAndIdentities.identities[identityId].email +
-                "<br>" +
-                "regexp:  " +
-                alias.replace(/\\/g, "\\\\") +
-                "<br><br>" +
-                "Please adjust in the Correct Identity Safety settings!",
-              BUTTON_OK
-            );
-            warningAliases[idxWarningAlias] = ""; // Skip this alias
-            // next recipient
-          }
-        } else if (recipient.indexOf(alias) >= 0)
-          warnRecipients += "<br>" + recipient;
-      }
+    var isMatch = patternSearch(recipientsString, warningAliases, identityId, "Safety");
+    if (isMatch) {
+      warnRecipients += "<br>" + recipient;
     }
   }
+
   return warnRecipients === "" ? true : firePopup(
         tabId,
         "Warning",
@@ -368,25 +410,53 @@ async function sendConfirm(tabId, identityId, recipients) {
 
 function checkComposeTab(tabId) {
   messenger.compose.getComposeDetails(tabId).then((gcd) => {
+    var replyHint = "";
+    var changed = false;
+    var recipientsList = [];
     entry = composeTabStatus[tabId];
+    var remainingPollsForAcceptingReplyHint = -1;
     if (entry) {
       if (entry.identitySetByUser) {
         // user has manually modified identity, so do not change it
         return;
       }
-      changed =
-        JSON.stringify(entry.identity) != JSON.stringify(gcd.identityId) ||
-        JSON.stringify(entry.to) != JSON.stringify(gcd.to);
+      remainingPollsForAcceptingReplyHint = entry.remainingPollsForAcceptingReplyHint;
+      // check if relevant entries have changed
+      recipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
+      changed = JSON.stringify(entry.identity) != JSON.stringify(gcd.identityId) ||
+                JSON.stringify(entry.recipientsList) != JSON.stringify(recipientsList);
     } else {
       // new tab detected
+      remainingPollsForAcceptingReplyHint = 2;  // check 2 times in total
       changed = true;
     }
+
+    // Check if we have received a matching replyHint from the experiments API.
+    // Give one poll cycle for the replyHint to be received via onReplyHintCaptured event
+    // later arriving events may belong to other compose windows.
+    if (remainingPollsForAcceptingReplyHint > 0) {
+      remainingPollsForAcceptingReplyHint--;
+      for (var i in replyHints) {
+        if (gcd.subject.includes(replyHints[i].subject) && (gcd.identityId === replyHints[i].origIdentityId)) {
+          // matching reply hint found
+          replyHint = replyHints[i].hint;
+          replyHints.splice(i, 1);  // remove from array, so only reported once
+          remainingPollsForAcceptingReplyHint = 0;
+          changed = true;
+          break;
+        }
+      }
+    }
+
+    // store status in global object
     composeTabStatus[tabId] = {
-      identity: gcd.identityId,
-      to: gcd.to,
-    };
+        identity: gcd.identityId,
+        recipientsList: recipientsList,
+        remainingPollsForAcceptingReplyHint : remainingPollsForAcceptingReplyHint,
+      };
+
     if (changed) {
-      handleComposeTabChanged(tabId, gcd.identityId, gcd.to);
+      handleComposeTabChanged(tabId, gcd.identityId, recipientsList, replyHint);
     }
   }, function(){});
 }
@@ -401,10 +471,8 @@ function checkComposeTabs() {
   });
 }
 
-
-//test correct identity method
-function handleComposeTabChanged(tabId, identityId, toList) {
-  result = getIdentity(tabId, identityId, toList);
+function handleComposeTabChanged(tabId, identityId, recipientsList, replyHint) {
+  result = getIdentity(tabId, identityId, recipientsList, replyHint);
   if (result.changed) {
     // change identity
     composeTabStatus[tabId].changedByUs = true;
@@ -425,11 +493,11 @@ function onIdentityChangedListener(tab, identityId) {
 
 //we need to wait for confirmations -> async function
 async function onBeforeSendListener(tab, details) {
-var result = await sendConfirm(tab.id, details.identityId, details.to);
+  var result = await sendConfirm(tab.id, details.identityId, details.to.concat(details.cc, details.bcc));
 
-return {
- cancel: !result,
-};
+  return {
+    cancel: !result,
+  };
 }
 
 function handleMessage(request, sender, sendResponse) {
@@ -452,11 +520,47 @@ function handleMessage(request, sender, sendResponse) {
   }
 }
 
+/*
+ * composeTypes:
+ * from nsIMsgFolder.idl
+ * New                      = 0;
+ * Reply                    = 1;
+ * ReplyAll                 = 2;
+ * ForwardAsAttachment      = 3;
+ * ForwardInline            = 4;
+ * NewsPost                 = 5;
+ * ReplyToSender            = 6;
+ * ReplyToGroup             = 7;
+ * ReplyToSenderAndGroup    = 8;
+ * Draft                    = 9;
+ * Template                 = 10;  // New message from template.
+ * MailToUrl                = 11;
+ * ReplyWithTemplate        = 12;
+ * ReplyToList              = 13;
+ */
+
+
+function onReplyHintCaptured(hint, origIdentityId, composeType, subject) {
+  replyHint = {
+      hint : hint,
+      origIdentityId : origIdentityId,
+      composeType : composeType,
+      subject : subject
+  };
+  replyHints.push(replyHint);
+}
+
 initSettings();
 
 // start compose tab polling
 setInterval(checkComposeTabs, 1000);
 
+browser.exp.installGetIdentityForHeaderHook();
+browser.exp.onReplyHintCaptured.addListener(onReplyHintCaptured);
+
 browser.runtime.onMessage.addListener(handleMessage);
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
+
+// to test empty storage uncomment next line once
+// browser.storage.sync.clear();

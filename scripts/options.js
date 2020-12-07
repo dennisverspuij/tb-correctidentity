@@ -12,13 +12,15 @@ function notifySettingsChanged() {
 }
 
 function getPerAccountSettingsOrDefault(accountId) {
+  if (accountId === undefined) {
+    throw "accountId has value \"undefined\"";
+  }
   perAccountSettings = settings.accountSettings[accountId];
   if (perAccountSettings === undefined) {
     // not found in settings, set defaults
     perAccountSettings = {
       identityMechanism: 0,
-      explicitIdentity:
-        accountsAndIdentities.accounts[accountId].defaultIdentityId,
+      explicitIdentity: accountsAndIdentities.accounts[accountId].defaultIdentityId,
       replyFromRecipient: true,
     };
     settings.accountSettings[accountId] = perAccountSettings;
@@ -27,6 +29,9 @@ function getPerAccountSettingsOrDefault(accountId) {
 }
 
 function getPerIdentitySettingsOrDefault(identityId) {
+  if (identityId === undefined) {
+    throw "identityId has value \"undefined\"";
+  }
   perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // not found in settings, set defaults
@@ -54,7 +59,7 @@ function fillExplicitSelector(explicitIdentityId) {
   for (var i in accountsAndIdentities.identities) {
     var opt = document.createElement("option");
     opt.value = i;
-    opt.innerHTML = accountsAndIdentities.identities[i].email;
+    opt.innerHTML = accountsAndIdentities.identities[i].prettyName;
     explicitSelector.appendChild(opt);
     if (i == explicitIdentityId) {
       selectedIndex = index;
@@ -66,7 +71,6 @@ function fillExplicitSelector(explicitIdentityId) {
 
 function updateGuiAccountChanged(accountId) {
   perAccountSettings = getPerAccountSettingsOrDefault(accountId);
-  // perIdentitySettings = getPerIdentitySettingsOrDefault(perAccountSettings.defaultIdentityId);
 
   fillExplicitSelector(perAccountSettings.explicitIdentity);
 
@@ -127,7 +131,7 @@ function accountSelectorChanged(result) {
 
   perAccountSettings = getPerAccountSettingsOrDefault(sKey);
   perIdentitySettings = getPerIdentitySettingsOrDefault(
-    perAccountSettings.defaultIdentityId
+    accountsAndIdentities.accounts[sKey].defaultIdentityId
   );
 
   updateGuiAccountChanged(sKey);
@@ -280,7 +284,7 @@ function getSettings() {
       for (let i in accountsAndIdentities.identities) {
         let opt = document.createElement("option");
         opt.value = i;
-        opt.innerHTML = accountsAndIdentities.identities[i].email;
+        opt.innerHTML = accountsAndIdentities.identities[i].prettyName;
         selectedDetectionIdentity.appendChild(opt.cloneNode(true)); // we need a copy not a reference
         selectedSafetyIdentity.appendChild(opt);
         if (guiState.currentDetectionIdentity == i) {

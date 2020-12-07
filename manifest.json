@@ -6,7 +6,7 @@
   "author": "Dennis Verspuij",
   "applications": {
     "gecko": {
-      "id": "author@localhost",
+      "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
       "strict_min_version": "78.0"
     }
   },
