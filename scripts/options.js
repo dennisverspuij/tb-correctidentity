@@ -15,7 +15,10 @@ function getPerAccountSettingsOrDefault(accountId) {
   if (accountId === undefined) {
     throw "accountId has value \"undefined\"";
   }
-  perAccountSettings = settings.accountSettings[accountId];
+  if (!(accountId in accountsAndIdentities.accounts)) {
+    throw "accountId has unknown value";
+  }
+  var perAccountSettings = settings.accountSettings[accountId];
   if (perAccountSettings === undefined) {
     // not found in settings, set defaults
     perAccountSettings = {
@@ -32,7 +35,10 @@ function getPerIdentitySettingsOrDefault(identityId) {
   if (identityId === undefined) {
     throw "identityId has value \"undefined\"";
   }
-  perIdentitySettings = settings.identitySettings[identityId];
+  if (!(identityId in accountsAndIdentities.identities)) {
+    throw "identityId has unknown value";
+  }
+  var perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // not found in settings, set defaults
     perIdentitySettings = {
@@ -47,7 +53,7 @@ function getPerIdentitySettingsOrDefault(identityId) {
 
 function fillExplicitSelector(explicitIdentityId) {
   // fill explicitId list for that account
-  explicitSelector = document.getElementById("explicitSelector");
+  var explicitSelector = document.getElementById("explicitSelector");
 
   // remove all items
   while (explicitSelector.options.length) {
@@ -57,7 +63,7 @@ function fillExplicitSelector(explicitIdentityId) {
   let index = 0;
   let selectedIndex = 0;
   for (var i in accountsAndIdentities.identities) {
-    var opt = document.createElement("option");
+    let opt = document.createElement("option");
     opt.value = i;
     opt.innerHTML = accountsAndIdentities.identities[i].prettyName;
     explicitSelector.appendChild(opt);
@@ -70,7 +76,7 @@ function fillExplicitSelector(explicitIdentityId) {
 }
 
 function updateGuiAccountChanged(accountId) {
-  perAccountSettings = getPerAccountSettingsOrDefault(accountId);
+  var perAccountSettings = getPerAccountSettingsOrDefault(accountId);
 
   fillExplicitSelector(perAccountSettings.explicitIdentity);
 
@@ -92,7 +98,7 @@ function updateGuiAccountChanged(accountId) {
 
 function updateGuiDetectionIdentityChanged(newDetectionIdentityId) {
   // update Detection GUI
-  perIdentitySettings = getPerIdentitySettingsOrDefault(newDetectionIdentityId);
+  var perIdentitySettings = getPerIdentitySettingsOrDefault(newDetectionIdentityId);
 
   document.getElementById("detectable").checked =
     perIdentitySettings.detectable;
@@ -102,16 +108,16 @@ function updateGuiDetectionIdentityChanged(newDetectionIdentityId) {
 
 function updateGuiSafetyIdentityChanged(newSafetyIdentityId) {
   // update Safety GUI
-  perIdentitySettings = getPerIdentitySettingsOrDefault(newSafetyIdentityId);
+  var perIdentitySettings = getPerIdentitySettingsOrDefault(newSafetyIdentityId);
 
   document.getElementById("warningAliases").value =
     perIdentitySettings.warningAliases;
 }
 
 function accountSelectorChanged(result) {
-  sKey = result.target.value;
+  var sKey = result.target.value;
 
-  perAccountSettings = getPerAccountSettingsOrDefault(
+  var perAccountSettings = getPerAccountSettingsOrDefault(
     guiState.currentAccountId
   );
   // Remember preferences of currently showed account
@@ -129,30 +135,21 @@ function accountSelectorChanged(result) {
 
   notifySettingsChanged();
 
-  perAccountSettings = getPerAccountSettingsOrDefault(sKey);
-  perIdentitySettings = getPerIdentitySettingsOrDefault(
-    accountsAndIdentities.accounts[sKey].defaultIdentityId
-  );
-
   updateGuiAccountChanged(sKey);
 }
 
 function explicitIdentityChanged(result) {
-  perAccountSettings = getPerAccountSettingsOrDefault(
-    guiState.currentAccountId
-  );
+  var perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
   perAccountSettings.explicitIdentity = result.target.value;
   notifySettingsChanged();
 }
 
 function identityMechanismChanged(result) {
-  perAccountSettings = getPerAccountSettingsOrDefault(
-    guiState.currentAccountId
-  );
+  var perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
   perAccountSettings.identityMechanism = parseInt(result.target.value, 10);
 
   // Update the form
-  explicitSelector = document.getElementById("explicitSelector");
+  var explicitSelector = document.getElementById("explicitSelector");
   explicitSelector.disabled = result.target.value != 1;
   if (explicitSelector.disabled) {
     // If not selected, restore the explicit identity to default identity for the account
@@ -165,7 +162,7 @@ function identityMechanismChanged(result) {
 }
 
 function replyFromRecipientChanged(result) {
-  perAccountSettings = getPerAccountSettingsOrDefault(
+  var perAccountSettings = getPerAccountSettingsOrDefault(
     guiState.currentAccountId
   );
   perAccountSettings.replyFromRecipient = result.target.checked;
@@ -179,7 +176,7 @@ function selectedDetectionIdentityChanged(result) {
 }
 
 function detectableChanged(result) {
-  perIdentitySettings = getPerIdentitySettingsOrDefault(
+  var perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentDetectionIdentity
   );
   perIdentitySettings.detectable = result.target.checked;
@@ -187,7 +184,7 @@ function detectableChanged(result) {
 }
 
 function detectionAliasesChanged(result) {
-  perIdentitySettings = getPerIdentitySettingsOrDefault(
+  var perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentDetectionIdentity
   );
   perIdentitySettings.detectionAliases = result.target.value;
@@ -202,7 +199,7 @@ function selectedSafetyIdentityChanged(result) {
 }
 
 function warningAliasesChanged(result) {
-  perIdentitySettings = getPerIdentitySettingsOrDefault(
+  var perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentSafetyIdentity
   );
   perIdentitySettings.warningAliases = result.target.value;
@@ -258,7 +255,7 @@ function getSettings() {
       guiState = message.guiState;
 
       // fill settings into GUI
-      accountSelector = document.getElementById("accountSelector");
+      var accountSelector = document.getElementById("accountSelector");
       for (let i in accountsAndIdentities.accounts) {
         let opt = document.createElement("option");
         opt.value = i;
@@ -272,10 +269,10 @@ function getSettings() {
       updateGuiAccountChanged(guiState.currentAccountId);
 
       // fill "Detection" and "Safety" section
-      selectedDetectionIdentity = document.getElementById(
+      var selectedDetectionIdentity = document.getElementById(
         "selectedDetectionIdentity"
       );
-      selectedSafetyIdentity = document.getElementById(
+      var selectedSafetyIdentity = document.getElementById(
         "selectedSafetyIdentity"
       );
       var detectionIndex = 0;

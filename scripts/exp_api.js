@@ -84,7 +84,7 @@ function myOverlay(hdr, type, hint = "") {
   // end
 
   if (server) {
-    account = MailServices.accounts.FindAccountForServer(server);
+    let account = MailServices.accounts.FindAccountForServer(server);
     accountId = account.key;
   }
 
@@ -92,7 +92,7 @@ function myOverlay(hdr, type, hint = "") {
   // we do not modify the result here, simply call original function
   // modification is done later in the ComposeWindow
   [identity, matchingHint] = MailUtils.origGetIdentityForHeader(hdr, type, hint);
-
+  var origIdentityId;
   if (identity) {
     origIdentityId = identity.key;
   }

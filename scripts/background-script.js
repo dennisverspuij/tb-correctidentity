@@ -59,7 +59,7 @@ function checkSettings(inSettings) {
       delete inSettings.accountSettings[idx];
       continue;
     }
-    as = inSettings.accountSettings[idx];
+    var as = inSettings.accountSettings[idx];
     if (as.identityMechanism === undefined) {
       as.identityMechanism = 0;
     }
@@ -77,7 +77,7 @@ function checkSettings(inSettings) {
       delete inSettings.identitySettings[idx];
       continue;
     }
-    is = inSettings.identitySettings[idx];
+    var is = inSettings.identitySettings[idx];
     if (is.detectable === undefined) {
       is.detectable = true;
     }
@@ -270,7 +270,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
   for (var idx in needles) {
     if (needles[idx] !== "") {
       // checking alias
-      match = /^\/(.*)\/$/.exec(needles[idx]);
+      var match = /^\/(.*)\/$/.exec(needles[idx]);
       if (match) {
         // maybe: we have a RegExp
         try {
@@ -313,9 +313,9 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
   var explicitId = "";
   var replyId = "";
 
-  accountId = accountsAndIdentities.identities[identityId].accountId;
+  var accountId = accountsAndIdentities.identities[identityId].accountId;
 
-  perAccountSettings = settings.accountSettings[accountId];
+  var perAccountSettings = settings.accountSettings[accountId];
 
   if (perAccountSettings !== undefined) {
     switch (perAccountSettings.identityMechanism) {
@@ -328,13 +328,13 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
     // check if we have a reply hint
     if (perAccountSettings.replyFromRecipient && (replyHint !== "")) {
       replyHint = replyHint.toLowerCase();
-      identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
+      var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
       if (!((identityEmail.indexOf("@") != -1) && (replyHint.indexOf(identityEmail) >= 0))) {
         // the current identity email (=sender) is not in the replyHint
         // so check if we find a match matching identity
         for (let idxIdentity in settings.identitySettings) {
-          perIdentitySettings = settings.identitySettings[idxIdentity];
-          curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
+          let perIdentitySettings = settings.identitySettings[idxIdentity];
+          var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
           if (perIdentitySettings.detectable) {
             if ((curIdentityEmail.indexOf("@") != -1) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
               // we found an identity that was mentioned in the hint
@@ -346,9 +346,9 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
     }
   }
 
-  recipientsString = recipientsList.join(" ").toLowerCase();
+  var recipientsString = recipientsList.join(" ").toLowerCase();
   for (let idxIdentity in settings.identitySettings) {
-    perIdentitySettings = settings.identitySettings[idxIdentity];
+    let perIdentitySettings = settings.identitySettings[idxIdentity];
     if (perIdentitySettings.detectable) {
       let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
       var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection");
@@ -381,7 +381,7 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
 
 // returns true if ok-to-send
 async function sendConfirm(tabId, identityId, recipients) {
-  perIdentitySettings = settings.identitySettings[identityId];
+  var perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // nothing configured
     return true;
@@ -390,7 +390,7 @@ async function sendConfirm(tabId, identityId, recipients) {
   let warnRecipients = "";
 
   for (var idxRecipient in recipients) {
-    recipient = recipients[idxRecipient];
+    var recipient = recipients[idxRecipient];
     var isMatch = patternSearch(recipientsString, warningAliases, identityId, "Safety");
     if (isMatch) {
       warnRecipients += "<br>" + recipient;
@@ -413,7 +413,7 @@ function checkComposeTab(tabId) {
     var replyHint = "";
     var changed = false;
     var recipientsList = [];
-    entry = composeTabStatus[tabId];
+    var entry = composeTabStatus[tabId];
     var remainingPollsForAcceptingReplyHint = -1;
     if (entry) {
       if (entry.identitySetByUser) {
@@ -463,7 +463,7 @@ function checkComposeTab(tabId) {
 
 function checkComposeTabs() {
   // try to find all tabs
-  queryInfo = {};
+  var queryInfo = {};
   messenger.tabs.query(queryInfo).then((tabs) => {
     for (var i in tabs) {
       checkComposeTab(tabs[i].id);
@@ -472,11 +472,11 @@ function checkComposeTabs() {
 }
 
 function handleComposeTabChanged(tabId, identityId, recipientsList, replyHint) {
-  result = getIdentity(tabId, identityId, recipientsList, replyHint);
+  var result = getIdentity(tabId, identityId, recipientsList, replyHint);
   if (result.changed) {
     // change identity
     composeTabStatus[tabId].changedByUs = true;
-    details = {
+    var details = {
         identityId : result.newIdentityId,
     };
     messenger.compose.setComposeDetails(tabId, details);
@@ -541,7 +541,7 @@ function handleMessage(request, sender, sendResponse) {
 
 
 function onReplyHintCaptured(hint, origIdentityId, composeType, subject) {
-  replyHint = {
+  var replyHint = {
       hint : hint,
       origIdentityId : origIdentityId,
       composeType : composeType,
