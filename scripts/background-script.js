@@ -389,9 +389,10 @@ async function sendConfirm(tabId, identityId, recipients) {
   let warningAliases = perIdentitySettings.warningAliases.split(/\n+/);
   let warnRecipients = "";
 
+  var recipientsString = recipients.join(" ").toLowerCase();
   for (var idxRecipient in recipients) {
     var recipient = recipients[idxRecipient];
-    var isMatch = patternSearch(recipientsString, warningAliases, identityId, "Safety");
+    var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety");
     if (isMatch) {
       warnRecipients += "<br>" + recipient;
     }
