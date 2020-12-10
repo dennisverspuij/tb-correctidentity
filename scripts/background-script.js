@@ -30,8 +30,8 @@ var settings = {
   // migrate   ... property will be dynamically added if old prefs were migrated
 };
 
-//capture last recorded state of compose tab to detect changes to "identity" or to "to"
-var composeTabStatus = {}; // key:tabId values:identity, recipientsList, changedByUs, identitySetByUser, remainingPollsForAcceptingReplyHint
+//capture last recorded state of compose tab to detect changes to "identityId" or to "to"
+var composeTabStatus = {}; // key:tabId values:identityId, recipientsList, changedByUs, identitySetByUser, remainingPollsForAcceptingReplyHint
 
 var dialogResults = {}; // key:windowId
 
@@ -325,35 +325,42 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
       // Room for more options in the future
     }
 
-    // check if we have a reply hint
-    if (perAccountSettings.replyFromRecipient && (replyHint !== "")) {
-      replyHint = replyHint.toLowerCase();
-      var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
-      if (!((identityEmail.indexOf("@") != -1) && (replyHint.indexOf(identityEmail) >= 0))) {
-        // the current identity email (=sender) is not in the replyHint
-        // so check if we find a match matching identity
-        for (let idxIdentity in settings.identitySettings) {
-          let perIdentitySettings = settings.identitySettings[idxIdentity];
-          var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
-          if (perIdentitySettings.detectable) {
-            if ((curIdentityEmail.indexOf("@") != -1) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
-              // we found an identity that was mentioned in the hint
-              replyId = idxIdentity;
+    if (perAccountSettings.replyFromRecipient) {
+      // check if we have a reply hint
+      if (replyHint !== "") {
+        replyHint = replyHint.toLowerCase();
+        var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
+        if (!((identityEmail.indexOf("@") != -1) && (replyHint.indexOf(identityEmail) >= 0))) {
+          // the current identity email (=sender) is not in the replyHint
+          // so check if we find a match matching identity
+          for (let idxIdentity in settings.identitySettings) {
+            let perIdentitySettings = settings.identitySettings[idxIdentity];
+            var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
+            if (perIdentitySettings.detectable) {
+              if ((curIdentityEmail.indexOf("@") != -1) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
+                // we found an identity that was mentioned in the hint
+                replyId = idxIdentity;
+              }
             }
           }
         }
       }
-    }
-  }
 
-  var recipientsString = recipientsList.join(" ").toLowerCase();
-  for (let idxIdentity in settings.identitySettings) {
-    let perIdentitySettings = settings.identitySettings[idxIdentity];
-    if (perIdentitySettings.detectable) {
-      let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-      var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection");
-      if (isMatch) {
-        aliasedId = idxIdentity;
+      // check for alias matches
+      var recipientsString = recipientsList.join(" ").toLowerCase();
+      if (replyHint !== "") {
+        // if we have a replyHint, search also for replyHint
+        recipientsString = recipientsString + " " + replyHint;
+      }
+      for (let idxIdentity in settings.identitySettings) {
+        let perIdentitySettings = settings.identitySettings[idxIdentity];
+        if (perIdentitySettings.detectable) {
+          let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
+          var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection");
+          if (isMatch) {
+            aliasedId = idxIdentity;
+          }
+        }
       }
     }
   }
@@ -389,7 +396,6 @@ async function sendConfirm(tabId, identityId, recipients) {
   let warningAliases = perIdentitySettings.warningAliases.split(/\n+/);
   let warnRecipients = "";
 
-  var recipientsString = recipients.join(" ").toLowerCase();
   for (var idxRecipient in recipients) {
     var recipient = recipients[idxRecipient];
     var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety");
@@ -416,19 +422,35 @@ function checkComposeTab(tabId) {
     var recipientsList = [];
     var entry = composeTabStatus[tabId];
     var remainingPollsForAcceptingReplyHint = -1;
+    var identityId = "";
+    var gcdRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
     if (entry) {
       if (entry.identitySetByUser) {
         // user has manually modified identity, so do not change it
         return;
       }
+
+      // get current values and check for changes
       remainingPollsForAcceptingReplyHint = entry.remainingPollsForAcceptingReplyHint;
-      // check if relevant entries have changed
-      recipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
-      changed = JSON.stringify(entry.identity) != JSON.stringify(gcd.identityId) ||
-                JSON.stringify(entry.recipientsList) != JSON.stringify(recipientsList);
+      identityId = entry.identityId;
+      recipientsList = entry.recipientsList;
+
+      // check if identityId has changed
+      if (JSON.stringify(identityId) != JSON.stringify(gcd.identityId)) {
+        identityId = gcd.identityId;
+        changed = true;
+      }
+
+      // check if recipients have changed
+      if (JSON.stringify(recipientsList) != JSON.stringify(gcdRecipientsList)) {
+        recipientsList = gcdRecipientsList;
+        changed = true;
+      }
     } else {
       // new tab detected
       remainingPollsForAcceptingReplyHint = 2;  // check 2 times in total
+      identityId = gcd.identityId;
+      recipientsList = gcdRecipientsList;
       changed = true;
     }
 
@@ -451,15 +473,17 @@ function checkComposeTab(tabId) {
 
     // store status in global object
     composeTabStatus[tabId] = {
-        identity: gcd.identityId,
+        identityId: identityId,
         recipientsList: recipientsList,
+        // replyHint is not stored, we only handle it once after opening the compose window
         remainingPollsForAcceptingReplyHint : remainingPollsForAcceptingReplyHint,
       };
 
     if (changed) {
-      handleComposeTabChanged(tabId, gcd.identityId, recipientsList, replyHint);
+      // console.log("identityId", identityId, " recipientsList:", recipientsList, " replyHint:", replyHint);
+      handleComposeTabChanged(tabId, identityId, recipientsList, replyHint);
     }
-  }, function(){});
+  }, function(){/* errors are ignored */});
 }
 
 function checkComposeTabs() {
@@ -475,7 +499,7 @@ function checkComposeTabs() {
 function handleComposeTabChanged(tabId, identityId, recipientsList, replyHint) {
   var result = getIdentity(tabId, identityId, recipientsList, replyHint);
   if (result.changed) {
-    // change identity
+    // change identityId
     composeTabStatus[tabId].changedByUs = true;
     var details = {
         identityId : result.newIdentityId,
