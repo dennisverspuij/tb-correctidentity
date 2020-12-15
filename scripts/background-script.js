@@ -120,9 +120,9 @@ function migrateSettings() {
   return browser.exp.migratePrefs().then((result) => {
     guiState = checkGuiState(result.guiState);
     settings = checkSettings(result.settings);
-    }, error => {
-      console.log("migrateSettings Error", error);
-    }
+  }, error => {
+    console.log("migrateSettings Error", error);
+  }
   );
 }
 
@@ -135,7 +135,9 @@ function initSettings() {
       let iIndex = 0;
       for (var i in arrayMailAccounts) {
         // determine default identity of this account
-        defaultIdentity = arrayMailAccounts[i].identities[0];
+        var defaultIdentity = arrayMailAccounts[i].identities[0];
+        var defaultIdentityId;
+
         if (defaultIdentity === undefined) {
           defaultIdentityId = "";
         } else {
@@ -183,7 +185,7 @@ function initSettings() {
             )[0];
           }
         },
-        (error) => console.log("Error: storage get guiState failed ${error}")
+        (error) => console.log("Error: storage get guiState failed ", error)
       );
       browser.storage.sync.get("settings").then(
         (result) => {
@@ -202,7 +204,7 @@ function initSettings() {
             });
           }
         },
-        (error) => console.log("Error: storage get settings failed ${error}")
+        (error) => console.log("Error: storage get settings failed ", error)
       );
     },
     (error) => {
@@ -221,7 +223,7 @@ async function windowExists(winId) {
     (window) => {
       exists = true;
     },
-    function () {
+    () => {
       exists = false;
     }
   );
@@ -230,7 +232,7 @@ async function windowExists(winId) {
 
 // does not exit until window closed
 // returns true, if "OK" pressed
-async function firePopup(tabId, title, text, buttons) {
+async function firePopup(title, text, buttons) {
   // build script which fires alert
   var winId = "";
   var result = false;
@@ -281,7 +283,6 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
         } catch (err) {
           // called non blocking
           firePopup(
-            tabId,
             "Error in RegExp",
             "Ignoring invalid regular expression:<br><br>" +
               "identity:  " +
@@ -290,7 +291,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
               "regexp:  " +
               needles[idx].replace(/\\/g, "\\\\") +
               "<br><br>" +
-              "Please adjust in the Correct Identity " + printout + " settings!",
+              "Please adjust in the Correct Identity " + warnText + " settings!",
             BUTTON_OK
           );
           needles[idx] = ""; // Skip this alias
@@ -306,7 +307,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
   return isMatch;
 }
 
-function getIdentity(tabId, identityId, recipientsList, replyHint) {
+function getIdentity(identityId, recipientsList, replyHint) {
   var changed = false;
   var newIdentityId = "";
   var aliasedId = "";
@@ -319,9 +320,9 @@ function getIdentity(tabId, identityId, recipientsList, replyHint) {
 
   if (perAccountSettings !== undefined) {
     switch (perAccountSettings.identityMechanism) {
-      case 1:
-        explicitId = perAccountSettings.explicitIdentity;
-        break;
+    case 1:
+      explicitId = perAccountSettings.explicitIdentity;
+      break;
       // Room for more options in the future
     }
 
@@ -405,22 +406,21 @@ async function sendConfirm(tabId, identityId, recipients) {
   }
 
   return warnRecipients === "" ? true : firePopup(
-        tabId,
-        "Warning",
-        browser.i18n.getMessage("warning", [
-          accountsAndIdentities.identities[identityId].email,
-          warnRecipients,
-        ]),
-        BUTTON_OK | BUTTON_CANCEL
-      );
+    "Warning",
+    browser.i18n.getMessage("warning", [
+      accountsAndIdentities.identities[identityId].email,
+      warnRecipients,
+    ]),
+    BUTTON_OK | BUTTON_CANCEL
+  );
 }
 
-function checkComposeTab(tabId) {
-  messenger.compose.getComposeDetails(tabId).then((gcd) => {
+function checkComposeTab(tab) {
+  messenger.compose.getComposeDetails(tab.id).then((gcd) => {
     var replyHint = "";
     var changed = false;
     var recipientsList = [];
-    var entry = composeTabStatus[tabId];
+    var entry = composeTabStatus[tab.id];
     var remainingPollsForAcceptingReplyHint = -1;
     var identityId = "";
     var gcdRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
@@ -472,39 +472,36 @@ function checkComposeTab(tabId) {
     }
 
     // store status in global object
-    composeTabStatus[tabId] = {
-        identityId: identityId,
-        recipientsList: recipientsList,
-        // replyHint is not stored, we only handle it once after opening the compose window
-        remainingPollsForAcceptingReplyHint : remainingPollsForAcceptingReplyHint,
-      };
+    composeTabStatus[tab.id] = {
+      identityId: identityId,
+      recipientsList: recipientsList,
+      // replyHint is not stored, we only handle it once after opening the compose window
+      remainingPollsForAcceptingReplyHint : remainingPollsForAcceptingReplyHint,
+    };
 
     if (changed) {
-      // console.log("identityId", identityId, " recipientsList:", recipientsList, " replyHint:", replyHint);
-      handleComposeTabChanged(tabId, identityId, recipientsList, replyHint);
+      handleComposeTabChanged(tab.id, tab.windowId, identityId, recipientsList, replyHint);
     }
-  }, function(){/* errors are ignored */});
+  }, () => {/* errors are ignored */});
 }
 
-function checkComposeTabs() {
-  // try to find all tabs
-  var queryInfo = {};
-  messenger.tabs.query(queryInfo).then((tabs) => {
-    for (var i in tabs) {
-      checkComposeTab(tabs[i].id);
-    }
-  });
-}
-
-function handleComposeTabChanged(tabId, identityId, recipientsList, replyHint) {
-  var result = getIdentity(tabId, identityId, recipientsList, replyHint);
+function handleComposeTabChanged(tabId, windowId, identityId, recipientsList, replyHint) {
+  var result = getIdentity(identityId, recipientsList, replyHint);
   if (result.changed) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
     var details = {
-        identityId : result.newIdentityId,
+      identityId : result.newIdentityId,
     };
+
+    // changing identity makes focus jump to "to"
+    // so save focus before changing identity
+    browser.exp.saveCurrentFocus(windowId);
+
     messenger.compose.setComposeDetails(tabId, details);
+
+    // ... and restore focus
+    browser.exp.restoreCurrentFocus(windowId);
   }
 }
 
@@ -567,23 +564,39 @@ function handleMessage(request, sender, sendResponse) {
 
 function onReplyHintCaptured(hint, origIdentityId, composeType, subject) {
   var replyHint = {
-      hint : hint,
-      origIdentityId : origIdentityId,
-      composeType : composeType,
-      subject : subject
+    hint : hint,
+    origIdentityId : origIdentityId,
+    composeType : composeType,
+    subject : subject
   };
   replyHints.push(replyHint);
 }
 
-initSettings();
+function onRecipientsChanged(tabId) {
+  browser.tabs.get(tabId).then( tab => {
+    checkComposeTab(tab);
+  });
+}
 
-// start compose tab polling
-setInterval(checkComposeTabs, 1000);
+function onTabCreated(tab) {
+  messenger.compose.getComposeDetails(tab.id).then((gcd) => {
+    // composeDetails exist -> we are a compose window
+    browser.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
+    checkComposeTab(tab);
+  }, () => {/* errors are ignored */});
+}
+
+
+initSettings();
 
 browser.exp.installGetIdentityForHeaderHook();
 browser.exp.onReplyHintCaptured.addListener(onReplyHintCaptured);
+browser.exp.onRecipientsChanged.addListener(onRecipientsChanged);
+
+browser.tabs.onCreated.addListener(onTabCreated);
 
 browser.runtime.onMessage.addListener(handleMessage);
+
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
 

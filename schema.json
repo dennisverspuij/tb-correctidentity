@@ -15,6 +15,46 @@
         "type": "function",
         "async": true,
         "parameters": []
+      },
+      {
+        "name": "installOnRecipientsChangedHook",
+        "description": "install Hook",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "tabId",
+            "type": "integer"
+          },
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "saveCurrentFocus",
+        "description": "Find focus of current compose window",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "restoreCurrentFocus",
+        "description": "Restore focus to saved element",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
       }
     ],
     "events": [
@@ -37,6 +77,16 @@
           {
             "name": "subject",
             "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "onRecipientsChanged",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "tabId",
+            "type": "integer"
           }
         ]
       }
