@@ -368,7 +368,7 @@ function getIdentity(identityId, recipientsList, replyHint) {
 
   // prioritized selection of resulting identity
   if (replyId !== "") {
-    // return the matched identity  from the replyHint
+    // return the matched identity from the replyHint
     newIdentityId = replyId;
     changed = true;
   } else if (aliasedId !== "") {

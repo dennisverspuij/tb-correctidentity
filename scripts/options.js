@@ -4,7 +4,14 @@ var guiState;
 
 function notifySettingsChanged() {
   // send update to background script
-  browser.runtime.sendMessage({
+
+  // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
+  // browser.runtime.sendMessage({
+  //   msgType: "SET_SETTINGS_REQ",
+  //   settings: settings,
+  //   guiState: guiState,
+  // });
+  browser.extension.getBackgroundPage().handleMessage({
     msgType: "SET_SETTINGS_REQ",
     settings: settings,
     guiState: guiState,
@@ -302,8 +309,10 @@ function getSettings() {
     }
   }
 
-  const sending = browser.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
-  sending.then(handleResponse);
+  // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
+  // var sending = browser.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
+  // sending.then(handleResponse, (err) => {console.log("err:", err)});
+  browser.extension.getBackgroundPage().handleMessage({ msgType: "GET_SETTINGS_REQ" }, browser.extension, handleResponse)
 }
 
 function onLoad(event) {
