@@ -72,7 +72,7 @@ function fillExplicitSelector(explicitIdentityId) {
   for (var i in accountsAndIdentities.identities) {
     let opt = document.createElement("option");
     opt.value = i;
-    opt.innerHTML = accountsAndIdentities.identities[i].prettyName;
+    opt.innerHTML = accountsAndIdentities.identities[i].prettyNameHtml;
     explicitSelector.appendChild(opt);
     if (i == explicitIdentityId) {
       selectedIndex = index;
@@ -157,12 +157,15 @@ function identityMechanismChanged(result) {
 
   // Update the form
   var explicitSelector = document.getElementById("explicitSelector");
-  explicitSelector.disabled = result.target.value != 1;
+  explicitSelector.disabled = (result.target.value != 1);
   if (explicitSelector.disabled) {
     // If not selected, restore the explicit identity to default identity for the account
     perAccountSettings.explicitIdentity =
-      accountsAndIdentities.accounts[guiState.currentAccountId].defaultIdentity;
+      accountsAndIdentities.accounts[guiState.currentAccountId].defaultIdentityId;
     explicitSelector.selectedIndex = perAccountSettings.index;
+  } else {
+    // sync with gui display
+    perAccountSettings.explicitIdentity = document.getElementById("explicitSelector").target.value;
   }
 
   notifySettingsChanged();
@@ -263,6 +266,9 @@ function getSettings() {
 
       // fill settings into GUI
       var accountSelector = document.getElementById("accountSelector");
+      while (accountSelector.firstChild) {
+        accountSelector.removeChild(accountSelector.firstChild);
+      }
       for (let i in accountsAndIdentities.accounts) {
         let opt = document.createElement("option");
         opt.value = i;
@@ -279,16 +285,24 @@ function getSettings() {
       var selectedDetectionIdentity = document.getElementById(
         "selectedDetectionIdentity"
       );
+      while (selectedDetectionIdentity.firstChild) {
+        selectedDetectionIdentity.removeChild(selectedDetectionIdentity.firstChild);
+      }
+
       var selectedSafetyIdentity = document.getElementById(
         "selectedSafetyIdentity"
       );
+      while (selectedSafetyIdentity.firstChild) {
+        selectedSafetyIdentity.removeChild(selectedSafetyIdentity.firstChild);
+      }
+
       var detectionIndex = 0;
       var safetyIndex = 0;
       var index = 0;
       for (let i in accountsAndIdentities.identities) {
         let opt = document.createElement("option");
         opt.value = i;
-        opt.innerHTML = accountsAndIdentities.identities[i].prettyName;
+        opt.innerHTML = accountsAndIdentities.identities[i].prettyNameHtml;
         selectedDetectionIdentity.appendChild(opt.cloneNode(true)); // we need a copy not a reference
         selectedSafetyIdentity.appendChild(opt);
         if (guiState.currentDetectionIdentity == i) {
@@ -312,7 +326,7 @@ function getSettings() {
   // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
   // var sending = browser.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
   // sending.then(handleResponse, (err) => {console.log("err:", err)});
-  browser.extension.getBackgroundPage().handleMessage({ msgType: "GET_SETTINGS_REQ" }, browser.extension, handleResponse)
+  browser.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" }, browser.extension, handleResponse)
 }
 
 function onLoad(event) {

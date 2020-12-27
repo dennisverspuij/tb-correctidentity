@@ -25,9 +25,9 @@ function onButtonClicked(event) {
 function onLoad(event) {
   const queryString = window.location.search;
   var searchParams = new URLSearchParams(queryString);
-  text = searchParams.get("string");
-  title = searchParams.get("title");
-  buttons = searchParams.get("buttons");
+  var text = searchParams.get("string");
+  var title = searchParams.get("title");
+  var buttons = searchParams.get("buttons");
 
   document.getElementById("dialogText").innerHTML = text;
   document.title = title;

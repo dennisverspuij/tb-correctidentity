@@ -9,24 +9,10 @@ var guiState = {
   currentSafetyIdentity: "",
 };
 
-/*
-var perAccountSettings = {
-    identityMechanism : 0,
-    explicitIdentity : "",
-    replyFromRecipient : false,
-};
-
-
-var perIdentitySettings = {
-      detectable: true,
-      detectionAliases: "",
-      warningAliases: "",
-};
- */
-
 var settings = {
-  accountSettings: {},
-  identitySettings: {},
+  accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
+  identitySettings: {}, // ke<: identityId; values: detectable, detectionAliases, warningAliases
+  // migrate   ... property will be dynamically added if old prefs were migrated
 };
 
 var composeWindowFocus = {};  // key: windowId; store element of compose window which has current focus
