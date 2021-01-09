@@ -72,7 +72,7 @@
     "message": "554"
   },
   "warning": {
-    "message": "WARNING: You are about to use identity $P1$ to send a message to:<br>$P2$<br><br>Continue?",
+    "message": "WARNING: You are about to use identity $P1$ to send a message to:\n$P2$\n\nContinue?",
     "placeholders": {
       "P1": {
         "content": "$1"

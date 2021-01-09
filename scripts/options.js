@@ -58,34 +58,39 @@ function getPerIdentitySettingsOrDefault(identityId) {
   return perIdentitySettings;
 }
 
-function fillExplicitSelector(explicitIdentityId) {
+function fillSelectorList(elementId, toBeSelectedIdentityId) {
   // fill explicitId list for that account
-  var explicitSelector = document.getElementById("explicitSelector");
+  var selector = document.getElementById(elementId);
 
   // remove all items
-  while (explicitSelector.options.length) {
-    explicitSelector.remove(0);
+  while (selector.options.length) {
+    selector.remove(0);
   }
 
   let index = 0;
-  let selectedIndex = 0;
   for (var i in accountsAndIdentities.identities) {
     let opt = document.createElement("option");
+    let label1 = document.createElement("label");
+    label1.className = "menu-iconic-text";
+    label1.textContent = accountsAndIdentities.identities[i].prettyName + " ";
+    let label2 = document.createElement("label");
+    label2.className = "menu-description";
+    label2.textContent = accountsAndIdentities.accounts[accountsAndIdentities.identities[i].accountId].prettyName;
     opt.value = i;
-    opt.innerHTML = accountsAndIdentities.identities[i].prettyNameHtml;
-    explicitSelector.appendChild(opt);
-    if (i == explicitIdentityId) {
-      selectedIndex = index;
+    opt.appendChild(label1);
+    opt.appendChild(label2);
+    selector.appendChild(opt);
+    if (i == toBeSelectedIdentityId) {
+      selector.selectedIndex = index;
     }
     index++;
   }
-  document.getElementById("explicitSelector").selectedIndex = selectedIndex;
 }
 
 function updateGuiAccountChanged(accountId) {
   var perAccountSettings = getPerAccountSettingsOrDefault(accountId);
 
-  fillExplicitSelector(perAccountSettings.explicitIdentity);
+  fillSelectorList("explicitSelector", perAccountSettings.explicitIdentity);
 
   // select radio buttons for identityMechanism
   document.getElementById("defaultIdentity").checked =
@@ -272,7 +277,7 @@ function getSettings() {
       for (let i in accountsAndIdentities.accounts) {
         let opt = document.createElement("option");
         opt.value = i;
-        opt.innerHTML = accountsAndIdentities.accounts[i].prettyName;
+        opt.textContent = accountsAndIdentities.accounts[i].prettyName;
         accountSelector.appendChild(opt);
       }
       // Pick the most recently selected account
@@ -281,41 +286,9 @@ function getSettings() {
 
       updateGuiAccountChanged(guiState.currentAccountId);
 
-      // fill "Detection" and "Safety" section
-      var selectedDetectionIdentity = document.getElementById(
-        "selectedDetectionIdentity"
-      );
-      while (selectedDetectionIdentity.firstChild) {
-        selectedDetectionIdentity.removeChild(selectedDetectionIdentity.firstChild);
-      }
+      fillSelectorList("selectedDetectionIdentity", guiState.currentDetectionIdentity);
+      fillSelectorList("selectedSafetyIdentity", guiState.currentSafetyIdentity);
 
-      var selectedSafetyIdentity = document.getElementById(
-        "selectedSafetyIdentity"
-      );
-      while (selectedSafetyIdentity.firstChild) {
-        selectedSafetyIdentity.removeChild(selectedSafetyIdentity.firstChild);
-      }
-
-      var detectionIndex = 0;
-      var safetyIndex = 0;
-      var index = 0;
-      for (let i in accountsAndIdentities.identities) {
-        let opt = document.createElement("option");
-        opt.value = i;
-        opt.innerHTML = accountsAndIdentities.identities[i].prettyNameHtml;
-        selectedDetectionIdentity.appendChild(opt.cloneNode(true)); // we need a copy not a reference
-        selectedSafetyIdentity.appendChild(opt);
-        if (guiState.currentDetectionIdentity == i) {
-          detectionIndex = index;
-        }
-        if (guiState.currentSafetyIdentity == i) {
-          safetyIndex = index;
-        }
-        index++;
-      }
-
-      selectedDetectionIdentity.selectedIndex = detectionIndex;
-      selectedSafetyIdentity.selectedIndex = safetyIndex;
       updateGuiDetectionIdentityChanged(guiState.currentDetectionIdentity);
       updateGuiSafetyIdentityChanged(guiState.currentSafetyIdentity);
 

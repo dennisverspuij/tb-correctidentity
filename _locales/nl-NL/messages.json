@@ -72,7 +72,7 @@
     "message": "554"
   },
   "warning": {
-    "message": "LET OP: Je staat op het punt met identiteit $P1$ een bericht te sturen naar:<br>$P2$<br><br>Doorgaan?",
+    "message": "LET OP: Je staat op het punt met identiteit $P1$ een bericht te sturen naar:\n$P2$\n\nDoorgaan?",
     "placeholders": {
       "P1": {
         "content": "$1"

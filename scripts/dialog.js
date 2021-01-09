@@ -29,7 +29,9 @@ function onLoad(event) {
   var title = searchParams.get("title");
   var buttons = searchParams.get("buttons");
 
-  document.getElementById("dialogText").innerHTML = text;
+  var dialogText = document.getElementById("dialogText");
+  dialogText.setAttribute('style', 'white-space: pre-line;');
+  dialogText.textContent = text;
   document.title = title;
 
   // show requested buttons

@@ -1,6 +1,6 @@
 var accountsAndIdentities = {
   accounts: {}, // key:id, values: prettyName, index, defaultIdentityId, type
-  identities: {}, // key:id, values: email, accountId, prettyNameHtml, prettyNameDebug
+  identities: {}, // key:id, values: email, accountId, prettyName, prettyNameDebug
 };
 
 var guiState = {
@@ -200,16 +200,13 @@ function initSettings() {
 
         for (var j in arrayMailAccounts[i].identities) {
           // append account name in italics and in gray as in compose window
-          var prettyNameHtml = arrayMailAccounts[i].identities[j].name +
-                           " &lt;"+ arrayMailAccounts[i].identities[j].email + "&gt; " +
-                           "<span style=\"color:#808080\"><i>" +
-                           arrayMailAccounts[i].name +
-                           "</i></span>";
+          var prettyName = arrayMailAccounts[i].identities[j].name +
+                           " <"+ arrayMailAccounts[i].identities[j].email + ">";
           var prettyNameDebug = arrayMailAccounts[i].identities[j].email +
                                 " (account: " + arrayMailAccounts[i].name + ")";
           accountsAndIdentities.identities[arrayMailAccounts[i].identities[j].id] = {
             email: arrayMailAccounts[i].identities[j].email,
-            prettyNameHtml: prettyNameHtml,
+            prettyName: prettyName,
             prettyNameDebug : prettyNameDebug,
             accountId: arrayMailAccounts[i].id,
           };
@@ -347,13 +344,13 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
           // called non blocking
           firePopup(
             "Error in RegExp",
-            "Ignoring invalid regular expression:<br><br>" +
+            "Ignoring invalid regular expression:\n\n" +
               "identity:  " +
               accountsAndIdentities.identities[warnIdentityId].email +
-              "<br>" +
+              "\n" +
               "regexp:  " +
               needles[idx].replace(/\\/g, "\\\\") +
-              "<br><br>" +
+              "\n\n" +
               "Please adjust in the Correct Identity " + warnText + " settings!",
             BUTTON_OK
           );
@@ -470,7 +467,7 @@ async function sendConfirm(tabId, identityId, recipients) {
     var recipient = recipients[idxRecipient];
     var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety");
     if (isMatch) {
-      warnRecipients += "<br>" + recipient;
+      warnRecipients += "\n" + recipient;
     }
   }
 
@@ -605,7 +602,11 @@ function handleMessage(request, sender, sendResponse) {
   } else if (request.msgType === "CLOSE_WINDOW") {
     dialogResults[request.windowId] = request.result;
     browser.windows.remove(request.windowId);
+  } else if (request.msgType === "NEW_COMPOSE_TAB_READY") {
+    onComposeTabReady(sender.tab);
   } else {
+    console.log("UNDEFINED_MSG_TYPE:", request.msgType);
+    console.log("sender:", sender);
     sendResponse({ msgType: "UNDEFINED_MSG_TYPE" });
   }
 }
@@ -645,12 +646,9 @@ function onRecipientsChanged(tabId) {
   });
 }
 
-function onTabCreated(tab) {
-  messenger.compose.getComposeDetails(tab.id).then((gcd) => {
-    // composeDetails exist -> we are a compose window
-    browser.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
-    checkComposeTab(tab);
-  }, () => {/* errors are ignored */});
+function onComposeTabReady(tab) {
+  browser.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
+  checkComposeTab(tab);
 }
 
 initSettings();
@@ -659,12 +657,11 @@ browser.exp.installGetIdentityForHeaderHook();
 browser.exp.onReplyHintCaptured.addListener(onReplyHintCaptured);
 browser.exp.onRecipientsChanged.addListener(onRecipientsChanged);
 
-browser.tabs.onCreated.addListener(onTabCreated);
-
 browser.runtime.onMessage.addListener(handleMessage);
 
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
+messenger.composeScripts.register({ js : [{file: "scripts/compose.js"}] });
 
 // to test empty storage uncomment next line once
 // browser.storage.sync.clear();

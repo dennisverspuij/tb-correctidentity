@@ -72,7 +72,7 @@
     "message": "554"
   },
   "warning": {
-    "message": "ACHTUNG: Sie sind dabei mit der Identität $P1$ eine Nachricht zu senden an:<br>$P2$<br><br>Weitergehen?",
+    "message": "ACHTUNG: Sie sind dabei mit der Identität $P1$ eine Nachricht zu senden an:\n$P2$\n\nFortfahren?",
     "placeholders": {
       "P1": {
         "content": "$1"
