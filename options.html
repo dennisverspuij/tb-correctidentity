@@ -59,59 +59,59 @@
 
 		<div class="box">
 			<form>
-				__MSG_CorrectIdentity.accountSelector__ <select name="AccountSelector" id="accountSelector">
+				<label for="accountSelector" id="accountLabel">__MSG_CorrectIdentity.accountSelector__ </label>
+				<select name="AccountSelector" id="accountSelector" role="listbox">
 				</select>
 			</form>
 		</div>
 
-		<div class="box">
-			<br>__MSG_CorrectIdentity.accountsDescription__<br> <input type="radio"
-				id="defaultIdentity" name="identityMechanism" value=0
-				checked="checked"> <label for="defaultIdentity">__MSG_CorrectIdentity.mechanismDefault__</label><br> <input type="radio"
-				id="explicitIdentity" name="identityMechanism" value=1> <label
-				for="explicitIdentity">__MSG_CorrectIdentity.mechanismExplicit__</label> <select name="ExplicitSelector"
-				id="explicitSelector">
+		<div class="box" id="identityMechanismGroup" role="radiogroup" aria-describedby="identityMechanismGroupLabel">
+			<br><label for="identityMechanismGroup" id="identityMechanismGroupLabel">__MSG_CorrectIdentity.accountsDescription__</label><br>
+			<input type="radio" id="defaultIdentity" name="identityMechanism" value=0 checked="checked">
+			<label for="defaultIdentity" id="defaultIdentityLabel">__MSG_CorrectIdentity.mechanismDefault__</label><br>
+			<input type="radio" id="explicitIdentity" name="identityMechanism" value=1 aria-roledescription="identity from list">
+			<label for="explicitIdentity" id="explicitSelectorLabel">__MSG_CorrectIdentity.mechanismExplicit__</label>
+			<select name="ExplicitSelector" id="explicitSelector" label="list box" role="listbox" aria-labelledby="explicitSelectorLabel">
 			</select>
 		</div>
 
 		<div class="box">
-			<br>__MSG_CorrectIdentity.replyDescription__<br> <input type="checkbox"
+			<br><span id="replyDescription">__MSG_CorrectIdentity.replyDescription__</span><br>
+			<input type="checkbox"
 				id="replyFromRecipient" name="replyFromRecipient"
-				value="replyFromRecipient"> <label for="replyFromRecipient">__MSG_CorrectIdentity.replyFromRecipient__</label><br>
+				value="replyFromRecipient" aria-labelledby="replyDescription replyFromRecipientLabel"> <label for="replyFromRecipient" id="replyFromRecipientLabel">__MSG_CorrectIdentity.replyFromRecipient__</label><br>
 		</div>
  	</fieldset>
 	<fieldset>
 		<legend>__MSG_CorrectIdentity.detectionCaption__</legend>
-		__MSG_CorrectIdentity.detectionDescription__
-		<form>
-			__MSG_CorrectIdentity.identitySelector__ <select name="SelectedDetectionIdentity"
-				id="selectedDetectionIdentity">
+		<span id="detectionDescription">__MSG_CorrectIdentity.detectionDescription__</span>
+		<form aria-describedby="detectionDescription">
+			<label for="selectedDetectionIdentity" id="identityLabel">__MSG_CorrectIdentity.identitySelector__ </label>
+			<select name="SelectedDetectionIdentity" id="selectedDetectionIdentity" role="listbox">
 			</select>
 		</form>
 		<div class="box">
 			<input type="checkbox" id="detectable" name="detectable"
 				value="detectable"> <label for="detectable">__MSG_CorrectIdentity.identityDetectable__</label><br>
 		</div>
-		__MSG_CorrectIdentity.aliasesDescription__
+		<label for="detectionAliases">__MSG_CorrectIdentity.aliasesDescription__</label>
 		<div class="tooltip">
-		<textarea id="detectionAliases" name="detectionAliases" rows="4"
-			cols="80"></textarea>
+			<textarea id="detectionAliases" name="detectionAliases" rows="4" cols="80"></textarea>
 			<span>__MSG_CorrectIdentity.aliasesTooltip__</span>
 		</div>
 	</fieldset>
 
 	<fieldset>
 		<legend>__MSG_CorrectIdentity.safetyCaption__</legend>
-		__MSG_CorrectIdentity.safetyDescription__
-		<form>
-			__MSG_CorrectIdentity.identitySelector__ <select name="SelectedSafetyIdentity"
-				id="selectedSafetyIdentity">
+		<span id="safetyDescription">__MSG_CorrectIdentity.safetyDescription__</span>
+		<form aria-describedby="safetyDescription">
+			<label for="selectedSafetyIdentity">__MSG_CorrectIdentity.identitySelector__ </label>
+			<select name="SelectedSafetyIdentity" id="selectedSafetyIdentity" role="listbox">
 			</select>
 		</form>
-		__MSG_CorrectIdentity.warningAliasesDescription__
+		<label for="warningAliases">__MSG_CorrectIdentity.warningAliasesDescription__</label>
 		<div class="tooltip">
-		<textarea id="warningAliases" name="warningAliases" rows="4"
-			cols="80"></textarea>
+			<textarea id="warningAliases" name="warningAliases" rows="4" cols="80"></textarea>
 			<span>__MSG_CorrectIdentity.warningAliasesTooltip__</span>
 		</div>
 	</fieldset>
