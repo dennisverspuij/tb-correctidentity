@@ -1,0 +1,95 @@
+[
+  {
+    "namespace": "exp",
+    "functions": [
+      {
+        "name": "migratePrefs",
+        "description": "Migrate user preferences from pref.js to storage.sync",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "installGetIdentityForHeaderHook",
+        "description": "install Hook",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      },
+      {
+        "name": "installOnRecipientsChangedHook",
+        "description": "install Hook",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "tabId",
+            "type": "integer"
+          },
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "saveCurrentFocus",
+        "description": "Find focus of current compose window",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "restoreCurrentFocus",
+        "description": "Restore focus to saved element",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "name": "onReplyHintCaptured",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "hint",
+            "type": "string"
+          },
+          {
+            "name": "origIdentityId",
+            "type": "string"
+          },
+          {
+            "name": "composeType",
+            "type": "integer"
+          },
+          {
+            "name": "subject",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "onRecipientsChanged",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "tabId",
+            "type": "integer"
+          }
+        ]
+      }
+    ]
+  }
+]

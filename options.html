@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Correct Identity</title>
+<script src="scripts/i18n.js"></script>
+<script src="scripts/options.js"></script>
+<style type="text/css">
+.tooltip {
+	text-decoration: none;
+	position: relative;
+}
+
+.tooltip span {
+	display: none;
+}
+
+.tooltip:hover span {
+	width: 75%;
+	left: 20%;
+	bottom: 100%;
+	background-color: orange;
+	padding: 5px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: black;
+	display: block;
+	position: absolute;
+	overflow: hidden;
+}
+
+.invisible_box {
+	overflow: hidden;
+	visibility: hidden;
+	height: 0;
+	width: 0;
+}
+
+<!-- copied from Thunderbird sources: suite/themes/modern/global/menu.css -->
+.menu-iconic-text {
+	margin-top: 0px !important;
+	margin-bottom: 0px !important;
+	margin-inline-start: 0px !important;
+	margin-inline-end: 2px !important;
+	color: inherit;
+}
+
+.menu-description {
+	font-style: italic;
+	color: #8C99AB;
+	margin-inline-start: 1ex !important;
+}
+</style>
+</head>
+<body>
+<!-- 	<header>__MSG_CorrectIdentity.title__</header> -->
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.accountsCaption__</legend>
+
+		<div class="box">
+			<form>
+				<label for="accountSelector" id="accountLabel">__MSG_CorrectIdentity.accountSelector__ </label>
+				<select name="AccountSelector" id="accountSelector" role="listbox">
+				</select>
+			</form>
+		</div>
+
+		<div class="box" id="identityMechanismGroup" role="radiogroup" aria-describedby="identityMechanismGroupLabel">
+			<br><label for="identityMechanismGroup" id="identityMechanismGroupLabel">__MSG_CorrectIdentity.accountsDescription__</label><br>
+			<input type="radio" id="defaultIdentity" name="identityMechanism" value=0 checked="checked">
+			<label for="defaultIdentity" id="defaultIdentityLabel">__MSG_CorrectIdentity.mechanismDefault__</label><br>
+			<input type="radio" id="explicitIdentity" name="identityMechanism" value=1 aria-roledescription="identity from list">
+			<label for="explicitIdentity" id="explicitSelectorLabel">__MSG_CorrectIdentity.mechanismExplicit__</label>
+			<select name="ExplicitSelector" id="explicitSelector" label="list box" role="listbox" aria-labelledby="explicitSelectorLabel">
+			</select>
+		</div>
+
+		<div class="box">
+			<br><span id="replyDescription">__MSG_CorrectIdentity.replyDescription__</span><br>
+			<input type="checkbox"
+				id="replyFromRecipient" name="replyFromRecipient"
+				value="replyFromRecipient" aria-labelledby="replyDescription replyFromRecipientLabel"> <label for="replyFromRecipient" id="replyFromRecipientLabel">__MSG_CorrectIdentity.replyFromRecipient__</label><br>
+		</div>
+ 	</fieldset>
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.detectionCaption__</legend>
+		<span id="detectionDescription">__MSG_CorrectIdentity.detectionDescription__</span>
+		<form aria-describedby="detectionDescription">
+			<label for="selectedDetectionIdentity" id="identityLabel">__MSG_CorrectIdentity.identitySelector__ </label>
+			<select name="SelectedDetectionIdentity" id="selectedDetectionIdentity" role="listbox">
+			</select>
+		</form>
+		<div class="box">
+			<input type="checkbox" id="detectable" name="detectable"
+				value="detectable"> <label for="detectable">__MSG_CorrectIdentity.identityDetectable__</label><br>
+		</div>
+		<label for="detectionAliases">__MSG_CorrectIdentity.aliasesDescription__</label>
+		<div class="tooltip">
+			<textarea id="detectionAliases" name="detectionAliases" rows="4" cols="80"></textarea>
+			<span>__MSG_CorrectIdentity.aliasesTooltip__</span>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<legend>__MSG_CorrectIdentity.safetyCaption__</legend>
+		<span id="safetyDescription">__MSG_CorrectIdentity.safetyDescription__</span>
+		<form aria-describedby="safetyDescription">
+			<label for="selectedSafetyIdentity">__MSG_CorrectIdentity.identitySelector__ </label>
+			<select name="SelectedSafetyIdentity" id="selectedSafetyIdentity" role="listbox">
+			</select>
+		</form>
+		<label for="warningAliases">__MSG_CorrectIdentity.warningAliasesDescription__</label>
+		<div class="tooltip">
+			<textarea id="warningAliases" name="warningAliases" rows="4" cols="80"></textarea>
+			<span>__MSG_CorrectIdentity.warningAliasesTooltip__</span>
+		</div>
+	</fieldset>
+</body>
+</html>
