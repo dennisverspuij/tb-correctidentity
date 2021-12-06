@@ -48,6 +48,12 @@ Note that you have to generate a .xpi file *with the same name* whenever you cha
 In Menu /Extras/ → /Development Tools/ you'll also find a dev console and more debugging tools.
 
 
+Acknowledgment
+--------------
+
+Many thanks to @dennisverspuij, the original author , and to @ldreier who ported this add-on to Thunderbird 67!
+
+
 Trivia
 ------
 
