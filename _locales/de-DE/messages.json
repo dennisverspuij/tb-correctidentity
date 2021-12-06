@@ -9,10 +9,10 @@
     "message": "Sie können für jedes Konto eine Identität auswählen, die standardmäßig beim Verfassen einer neuen Nachricht verwendet wird."
   },
   "CorrectIdentity.aliasesDescription": {
-    "message": "Geben Sie Aliases, Domains oder einfach nur Wörter an, die, wenn Sie in der Empfängerliste gefunden werden, einer bestimmten Identität zugeordnet werden. Aliases werden benutzt, wenn die Erkennung bei allen aktivierten Identitäten fehlgeschlagen ist."
+    "message": "Geben Sie Suchwörter oder Domains ein. Wenn diese in der Empfängerliste gefunden werden, wird zur entsprechenden Identität gewechselt. Suchwörter werden nur benutzt, wenn die Einstellungen \"Auswahl\" oben kein Ergebnis liefern."
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "Aliases sind schreibungsunabhängig und sollten jeweils durch eine neue Zeile getrennt werden. Sie können reguläre Ausdrücke innerhalb von Vorwärtsschrägstrichen verwenden (/.../)."
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
   },
   "CorrectIdentity.captionDescription": {
     "message": "Dennis Verspuij"
@@ -63,10 +63,10 @@
     "message": "Correct Identity Optionen"
   },
   "CorrectIdentity.warningAliasesDescription": {
-    "message": "Sie werden gewarnt werden beim senden an Empfänger deren Namen und/oder Adressen übereinstimmen mit einer der folgenden Suchterme."
+    "message": "Sie werden gewarnt werden beim Senden an Empfänger deren Namen und/oder Adressen übereinstimmen mit einem der folgenden Suchwörter."
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "Suchterme sind schreibungsunabhängig und sollten jeweils durch eine neue Zeile getrennt werden. Sie können reguläre Ausdrücke innerhalb von Vorwärtsschrägstrichen verwenden (/.../)."
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
   },
   "CorrectIdentity.width": {
     "message": "554"
