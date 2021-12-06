@@ -328,45 +328,44 @@ async function firePopup(title, text, buttons) {
 }
 
 function patternSearch(haystack, needles, warnIdentityId, warnText) {
-  var isMatch = false;
-  for (var idx in needles) {
-    if (needles[idx] !== "") {
-      // checking alias
-      var match = /^\/(.*)\/$/.exec(needles[idx]);
-      if (match) {
-        // maybe: we have a RegExp
-        try {
-          if (haystack.match(new RegExp(RegExp.$1, "i"))) {
-            isMatch = true;
-            break;
-          }
-        } catch (err) {
-          // called non blocking
-          firePopup(
-            "Error in RegExp",
-            "Ignoring invalid regular expression:\n\n" +
-              "identity:  " +
-              accountsAndIdentities.identities[warnIdentityId].email +
-              "\n" +
-              "regexp:  " +
-              needles[idx].replace(/\\/g, "\\\\") +
-              "\n\n" +
-              "Please adjust in the Correct Identity " + warnText + " settings!",
-            BUTTON_OK
-          );
-          needles[idx] = ""; // Skip this alias
+  for (let i in needles) {
+    let needle = needles[i];
+    // check search terms
+    if (needle.match(/^\s*$/)) {
+      continue; // skip empty lines
+    }
+    let isRegex = needle.match(/^\s*\/(.*)\/\s*$/)
+    if (isRegex) {
+      // maybe we have a RegExp
+      try {
+        const regex = new RegExp(isRegex[1], 'i');
+        if (haystack.match(regex)) {
+          return true;
         }
-      } else {
-        if (haystack.indexOf(needles[idx]) >= 0) {
-          isMatch = true;
-          break;
-        }
+      } catch (err) {
+        // called non-blocking
+        firePopup(
+          "Error in RegExp",
+          "Ignoring invalid regular expression:\n\n" +
+            "identity:  " +
+            accountsAndIdentities.identities[warnIdentityId].email +
+            "\n" +
+            "regexp:  " +
+            needle.replace(/\\/g, "\\\\") +
+            "\n\n" +
+            "Please adjust in the Correct Identity " + warnText + " settings!",
+          BUTTON_OK
+        );
       }
+    } else if (haystack.toLowerCase().indexOf(needle) >= 0) {
+      return true;
     }
   }
-  return isMatch;
+  return false;
 }
 
+// Compute identity based on recipientsList, explicitIdentity,
+// replyFromRecipient, and detectionAliases.
 function getIdentity(identityId, recipientsList, replyHint) {
   var newIdentityId = identityId;
   var aliasedId = "";
@@ -395,14 +394,15 @@ function getIdentity(identityId, recipientsList, replyHint) {
       if (replyHint !== "") {
         replyHint = replyHint.toLowerCase();
         var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
-        if (!((identityEmail.indexOf("@") != -1) && (replyHint.indexOf(identityEmail) >= 0))) {
+        console.log('this is identityEmail: ' + identityEmail);
+        if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
           // the current identity email (=sender) is not in the replyHint
           // so check if we find a match matching identity
           for (let idxIdentity in settings.identitySettings) {
             let perIdentitySettings = settings.identitySettings[idxIdentity];
             var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
             if (perIdentitySettings.detectable) {
-              if ((curIdentityEmail.indexOf("@") != -1) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
+              if ((curIdentityEmail.indexOf("@") >= 0) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
                 // we found an identity that was mentioned in the hint
                 replyId = idxIdentity;
               }
@@ -412,7 +412,7 @@ function getIdentity(identityId, recipientsList, replyHint) {
       }
 
       // check for alias matches
-      var recipientsString = recipientsList.join(" ").toLowerCase();
+      var recipientsString = recipientsList.join(" ");
       if (replyHint !== "") {
         // if we have a replyHint, search also for replyHint
         recipientsString = recipientsString + " " + replyHint;
@@ -421,7 +421,7 @@ function getIdentity(identityId, recipientsList, replyHint) {
         let perIdentitySettings = settings.identitySettings[idxIdentity];
         if (perIdentitySettings.detectable) {
           let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-          var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection");
+          var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
           if (isMatch) {
             aliasedId = idxIdentity;
           }
@@ -465,14 +465,14 @@ async function sendConfirm(tabId, identityId, recipients) {
 
   for (var idxRecipient in recipients) {
     var recipient = recipients[idxRecipient];
-    var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety");
+    var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
     if (isMatch) {
       warnRecipients += "\n" + recipient;
     }
   }
 
   return warnRecipients === "" ? true : firePopup(
-    "Warning",
+    "Warning", // TODO: i18n
     browser.i18n.getMessage("warning", [
       accountsAndIdentities.identities[identityId].email,
       warnRecipients,

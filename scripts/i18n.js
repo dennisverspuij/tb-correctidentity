@@ -34,7 +34,7 @@ var i18n = {
 		}
 	},
 
-	updateDocument(options = {}) {		
+	updateDocument(options = {}) {
 		this.extension = null;
 		this.keyPrefix = "__MSG_";
 		if (options) {

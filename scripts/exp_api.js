@@ -11,7 +11,7 @@ var guiState = {
 
 var settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
-  identitySettings: {}, // ke<: identityId; values: detectable, detectionAliases, warningAliases
+  identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
 };
 
