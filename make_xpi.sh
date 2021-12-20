@@ -1,5 +1,6 @@
 #!/bin/bash
 
-NAME=$(git describe)
+NAME=$(git describe --tags)
 
-zip -FS -r correct_identity_$NAME.xpi LICENSE *.html scripts _locales schema.json manifest.json
+zip -FS -r correct_identity2_$NAME.xpi LICENSE *.html scripts _locales schema.json manifest.json
+

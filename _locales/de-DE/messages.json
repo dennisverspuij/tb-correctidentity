@@ -14,12 +14,6 @@
   "CorrectIdentity.aliasesTooltip": {
     "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
   },
-  "CorrectIdentity.captionDescription": {
-    "message": "Dennis Verspuij"
-  },
-  "CorrectIdentity.captionTitle": {
-    "message": "Correct Identity v1.4.7"
-  },
   "CorrectIdentity.detectionCaption": {
     "message": "Erkennung"
   },

@@ -14,12 +14,6 @@
   "CorrectIdentity.aliasesTooltip": {
     "message": "Les alias sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier des expressions régulières entre des barres obliques (/.../)."
   },
-  "CorrectIdentity.captionDescription": {
-    "message": "Dennis Verspuij"
-  },
-  "CorrectIdentity.captionTitle": {
-    "message": "Correct Identity v1.4.7"
-  },
   "CorrectIdentity.detectionCaption": {
     "message": "Détection"
   },

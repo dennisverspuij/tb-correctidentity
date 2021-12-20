@@ -1,13 +1,14 @@
 {
   "manifest_version": 2,
-  "name": "Correct Identity",
+  "name": "Correct Identity 2",
   "description": "Allows you to configure the identity that will be chosen upon composing mail.",
-  "version": "2.00.00",
-  "author": "Dennis Verspuij",
+  "version": "2.0.0",
+  "author": "L. Dreier",
   "applications": {
     "gecko": {
-      "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
-      "strict_min_version": "78.0"
+      "id": "{23347f97-114a-4448-8bff-8a20ef8d135e}",
+      "strict_min_version": "78.0",
+      "strict_max_version": "91.*"
     }
   },
   "default_locale": "en-US",

@@ -14,12 +14,6 @@
   "CorrectIdentity.aliasesTooltip": {
     "message": "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/…/)."
   },
-  "CorrectIdentity.captionDescription": {
-    "message": "Dennis Verspuij"
-  },
-  "CorrectIdentity.captionTitle": {
-    "message": "Correct Identity v1.4.7"
-  },
   "CorrectIdentity.detectionCaption": {
     "message": "Detection"
   },

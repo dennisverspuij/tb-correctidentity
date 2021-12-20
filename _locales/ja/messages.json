@@ -14,12 +14,6 @@
   "CorrectIdentity.aliasesTooltip": {
     "message": "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)"
   },
-  "CorrectIdentity.captionDescription": {
-    "message": "Dennis Verspuij"
-  },
-  "CorrectIdentity.captionTitle": {
-    "message": "Correct Identity v1.4.7"
-  },
   "CorrectIdentity.detectionCaption": {
     "message": "検出"
   },

@@ -14,12 +14,6 @@
   "CorrectIdentity.aliasesTooltip": {
     "message": "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../)."
   },
-  "CorrectIdentity.captionDescription": {
-    "message": "Dennis Verspuij"
-  },
-  "CorrectIdentity.captionTitle": {
-    "message": "Correct Identity v1.4.7"
-  },
   "CorrectIdentity.detectionCaption": {
     "message": "Detectie"
   },
