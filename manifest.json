@@ -1,12 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "Correct Identity 2",
+  "name": "Correct Identity",
   "description": "Allows you to configure the identity that will be chosen upon composing mail.",
-  "version": "2.0.0",
+  "version": "_VERSION_WILL_BE_FILLED_BY_MAKE_XPI_SCRIPT_",
   "author": "L. Dreier",
   "applications": {
     "gecko": {
-      "id": "{23347f97-114a-4448-8bff-8a20ef8d135e}",
+      "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
       "strict_min_version": "78.0",
       "strict_max_version": "91.*"
     }

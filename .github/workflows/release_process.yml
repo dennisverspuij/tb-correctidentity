@@ -38,6 +38,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          asset_path: ./correct_identity2_${{ github.ref_name }}.xpi
-          asset_name: correct_identity2_${{ github.ref_name }}.xpi
+          asset_path: ./correct_identity_${{ github.ref_name }}.xpi
+          asset_name: correct_identity_${{ github.ref_name }}.xpi
+          asset_content_type: application/x-xpinstall
+      - name: Upload Dev Asset
+        id: upload-dev-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./correct_identity_${{ github.ref_name }}_dev.xpi
+          asset_name: correct_identity_${{ github.ref_name }}_dev.xpi
           asset_content_type: application/x-xpinstall
