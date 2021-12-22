@@ -1,12 +1,12 @@
-Thunderbird Add-on "Correct Identity"
-=====================================
+Thunderbird Add-on "Correct Identity" (V2.x.x)
+==============================================
 
-This add-on works with Thunderbird versions > 67.
+This add-on now works with Thunderbird versions > 67.
 
-It's a **perfect alternative** to
+It's a **perfect alternative/continuation**
 
-- the [original Correct Identity](https://github.com/dennisverspuij/tb-correctidentity)
-- [Flexible Identity](https://github.com/snakelizzard/flexible_identity)
+- of the original (version 1.x.x) Correct Identity
+- to [Flexible Identity](https://github.com/snakelizzard/flexible_identity)
 
 which don't work anymore because Thunderbird switched to new Plugin API
 framework called [WebExtension](https://webextension-api.thunderbird.net/).
@@ -20,16 +20,22 @@ window:
 Installation
 ------------
 
-This add-on is **not** yet available at the [official Thunderbird add-on store](https://addons.thunderbird.net/).
+This add-on update is **not** yet available at the [official Thunderbird add-on store](https://addons.thunderbird.net/), but will be avialable soon on the update channel (https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/).
 
-Steps for installation:
-
+Steps for installation (local build):
 1. Download this repository
 2. In the repository folder, execute `./make_xpi.sh` to create an .xpi file
-3. Open Thunderbird, go to /Add-ons/, and click /Install add-on from file/
-4. Choose the .xpi file in the repository folder
+4. Open Thunderbird, go to /Add-ons/, and click /Install add-on from file/
+5. Choose the .xpi file in the repository folder
+
+The .xpi files come in two flavours:
+* correct_identity_vX.Y.Z.xpi is a version which could (in theory) be released to the [official Thunderbird add-on store](https://addons.thunderbird.net/)
+* correct_identity_vX.Y.Z_dev.xpi has the same content, but has no limitation on the highest supported Thunderbird version ("strict_max_version"). Use this version to test this add-on on newer Thunderbird versions not known at date of the add-on release. (Feedback welcome).
 
 The add-on can now be configured in the add-on manager tab.
+
+
+Alternatively you can directly download an .xpi file from the "Releases" section.
 
 
 Development & Contributing
@@ -59,5 +65,5 @@ Trivia
 
 Before this fork:
 
-[Here is the old version](https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/)
+[Here is the old version](https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/versions/1.4.7)
 of Correct Identity which doesn't work on Thunderbird versions > 67.
