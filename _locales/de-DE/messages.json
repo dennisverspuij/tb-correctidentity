@@ -1,0 +1,79 @@
+{
+  "CorrectIdentity.accountSelector": {
+    "message": "Konto"
+  },
+  "CorrectIdentity.accountsCaption": {
+    "message": "Auswahl"
+  },
+  "CorrectIdentity.accountsDescription": {
+    "message": "Sie können für jedes Konto eine Identität auswählen, die standardmäßig beim Verfassen einer neuen Nachricht verwendet wird."
+  },
+  "CorrectIdentity.aliasesDescription": {
+    "message": "Geben Sie Suchwörter oder Domains ein. Wenn diese in der Empfängerliste gefunden werden, wird zur entsprechenden Identität gewechselt. Suchwörter werden nur benutzt, wenn die Einstellungen \"Auswahl\" oben kein Ergebnis liefern."
+  },
+  "CorrectIdentity.aliasesTooltip": {
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
+  },
+  "CorrectIdentity.detectionCaption": {
+    "message": "Erkennung"
+  },
+  "CorrectIdentity.detectionDescription": {
+    "message": "Sie können für jede Identität angeben, ob und inwiefern diese in der Empfängerliste erfasst werden darf."
+  },
+  "CorrectIdentity.height": {
+    "message": "442"
+  },
+  "CorrectIdentity.identityDetectable": {
+    "message": "diese Identität darf erfasst werden"
+  },
+  "CorrectIdentity.identitySelector": {
+    "message": "Identität"
+  },
+  "CorrectIdentity.identitySelectorWidth": {
+    "message": "356"
+  },
+  "CorrectIdentity.mechanismDefault": {
+    "message": "die Standardidentität des Kontos verwenden"
+  },
+  "CorrectIdentity.mechanismDescription": {
+    "message": "Beim Verfassen einer Nachricht"
+  },
+  "CorrectIdentity.mechanismExplicit": {
+    "message": "verwende"
+  },
+  "CorrectIdentity.replyDescription": {
+    "message": "Wenn auf eine Nachricht geantwortet wird"
+  },
+  "CorrectIdentity.replyFromRecipient": {
+    "message": "versuchen, die Identität zu suchen und zu benutzen, die in der Empfängerliste erscheint"
+  },
+  "CorrectIdentity.safetyCaption": {
+    "message": "Sicherheit"
+  },
+  "CorrectIdentity.safetyDescription": {
+    "message": "Sie können jede Identität schützen von Senden an bestimmte Empfänger."
+  },
+  "CorrectIdentity.title": {
+    "message": "Correct Identity Optionen"
+  },
+  "CorrectIdentity.warningAliasesDescription": {
+    "message": "Sie werden gewarnt werden beim Senden an Empfänger deren Namen und/oder Adressen übereinstimmen mit einem der folgenden Suchwörter."
+  },
+  "CorrectIdentity.warningAliasesTooltip": {
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
+  },
+  "CorrectIdentity.width": {
+    "message": "554"
+  },
+  "warning": {
+    "message": "ACHTUNG: Sie sind dabei mit der Identität $P1$ eine Nachricht zu senden an:\n$P2$\n\nFortfahren?",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      },
+      "P2": {
+        "content": "$2"
+      }
+    }
+  }
+}

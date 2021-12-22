@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "Correct Identity",
+  "description": "Allows you to configure the identity that will be chosen upon composing mail.",
+  "version": "_VERSION_WILL_BE_FILLED_BY_MAKE_XPI_SCRIPT_",
+  "author": "L. Dreier",
+  "applications": {
+    "gecko": {
+      "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
+      "strict_min_version": "78.0",
+      "strict_max_version": "91.*"
+    }
+  },
+  "default_locale": "en-US",
+  "permissions": ["accountsRead", "compose", "tabs", "storage"],
+  "experiment_apis": {
+    "exp": {
+      "schema": "schema.json",
+      "parent": {
+        "scopes": [ "addon_parent" ],
+        "paths": [ [ "exp" ] ],
+        "script": "scripts/exp_api.js"
+      }
+    }
+  },
+  "background": {
+    "scripts": ["scripts/background-script.js"]
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab" : false,
+    "browser_style": true
+  }
+}
