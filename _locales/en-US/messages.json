@@ -1,4 +1,13 @@
 {
+  "extensionName": {
+    "message": "Correct identity"
+  },
+  "extensionDescription": {
+    "message": "Allows you to configure the identity that will be chosen upon composing mail."
+  },
+  "CorrectIdentity.extensionCancel": {
+    "message": "Cancel"
+  },
   "CorrectIdentity.accountSelector": {
     "message": "Account"
   },

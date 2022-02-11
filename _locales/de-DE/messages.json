@@ -1,4 +1,13 @@
 {
+  "extensionName": {
+    "message": "Correct identity"
+  },
+  "extensionDescription": {
+    "message": "Erlaubt das Einstellen der richtigen Identität beim Verfassen von Mails."
+  },
+  "CorrectIdentity.extensionCancel": {
+    "message": "Abbrechen"
+  },
   "CorrectIdentity.accountSelector": {
     "message": "Konto"
   },

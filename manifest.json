@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "Correct Identity",
-  "description": "Allows you to configure the identity that will be chosen upon composing mail.",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "_VERSION_WILL_BE_FILLED_BY_MAKE_XPI_SCRIPT_",
   "author": "L. Dreier",
   "applications": {
