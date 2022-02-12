@@ -1,0 +1,32 @@
+# based on https://github.com/actions/upload-latest-asset
+
+on:
+  push:
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+name: Upload Latest Asset
+
+jobs:
+  build:
+    name: Upload Latest Asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build project # This would actually build your project, using zip for an example artifact
+        run: |
+          git tag "latest" --force
+          ./make_xpi.sh
+      - name: Upload Latest Assets
+        id: upload_latest_assets
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: ".xpi from current repo"
+          files: |
+           ./correct_identity_latest.xpi
+           ./correct_identity_latest_dev.xpi
