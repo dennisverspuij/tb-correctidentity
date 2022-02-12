@@ -5,6 +5,9 @@
   "extensionDescription": {
     "message": "Erlaubt das Einstellen der richtigen Identität beim Verfassen von Mails."
   },
+  "CorrectIdentity.extensionWarning": {
+    "message": "Warnung"
+  },
   "CorrectIdentity.extensionCancel": {
     "message": "Abbrechen"
   },
