@@ -4,10 +4,10 @@ const BUTTON_CANCEL = 2;
 
 function onButtonClicked(event) {
   var result = 0;
-  if (event.target.value === "OK") {
+  if (event.target.id === "ok") {
     result |= BUTTON_OK;
   }
-  if (event.target.value === "CANCEL") {
+  if (event.target.id === "cancel") {
     result |= BUTTON_CANCEL;
   }
   browser.windows.getCurrent().then((window) => {
@@ -32,7 +32,6 @@ function onLoad(event) {
   var dialogText = document.getElementById("dialogText");
   dialogText.setAttribute('style', 'white-space: pre-line;');
   dialogText.textContent = text;
-  document.title = title;
 
   // show requested buttons
   document.getElementById("ok").style.visibility =
@@ -43,6 +42,7 @@ function onLoad(event) {
   // send message to background script to close me
   document.getElementById("ok").addEventListener("click", onButtonClicked);
   document.getElementById("cancel").addEventListener("click", onButtonClicked);
+  i18n.updateDocument();  // from i18n.js
 }
 
 document.addEventListener("DOMContentLoaded", onLoad);
