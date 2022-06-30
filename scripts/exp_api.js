@@ -34,21 +34,6 @@ class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
   }
 }
 
-class OnReplyHintCapturedListener extends ExtensionCommon.EventEmitter {
-  constructor() {
-    super();
-  }
-
-  add(callback) {
-    this.on("replyHintCaptured", callback);
-  }
-
-  remove(callback) {
-    this.off("replyHintCaptured", callback);
-  }
-}
-
-var onReplyHintCapturedListener = new OnReplyHintCapturedListener();
 var onRecipientsChangedListener = new OnRecipientsChangedListener();
 
 function myGetIdentityForHeader(hdr, type, hint = "") {
@@ -94,11 +79,6 @@ function myGetIdentityForHeader(hdr, type, hint = "") {
   var origIdentityId;
   if (identity) {
     origIdentityId = identity.key;
-  }
-
-  if (type) {
-    // ignore undefined compose types
-    onReplyHintCapturedListener.emit("replyHintCaptured", hintForIdentity, origIdentityId, type, hdr.subject);
   }
 
   return [identity, matchingHint];
@@ -198,21 +178,6 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
         async restoreCurrentFocus(windowId) {
           composeWindowFocus[windowId].focus();
         },
-        //////////////////////////////////////////////////////////////
-        onReplyHintCaptured: new ExtensionCommon.EventManager({
-          context,
-          name: "exp.onReplyHintCaptured",
-          register(fire) {
-            function callback(event, hint, origIdentityId, composeType, subject) {
-              return fire.async(hint, origIdentityId, composeType, subject);
-            }
-
-            onReplyHintCapturedListener.add(callback);
-            return function() {
-              onReplyHintCapturedListener.remove(callback);
-            };
-          },
-        }).api()
         //////////////////////////////////////////////////////////////
       }
     };

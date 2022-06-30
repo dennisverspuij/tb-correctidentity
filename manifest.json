@@ -7,12 +7,12 @@
   "applications": {
     "gecko": {
       "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
-      "strict_min_version": "78.0",
-      "strict_max_version": "91.*"
+      "strict_min_version": "91.3.1",
+      "strict_max_version": "102.*"
     }
   },
   "default_locale": "en-US",
-  "permissions": ["accountsRead", "compose", "tabs", "storage"],
+  "permissions": ["accountsRead", "messagesRead", "compose", "tabs", "storage"],
   "experiment_apis": {
     "exp": {
       "schema": "schema.json",

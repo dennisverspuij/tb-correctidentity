@@ -23,20 +23,9 @@ var initSettingsDone = {
 
 //capture last recorded state of compose tab to detect changes to "identityId" or to "to"
 var composeTabStatus = {}; // key:tabId values: initialIdentityId, recipientsList, changedByUs,
-//                             identitySetByUser, remainingPollsForAcceptingReplyHint, replyHint
+//                             identitySetByUser, origRecipientsList
 
 var dialogResults = {}; // key:windowId
-
-/*
-replyHint = {
-    hint : hint,
-    origIdentityId : origIdentityId,
-    composeType : composeType,
-    subject : subject
-};
-*/
-
-var replyHints = [];
 
 // FIXME: are there somewhere global constants available?
 // used for interfacing to dialog.js
@@ -366,14 +355,14 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
 
 // Compute identity based on recipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
-function getIdentity(identityId, recipientsList, replyHint) {
+function getIdentity(identityId, recipientsList, origRecipientsList) {
   var newIdentityId = identityId;
   var aliasedId = "";
   var explicitId = "";
   var replyId = "";
 
   console.log("getIdentity called with identityId:", identityId,
-    " recipientsList:", JSON.stringify(recipientsList), " replyHint:", replyHint);
+    " recipientsList:", JSON.stringify(recipientsList), " origRecipientsList:", origRecipientsList);
 
   console.log(identityId, ":", accountsAndIdentities.identities[identityId].prettyNameDebug);
 
@@ -391,31 +380,39 @@ function getIdentity(identityId, recipientsList, replyHint) {
 
     if (perAccountSettings.replyFromRecipient) {
       // check if we have a reply hint
-      if (replyHint !== "") {
-        replyHint = replyHint.toLowerCase();
-        var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
-        console.log('this is identityEmail: ' + identityEmail);
-        if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
-          // the current identity email (=sender) is not in the replyHint
-          // so check if we find a match matching identity
-          for (let idxIdentity in settings.identitySettings) {
-            let perIdentitySettings = settings.identitySettings[idxIdentity];
-            var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
-            if (perIdentitySettings.detectable) {
-              if ((curIdentityEmail.indexOf("@") >= 0) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
-                // we found an identity that was mentioned in the hint
-                replyId = idxIdentity;
+      if (origRecipientsList) {
+        for (var origRecipients of origRecipientsList) {
+          replyHint = origRecipients.toLowerCase();
+          var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
+          console.log('this is identityEmail: ' + identityEmail);
+          if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
+            // the current identity email (=sender) is not in the replyHint
+            // so check if we find a matching identity
+            for (let idxIdentity in settings.identitySettings) {
+              let perIdentitySettings = settings.identitySettings[idxIdentity];
+              var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
+              if (perIdentitySettings.detectable) {
+                if ((curIdentityEmail.indexOf("@") >= 0) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
+                  // we found an identity that was mentioned in the hint
+                  replyId = idxIdentity;
+                  break;
+                }
               }
             }
+          }
+          if (replyId !== "") {
+            break;
           }
         }
       }
 
       // check for alias matches
       var recipientsString = recipientsList.join(" ");
-      if (replyHint !== "") {
-        // if we have a replyHint, search also for replyHint
-        recipientsString = recipientsString + " " + replyHint;
+      if (origRecipientsList) {
+        for (var origRecipients of origRecipientsList) {
+          // if we have a replyHint, search also for replyHint
+          recipientsString = recipientsString + " " + origRecipients;
+        }
       }
       for (let idxIdentity in settings.identitySettings) {
         let perIdentitySettings = settings.identitySettings[idxIdentity];
@@ -483,11 +480,9 @@ async function sendConfirm(tabId, identityId, recipients) {
 
 function checkComposeTab(tab) {
   messenger.compose.getComposeDetails(tab.id).then((gcd) => {
-    var replyHint = "";
     var changed = false;
     var recipientsList = [];
     var entry = composeTabStatus[tab.id];
-    var remainingPollsForAcceptingReplyHint = -1;
     var initialIdentityId = "";
     var currentIdentityId = gcd.identityId;
     var gcdRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
@@ -498,10 +493,9 @@ function checkComposeTab(tab) {
       }
 
       // get current values
-      remainingPollsForAcceptingReplyHint = entry.remainingPollsForAcceptingReplyHint;
       initialIdentityId = entry.initialIdentityId;
       recipientsList = entry.recipientsList;
-      replyHint = entry.replyHint;
+      relatedMessageId = entry.relatedMessageId;
 
       // check if recipients have changed
       if (JSON.stringify(recipientsList) != JSON.stringify(gcdRecipientsList)) {
@@ -510,45 +504,36 @@ function checkComposeTab(tab) {
       }
     } else {
       // new tab detected
-      remainingPollsForAcceptingReplyHint = 2;  // check 2 times in total
       initialIdentityId = gcd.identityId;
       recipientsList = gcdRecipientsList;
+      relatedMessageId = gcd.relatedMessageId;
       changed = true;
     }
 
-    // Check if we have received a matching replyHint from the experiments API.
-    // Give one poll cycle for the replyHint to be received via onReplyHintCaptured event
-    // later arriving events may belong to other compose windows.
-    if (remainingPollsForAcceptingReplyHint > 0) {
-      remainingPollsForAcceptingReplyHint--;
-      for (var i in replyHints) {
-        if (gcd.subject.includes(replyHints[i].subject) && (gcd.identityId === replyHints[i].origIdentityId)) {
-          // matching reply hint found
-          replyHint = replyHints[i].hint;
-          replyHints.splice(i, 1);  // remove from array, so only reported once
-          remainingPollsForAcceptingReplyHint = 0;
-          changed = true;
-          break;
-        }
-      }
-    }
 
     // store status in global object
     composeTabStatus[tab.id] = {
       initialIdentityId : initialIdentityId,
       recipientsList : recipientsList,
-      replyHint : replyHint,
-      remainingPollsForAcceptingReplyHint : remainingPollsForAcceptingReplyHint,
+      relatedMessageId : relatedMessageId,
     };
 
     if (changed) {
-      handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, replyHint);
+      var origRecipientsList = [];
+      if (gcd.relatedMessageId) {
+        origRecipients = messenger.messages.get(gcd.relatedMessageId).then((msgHdr) => {
+          origRecipientsList = msgHdr.recipients;
+          handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList);
+        });
+      } else {
+        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList);
+      }
     }
   }, () => {/* errors are ignored */});
 }
 
-function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId, recipientsList, replyHint) {
-  var newIdentityId = getIdentity(initialIdentityId, recipientsList, replyHint);
+function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList) {
+  var newIdentityId = getIdentity(initialIdentityId, recipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
@@ -630,16 +615,6 @@ function handleMessage(request, sender, sendResponse) {
  * ReplyToList              = 13;
  */
 
-function onReplyHintCaptured(hint, origIdentityId, composeType, subject) {
-  var replyHint = {
-    hint : hint,
-    origIdentityId : origIdentityId,
-    composeType : composeType,
-    subject : subject
-  };
-  replyHints.push(replyHint);
-}
-
 function onRecipientsChanged(tabId) {
   browser.tabs.get(tabId).then( tab => {
     checkComposeTab(tab);
@@ -654,7 +629,6 @@ function onComposeTabReady(tab) {
 initSettings();
 
 browser.exp.installGetIdentityForHeaderHook();
-browser.exp.onReplyHintCaptured.addListener(onReplyHintCaptured);
 browser.exp.onRecipientsChanged.addListener(onRecipientsChanged);
 
 browser.runtime.onMessage.addListener(handleMessage);

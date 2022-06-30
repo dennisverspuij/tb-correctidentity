@@ -59,28 +59,6 @@
     ],
     "events": [
       {
-        "name": "onReplyHintCaptured",
-        "type": "function",
-        "parameters": [
-          {
-            "name": "hint",
-            "type": "string"
-          },
-          {
-            "name": "origIdentityId",
-            "type": "string"
-          },
-          {
-            "name": "composeType",
-            "type": "integer"
-          },
-          {
-            "name": "subject",
-            "type": "string"
-          }
-        ]
-      },
-      {
         "name": "onRecipientsChanged",
         "type": "function",
         "parameters": [
