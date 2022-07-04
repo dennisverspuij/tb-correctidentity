@@ -1,3 +1,7 @@
+# v2.1.1:
+- min. version setting 91.3.1 is not valid, so chose 91.0
+- some minor bugs fixed
+
 # v2.1.0:
 - support Thunderbird 102 (max. version setting 91.\* > 102.\*)
 - use new API "relatedMessageId" to identify e.g. the message we reply-to.

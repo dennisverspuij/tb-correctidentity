@@ -139,11 +139,7 @@ function accountSelectorChanged(result) {
   );
   // Remember preferences of currently showed account
   perAccountSettings.identityMechanism = document.getElementById("defaultIdentity").checked ? 0 : 1;
-  if (document.getElementById("explicitSelector").selectedItem) {
-    perAccountSettings.explicitIdentity = document.getElementById(
-      "explicitSelector"
-    ).selectedItem.value;
-  }
+  perAccountSettings.explicitIdentity = document.getElementById("explicitSelector").value;
   perAccountSettings.replyFromRecipient = document.getElementById(
     "replyFromRecipient"
   ).checked;
@@ -175,7 +171,7 @@ function identityMechanismChanged(result) {
     explicitSelector.selectedIndex = perAccountSettings.index;
   } else {
     // sync with gui display
-    perAccountSettings.explicitIdentity = document.getElementById("explicitSelector").target.value;
+    perAccountSettings.explicitIdentity = explicitSelector.value;
   }
 
   notifySettingsChanged();
