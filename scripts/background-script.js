@@ -520,8 +520,8 @@ function checkComposeTab(tab) {
 
     if (changed) {
       var origRecipientsList = [];
-      if (gcd.relatedMessageId) {
-        origRecipients = messenger.messages.get(gcd.relatedMessageId).then((msgHdr) => {
+      if (relatedMessageId) {
+        origRecipients = messenger.messages.get(relatedMessageId).then((msgHdr) => {
           origRecipientsList = msgHdr.recipients;
           handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList);
         });
