@@ -21,7 +21,8 @@ window:
 Installation
 ------------
 
-This add-on update is **not** yet available at the [official Thunderbird add-on store](https://addons.thunderbird.net/), but will be avialable soon on the update channel (https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/).
+The github repository [dennisverspuij/tb-correctidentity](https://github.com/dennisverspuij/tb-correctidentity) holds the latest (development) version of the add-on.
+The version available at [Thunderbird Add-ons site](https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/) will be updated regularly.
 
 Steps for installation (local build):
 1. Download this repository
