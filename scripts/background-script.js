@@ -22,7 +22,7 @@ var initSettingsDone = {
 }
 
 //capture last recorded state of compose tab to detect changes to "identityId" or to "to"
-var composeTabStatus = {}; // key:tabId values: initialIdentityId, recipientsList, changedByUs,
+var composeTabStatus = {}; // key:tabId values: initialIdentityId, allRecipientsList, changedByUs,
 //                             identitySetByUser, origRecipientsList
 
 var dialogResults = {}; // key:windowId
@@ -353,16 +353,16 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
   return false;
 }
 
-// Compute identity based on recipientsList, explicitIdentity,
+// Compute identity based on allRecipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
-function getIdentity(identityId, recipientsList, origRecipientsList) {
+function getIdentity(identityId, allRecipientsList, origRecipientsList) {
   var newIdentityId = identityId;
   var aliasedId = "";
   var explicitId = "";
   var replyId = "";
 
   console.log("getIdentity called with identityId:", identityId,
-    " recipientsList:", JSON.stringify(recipientsList), " origRecipientsList:", origRecipientsList);
+    " allRecipientsList:", JSON.stringify(allRecipientsList), " origRecipientsList:", origRecipientsList);
 
   console.log(identityId, ":", accountsAndIdentities.identities[identityId].prettyNameDebug);
 
@@ -382,7 +382,7 @@ function getIdentity(identityId, recipientsList, origRecipientsList) {
       // check if we have a reply hint
       if (origRecipientsList) {
         for (var origRecipients of origRecipientsList) {
-          replyHint = origRecipients.toLowerCase();
+          var replyHint = origRecipients.toLowerCase();
           var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
           console.log('this is identityEmail: ' + identityEmail);
           if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
@@ -407,11 +407,11 @@ function getIdentity(identityId, recipientsList, origRecipientsList) {
       }
 
       // check for alias matches
-      var recipientsString = recipientsList.join(" ");
+      var recipientsString = allRecipientsList.join(" ");
       if (origRecipientsList) {
-        for (var origRecipients of origRecipientsList) {
-          // if we have a replyHint, search also for replyHint
-          recipientsString = recipientsString + " " + origRecipients;
+        // if we have a origRecipients, search also for origRecipients
+        for (var origRecipient of origRecipientsList) {
+          recipientsString = recipientsString + " " + origRecipient;
         }
       }
       for (let idxIdentity in settings.identitySettings) {
@@ -481,11 +481,14 @@ async function sendConfirm(tabId, identityId, recipients) {
 function checkComposeTab(tab) {
   messenger.compose.getComposeDetails(tab.id).then((gcd) => {
     var changed = false;
-    var recipientsList = [];
+    var allRecipientsList = [];
+    var toRecipientsList = [];
+    var ccRecipientsList = [];
     var entry = composeTabStatus[tab.id];
     var initialIdentityId = "";
+    var relatedMessageId = "";
     var currentIdentityId = gcd.identityId;
-    var gcdRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
+    var gcdAllRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
     if (entry) {
       if (entry.identitySetByUser) {
         // user has manually modified identity, so do not change it
@@ -494,19 +497,21 @@ function checkComposeTab(tab) {
 
       // get current values
       initialIdentityId = entry.initialIdentityId;
-      recipientsList = entry.recipientsList;
-      relatedMessageId = entry.relatedMessageId;
+      allRecipientsList = entry.allRecipientsList;
+      relatedMessageId  = entry.relatedMessageId;
 
       // check if recipients have changed
-      if (JSON.stringify(recipientsList) != JSON.stringify(gcdRecipientsList)) {
-        recipientsList = gcdRecipientsList;
+      if (JSON.stringify(allRecipientsList) != JSON.stringify(gcdAllRecipientsList)) {
+        allRecipientsList = gcdAllRecipientsList;
         changed = true;
       }
     } else {
       // new tab detected
       initialIdentityId = gcd.identityId;
-      recipientsList = gcdRecipientsList;
+      allRecipientsList = gcdAllRecipientsList;
       relatedMessageId = gcd.relatedMessageId;
+      toRecipientsList = gcd.to;
+      ccRecipientsList = gcd.cc;
       changed = true;
     }
 
@@ -514,26 +519,39 @@ function checkComposeTab(tab) {
     // store status in global object
     composeTabStatus[tab.id] = {
       initialIdentityId : initialIdentityId,
-      recipientsList : recipientsList,
-      relatedMessageId : relatedMessageId,
+      allRecipientsList : allRecipientsList,
+      toRecipientsList  : toRecipientsList,
+      ccRecipientsList  : ccRecipientsList,
+      relatedMessageId  : relatedMessageId,
     };
 
     if (changed) {
       var origRecipientsList = [];
       if (relatedMessageId) {
-        origRecipients = messenger.messages.get(relatedMessageId).then((msgHdr) => {
+        messenger.messages.get(relatedMessageId).then((msgHdr) => {
           origRecipientsList = msgHdr.recipients;
-          handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList);
+          handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
         });
       } else {
-        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList);
+        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
       }
     }
   }, () => {/* errors are ignored */});
 }
 
-function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId, recipientsList, origRecipientsList) {
-  var newIdentityId = getIdentity(initialIdentityId, recipientsList, origRecipientsList);
+function searchAndRemoveFromRecipientList(recipientsList, email) {
+  for (var recipientIdx = 0;  recipientIdx < recipientsList.length; recipientIdx++) {
+    if (recipientsList[recipientIdx].includes(email)) {
+      // remove from list
+      recipientsList.splice(recipientIdx,1);
+      return true;
+    }
+  }
+  return false;
+}
+
+function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList) {
+  var newIdentityId = getIdentity(initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
@@ -541,14 +559,26 @@ function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIden
       identityId : newIdentityId,
     };
 
-    // changing identity makes focus jump to "to"
-    // so save focus before changing identity
-    browser.exp.saveCurrentFocus(windowId);
+    // Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
+    messenger.identities.get(newIdentityId).then((newIdentity) => {
+      var newIdentityEmail = newIdentity.email;
+      if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
+        // found in "to"
+        details.to = composeTabStatus[tabId].toRecipientsList;
+      } else if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].ccRecipientsList, newIdentityEmail)) {
+        // found in "cc"
+        details.cc = composeTabStatus[tabId].ccRecipientsList;
+      }
 
-    messenger.compose.setComposeDetails(tabId, details);
+      // changing identity makes focus jump to "to"
+      // so save focus before changing identity
+      browser.exp.saveCurrentFocus(windowId);
 
-    // ... and restore focus
-    browser.exp.restoreCurrentFocus(windowId);
+      messenger.compose.setComposeDetails(tabId, details);
+
+      // ... and restore focus
+      browser.exp.restoreCurrentFocus(windowId);
+    }, () => {/* errors are ignored */});
   }
 }
 
