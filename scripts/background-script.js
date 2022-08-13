@@ -478,6 +478,12 @@ async function sendConfirm(tabId, identityId, recipients) {
   );
 }
 
+function testGetFull(msgId) {
+   messenger.messages.getFull(msgId).then((msgPart) => {
+      console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
+  });
+}
+
 function checkComposeTab(tab) {
   messenger.compose.getComposeDetails(tab.id).then((gcd) => {
     var changed = false;
@@ -528,6 +534,7 @@ function checkComposeTab(tab) {
     if (changed) {
       var origRecipientsList = [];
       if (relatedMessageId) {
+        testGetFull(relatedMessageId);
         messenger.messages.get(relatedMessageId).then((msgHdr) => {
           origRecipientsList = msgHdr.recipients;
           handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
