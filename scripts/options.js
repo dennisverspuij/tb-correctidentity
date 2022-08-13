@@ -131,6 +131,24 @@ function updateGuiSafetyIdentityChanged(newSafetyIdentityId) {
     perIdentitySettings.warningAliases;
 }
 
+function updateAdditionalHeaderFields() {
+  var str = "";
+  for (let i=0; i< settings.additionalHeaderFields.length; i++) {
+    // key value
+    str = settings.additionalHeaderFields[i][0];
+
+    // occurence value
+    if (settings.additionalHeaderFields[i][1]) {
+      str += "#" +settings.additionalHeaderFields[i][1];
+    }
+    str += "\n";
+  }
+
+  document.getElementById("additionalHeaderFields").value = str;
+  notifySettingsChanged();
+}
+
+
 function accountSelectorChanged(result) {
   var sKey = result.target.value;
 
@@ -182,6 +200,28 @@ function replyFromRecipientChanged(result) {
     guiState.currentAccountId
   );
   perAccountSettings.replyFromRecipient = result.target.checked;
+  notifySettingsChanged();
+}
+
+// expects multiple entries separated by newline
+// format: headerkey#occurenceNumber
+// #occurenceNumber is optional
+// example: received#2
+function additionalHeaderFieldsChanged(result) {
+  settings.additionalHeaderFields.length = 0;
+  var headerEntries = result.target.value.toLowerCase().split(/\n+/);
+  for (let i = 0; i < headerEntries.length; i++) {
+    var heFields = headerEntries[i].split('#');
+    if (heFields.length > 1) {
+      if (!Number.isNaN(heFields[1])) {
+        settings.additionalHeaderFields.push(heFields);
+      }
+    } else {
+      if (heFields[0]) {
+        settings.additionalHeaderFields.push(heFields);
+      }
+    }
+  }
   notifySettingsChanged();
 }
 
@@ -243,6 +283,11 @@ function installConfigPageEventListners() {
     .getElementById("replyFromRecipient")
     .addEventListener("change", replyFromRecipientChanged);
 
+  // additional header fields selection
+  document
+    .getElementById("additionalHeaderFields")
+    .addEventListener("change", additionalHeaderFieldsChanged);
+
   // "Selection"
   document
     .getElementById("selectedDetectionIdentity")
@@ -292,6 +337,7 @@ function getSettings() {
 
       updateGuiDetectionIdentityChanged(guiState.currentDetectionIdentity);
       updateGuiSafetyIdentityChanged(guiState.currentSafetyIdentity);
+      updateAdditionalHeaderFields();
 
       installConfigPageEventListners();
     }

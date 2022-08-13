@@ -13,6 +13,7 @@ var settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
   identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
+  additionalHeaderFields: [],
 };
 
 var initSettingsDone = {
@@ -91,6 +92,10 @@ function checkSettings(inSettings) {
 
   if (inSettings.identitySettings === undefined) {
     inSettings.identitySettings = {};
+  }
+
+  if (inSettings.additionalHeaderFields === undefined) {
+    inSettings.additionalHeaderFields = [];
   }
 
   // remove non-existing identities
@@ -537,7 +542,36 @@ function checkComposeTab(tab) {
         testGetFull(relatedMessageId);
         messenger.messages.get(relatedMessageId).then((msgHdr) => {
           origRecipientsList = msgHdr.recipients;
-          handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+
+          if (settings.additionalHeaderFields) {
+            // we should also collect information from other header fields
+            messenger.messages.getFull(relatedMessageId).then((msgPart) => {
+              console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
+              // add found headers to begining of origRecipientsList, to keep order, we start with last key
+              for (let i = settings.additionalHeaderFields.length - 1; i >= 0; i--) {
+                if (settings.additionalHeaderFields[i][0]) {
+                  var headerArray = msgPart.headers[settings.additionalHeaderFields[i][0]];
+                  if (headerArray) {
+                    if (settings.additionalHeaderFields[i][1]) {
+                      // with occurence number
+                      var oN = settings.additionalHeaderFields[i][1];
+                      if (headerArray.length >= oN) {
+                        origRecipientsList.unshift(headerArray[oN-1]);
+                      }
+                    } else {
+                      // without occurence number: take all
+                      for (let j = 0; j < headerArray.length; j++) {
+                        origRecipientsList.unshift(headerArray[j]);
+                      }
+                    }
+                  }
+                }
+              }
+              handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+            }, () => {/* errors are ignored */});
+          } else {
+            handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+          }
         });
       } else {
         handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);

@@ -20,6 +20,18 @@
   "CorrectIdentity.accountsDescription": {
     "message": "For every account you can specify the identity that will be chosen upon composing mail."
   },
+
+  "CorrectIdentity.additionalHeaderFieldsCaption": {
+    "message": "Advanced: Additional mail headers"
+  },
+  "CorrectIdentity.additionalHeaderFieldsDescription": {
+    "message": "List additional mail headers to be searched for finding an original recipient (To find the identity to be used for the reply)."
+  },
+  "CorrectIdentity.additionalHeaderFieldsTooltip": {
+    "message": "Some mail providers use non standard header fields to identify the original recipient of a message before forwarding it to the mailbox. To select the correct \"from\" mail address for a reply, additional headers could be used (if detection is enabled for the account). Keys are case insensitive and must be separated by new lines. An optional occurence number can be added. E.g. received#3 searches in 3rd \"Received:\" header. Commonly used headers are: Received, Delivered-To, X-Delivered-to, X-Apparently-To, X-Resolved-to, X-Mail-from. Consult the message source to find out which headers could contain relevant information."
+  },
+
+
   "CorrectIdentity.aliasesDescription": {
     "message": "Specify search terms or domains that, when found in the recipient list, will resolve to this identity. Search terms are tried only if the \"Selection\" settings above don't yield a result."
   },
