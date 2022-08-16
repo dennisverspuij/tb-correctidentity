@@ -30,5 +30,11 @@
     "page": "options.html",
     "open_in_tab" : false,
     "browser_style": true
+  },
+  "browser_action": {
+    "browser_style": true,
+    "default_icon": "icons/ci.svg",
+    "default_label": "",
+    "default_title": "__MSG_extensionName__"
   }
 }

@@ -697,6 +697,11 @@ function onComposeTabReady(tab) {
   checkComposeTab(tab);
 }
 
+function browserActionClicked(tab, info) {
+  // bring configuration up
+  browser.runtime.openOptionsPage()
+}
+
 initSettings();
 
 browser.exp.installGetIdentityForHeaderHook();
@@ -707,6 +712,8 @@ browser.runtime.onMessage.addListener(handleMessage);
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
 messenger.composeScripts.register({ js : [{file: "scripts/compose.js"}] });
+
+browser.browserAction.onClicked.addListener(browserActionClicked);
 
 // to test empty storage uncomment next line once
 // browser.storage.sync.clear();

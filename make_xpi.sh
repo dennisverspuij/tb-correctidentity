@@ -11,7 +11,7 @@ cp manifest.json manifest.json_backup
 
 # release version
 sed -i "s/_VERSION_WILL_BE_FILLED_BY_MAKE_XPI_SCRIPT_/${VERSION}/g" manifest.json
-zip -FS -r correct_identity_${VVERSION}.xpi LICENSE *.html scripts _locales schema.json manifest.json
+zip -FS -r correct_identity_${VVERSION}.xpi LICENSE *.html scripts _locales icons schema.json manifest.json
 
 # revert to backup
 cp manifest.json_backup manifest.json
