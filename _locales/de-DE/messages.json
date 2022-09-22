@@ -20,6 +20,17 @@
   "CorrectIdentity.accountsDescription": {
     "message": "Sie können für jedes Konto eine Identität auswählen, die standardmäßig beim Verfassen einer neuen Nachricht verwendet wird."
   },
+
+  "CorrectIdentity.additionalHeaderFieldsCaption": {
+    "message": "Erweitert: Zusätzliche Empfänger-Kopfzeilen"
+  },
+  "CorrectIdentity.additionalHeaderFieldsDescription": {
+    "message": "Liste von zusätzlichen Email-Kopfzeilen, die durchsucht werden, um den ursprünglichen Empfänger einer Nachricht zu ermitteln. (Um dann den passenden Absender für die Antwort zu finden)."
+  },
+  "CorrectIdentity.additionalHeaderFieldsTooltip": {
+    "message": "Einige Emailprovider benutzen spezielle Mailkopfzeilen (SMTP Header), um den originären Empfänger einer Email nach dem Weiterleiten in die Mailbox zu identifizieren. Diese Kopfzeilen können zusätzlich zum \"normalen\" Empfängereintrag bei de Auswahl des Absenders für Antworten ausgewertet werden. Dazu muss oben die Erkennung der Identität des Absenders \"... in der Empfängerliste ...\" ausgewählt sein. Die Groß/Kleinschreibung bei den Schlüsselwörtern ist egal. Sie müssen aber in jeweils eigenen Zeilen stehen. Soll bei mehreren gleichen Kopfzeilen ein bestimmtes Vorkommen gewählt werden, kann ein zusätzlicher Index angegeben werden. Z.B. received#3 sucht in der dritten \"Received:\" Kopfzeile. Übliche Kopfzeilen sind:  Received, Delivered-To, X-Delivered-to, X-Apparently-To, X-Resolved-to, X-Mail-from. Schauen sie sich den Quelltext der Mail an, um herauszufinden, welche Kopfzeilen die relevanten Informationen enthalten."
+  },
+
   "CorrectIdentity.aliasesDescription": {
     "message": "Geben Sie Suchwörter oder Domains ein. Wenn diese in der Empfängerliste gefunden werden, wird zur entsprechenden Identität gewechselt. Suchwörter werden nur benutzt, wenn die Einstellungen \"Auswahl\" oben kein Ergebnis liefern."
   },
