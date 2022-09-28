@@ -1,4 +1,4 @@
-Thunderbird Add-on "Correct Identity" (v2.1.x)
+Thunderbird Add-on "Correct Identity" (v2.2.x)
 ==============================================
 
 This add-on version works with Thunderbird versions >= 91.3.1.  
