@@ -12,15 +12,64 @@ It's a **perfect alternative/continuation**
 which don't work anymore because Thunderbird switched to new Plugin API
 framework called [WebExtension](https://webextension-api.thunderbird.net/).
 
+Check also the built-in features of Thunderbird which also evolve over time.
+
 The add-on comes in 5 different languages. Here is a screenshot of the settings
 window:
 
 ![Settings window](images/settings.png)
 
+Using Correct Identity
+----------------------
+
+This add-on helps to always use the correct "from" email identity when replying to messages or composing new messages.
+
+The configuration reflects the Thunderbird concept of "accounts" and "identities":
+
+* accounts: are the mailboxes where emails arrive and associated servers used to send emails
+* identities: are the email addresses available for composing emails. Typically the main email address of the accounts plus the configured aliases. Each identity is bound to a specific account.
+
+The typical configurations use lists of "regular expressions". In the simplest from this could be complete email addresses or parts of email addresses.
+
+Features
+--------
+
+* Choose the initial "from" identity when composing a new email
+* Choose the "from" identity when replying to a message
+    * based on the original recipients of the replied-to message
+    * based on non-standard SMTP header fields of the replied-to message (**new feature**: "Advanced: Additional mail headers")
+* Automatically change the "from" identity when addressing specific recipients
+* Warn if specific recipients are included in a email send from a specific identity
+
+### Advanced: Additional mail headers
+[Email header fields](https://en.wikipedia.org/wiki/Email#Header_fields) are keywords in the SMTP (Simple Mail Transfer Protocol) message. E.g. "**To**" identifies the email recipient.
+Beyond those standard headers, some email providers use vendor-specific headers e.g. to identify the original recipient of a forwarded message. Some known headers are:
+
+* Received
+* Delivered-To
+* X-Delivered-to
+* X-Apparently-To
+* X-Resolved-to
+* X-Mail-from
+
+To check if your email provider uses such a header field to transport an address you are interested in, browse the source of the message (e.g. Ctrl+U in Thunderbird message view).
+Add the found header name (optionally with an occurrence index) to the configuration.
+E.g. Received#3 uses the third "received:" header line to find a potential match.
+
+The found header lines are prepended to the normal "recipients" e.g. from "To:" and used to find
+a matching "from" identity. The first match is taken. So the sequence of the header fields in the configuration defines the search priority.
+Header fields that are not present in the mail are ignored.
+
+
+Configuration Shortcut
+----------------------
+![Configuration Shortcut](images/configuration_shortcut.png)
+
+When this add-on is installed, a small icon "Ci" appears in the Thunderbird toolbar.
+This icon provides a shortcut to the add-on configuration page.
 
 Installation
 ------------
-
 The github repository [dennisverspuij/tb-correctidentity](https://github.com/dennisverspuij/tb-correctidentity) holds the latest (development) version of the add-on.
 The version available at [Thunderbird Add-ons site](https://addons.thunderbird.net/de/thunderbird/addon/correct-identity/) will be updated regularly.
 
