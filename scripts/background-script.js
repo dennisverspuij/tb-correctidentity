@@ -123,7 +123,7 @@ function checkSettings(inSettings) {
       is.detectable = true;
     }
     if (is.detectionAliases === undefined) {
-      is.detectionAliases = "";
+      is.detectionAliases = accountsAndIdentities.identities[idx].label;
     }
     if (is.warningAliases === undefined) {
       is.warningAliases = "";

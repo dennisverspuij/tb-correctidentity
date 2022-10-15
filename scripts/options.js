@@ -50,7 +50,7 @@ function getPerIdentitySettingsOrDefault(identityId) {
     // not found in settings, set defaults
     perIdentitySettings = {
       detectable: true,
-      detectionAliases: "",
+      detectionAliases: accountsAndIdentities[identityId].label,
       warningAliases: "",
     };
     settings.identitySettings[identityId] = perIdentitySettings;
