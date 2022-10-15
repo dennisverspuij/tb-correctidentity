@@ -72,14 +72,14 @@ function fillSelectorList(elementId, toBeSelectedIdentityId) {
     let opt = document.createElement("option");
     // accountLabel is the localised "account" text
     // identityLabel is the localised "identity" text
-    opt.setAttribute("aria-labelledby", "identityLabel labelIdentity"+i+" accountLabel labelAccount"+i);
+    opt.setAttribute("aria-labelledby", `identityLabel labelIdentity${i} accountLabel labelAccount${i}`);
     let label1 = document.createElement("label");
     label1.className = "menu-iconic-text";
-    label1.id = "labelIdentity"+i;
-    label1.textContent = accountsAndIdentities.identities[i].prettyName + " ";
+    label1.id = `labelIdentity${i}`;
+    label1.textContent = `${accountsAndIdentities.identities[i].prettyName} `;
     let label2 = document.createElement("label");
     label2.className = "menu-description";
-    label2.id = "labelAccount"+i;
+    label2.id = `labelAccount${i}`;
     label2.textContent = accountsAndIdentities.accounts[accountsAndIdentities.identities[i].accountId].prettyName;
     opt.value = i;
     opt.appendChild(label1);
@@ -139,7 +139,7 @@ function updateAdditionalHeaderFields() {
 
     // occurence value
     if (settings.additionalHeaderFields[i][1]) {
-      str += "#" +settings.additionalHeaderFields[i][1];
+      str += `#${settings.additionalHeaderFields[i][1]}`;
     }
     str += "\n";
   }

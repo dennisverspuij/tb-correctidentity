@@ -66,7 +66,7 @@ function myGetIdentityForHeader(hdr, type, hint = "") {
   ) {
     hintForIdentity = hdr.author;
   } else {
-    hintForIdentity = hdr.recipients + "," + hdr.ccList;  // + "," + hint; modified from original
+    hintForIdentity = `${hdr.recipients},${hdr.ccList}`;  // + "," + hint; modified from original
   }
   // end
 
@@ -76,10 +76,6 @@ function myGetIdentityForHeader(hdr, type, hint = "") {
   let identity;
   let matchingHint;
   [identity, matchingHint] = MailUtils.origGetIdentityForHeader(hdr, type, hint);
-  let origIdentityId;
-  if (identity) {
-    origIdentityId = identity.key;
-  }
 
   return [identity, matchingHint];
 }

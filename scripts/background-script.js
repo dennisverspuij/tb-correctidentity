@@ -193,13 +193,13 @@ function initSettings() {
         };
 
         for (let j in arrayMailAccounts[i].identities) {
-          // append account name in italics and in gray as in compose window
-          let prettyName = arrayMailAccounts[i].identities[j].name +
-                           " <"+ arrayMailAccounts[i].identities[j].email + ">";
-          let prettyNameDebug = arrayMailAccounts[i].identities[j].email +
-                                " (account: " + arrayMailAccounts[i].name + ")";
-          accountsAndIdentities.identities[arrayMailAccounts[i].identities[j].id] = {
-            email: arrayMailAccounts[i].identities[j].email,
+          const identity = arrayMailAccounts[i].identities[j];
+          let prettyName = `${identity.name} <${identity.email}>`;
+          let prettyNameDebug = `${identity.email}` +
+                                `(account: ${arrayMailAccounts[i].name})`;
+
+          accountsAndIdentities.identities[identity.id] = {
+            email: identity.email,
             prettyName: prettyName,
             prettyNameDebug : prettyNameDebug,
             accountId: arrayMailAccounts[i].id,
@@ -262,7 +262,7 @@ function initSettings() {
       );
     },
     (error) => {
-      console.error("Error failureCallback: " + error);
+      console.error(`Error failureCallback: ${error}`);
     }
   );
 }
@@ -296,12 +296,8 @@ async function firePopup(title, text, buttons) {
       width: 400,
       height: 300,
       url:
-        "dialog.html?buttons=" +
-        encodeURIComponent(buttons) +
-        "&title=" +
-        encodeURIComponent(title) +
-        "&string=" +
-        encodeURIComponent(text),
+        `dialog.html?buttons=${encodeURIComponent(buttons)}&title=${encodeURIComponent(title)}` +
+        `&string=${encodeURIComponent(text)}`,
     })
     .then((window) => {
       winId = window.id;
@@ -340,14 +336,10 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
         // called non-blocking
         firePopup(
           "Error in RegExp",
-          "Ignoring invalid regular expression:\n\n" +
-            "identity:  " +
-            accountsAndIdentities.identities[warnIdentityId].email +
-            "\n" +
-            "regexp:  " +
-            needle.replace(/\\/g, "\\\\") +
-            "\n\n" +
-            "Please adjust in the Correct Identity " + warnText + " settings!",
+          `Ignoring invalid regular expression:\n\n` +
+            `identity:  ${accountsAndIdentities.identities[warnIdentityId].email}\n` +
+            `regexp:  ${needle.replace(/\\/g, "\\\\")}\n\n` +
+            `Please adjust in the Correct Identity ${warnText} settings!`,
           BUTTON_OK
         );
       }
@@ -389,7 +381,7 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
         for (let origRecipients of origRecipientsList) {
           let replyHint = origRecipients.toLowerCase();
           let identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
-          console.log('this is identityEmail: ' + identityEmail);
+          console.log(`this is identityEmail: ${identityEmail}`);
           if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
             // the current identity email (=sender) is not in the replyHint
             // so check if we find a matching identity
@@ -416,7 +408,7 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
       if (origRecipientsList) {
         // if we have a origRecipients, search also for origRecipients
         for (let origRecipient of origRecipientsList) {
-          recipientsString = recipientsString + " " + origRecipient;
+          recipientsString = `${recipientsString} ${origRecipient}`;
         }
       }
       for (let idxIdentity in settings.identitySettings) {
@@ -469,7 +461,7 @@ async function sendConfirm(tabId, identityId, recipients) {
     let recipient = recipients[idxRecipient];
     let isMatch = patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
     if (isMatch) {
-      warnRecipients += "\n" + recipient;
+      warnRecipients += `\n${recipient}`;
     }
   }
 
