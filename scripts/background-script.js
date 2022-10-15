@@ -195,8 +195,14 @@ function initSettings() {
         for (let j in arrayMailAccounts[i].identities) {
           const identity = arrayMailAccounts[i].identities[j];
           let prettyName = `${identity.name} <${identity.email}>`;
-          let prettyNameDebug = `${identity.email}` +
-                                `(account: ${arrayMailAccounts[i].name})`;
+          let prettyNameDebug = `${identity.email}`;
+
+          if (identity.label !== "") {
+            prettyName += ` (${identity.label})`;
+            prettyNameDebug += ` (${identity.label})`;
+          }
+
+          prettyNameDebug += `(account: ${arrayMailAccounts[i].name})`;
 
           accountsAndIdentities.identities[identity.id] = {
             email: identity.email,
