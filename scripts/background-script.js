@@ -1,6 +1,6 @@
 var accountsAndIdentities = {
   accounts: {}, // key:id, values: prettyName, index, defaultIdentityId, type
-  identities: {}, // key:id, values: email, accountId, prettyName, prettyNameDebug
+  identities: {}, // key:id, values: email, accountId, prettyName, prettyNameDebug, label
 };
 
 var guiState = {
@@ -172,7 +172,7 @@ function initSettings() {
   // get all accounts and identities from thunderbird
   messenger.accounts.list().then(
     (arrayMailAccounts) => {
-      // console.log("arrayMailAccounts:", arrayMailAccounts);
+      console.log("arrayMailAccounts:", arrayMailAccounts);
       let iIndex = 0;
       for (var i in arrayMailAccounts) {
         // determine default identity of this account
@@ -194,15 +194,15 @@ function initSettings() {
 
         for (var j in arrayMailAccounts[i].identities) {
           // append account name in italics and in gray as in compose window
-          var prettyName = arrayMailAccounts[i].identities[j].name +
-                           " <"+ arrayMailAccounts[i].identities[j].email + ">";
-          var prettyNameDebug = arrayMailAccounts[i].identities[j].email +
-                                " (account: " + arrayMailAccounts[i].name + ")";
-          accountsAndIdentities.identities[arrayMailAccounts[i].identities[j].id] = {
-            email: arrayMailAccounts[i].identities[j].email,
+          const identity = arrayMailAccounts[i].identities[j];
+          var prettyName = identity.name + " <"+ identity.email + ">";
+          var prettyNameDebug = identity.email + " (account: " + arrayMailAccounts[i].name + ")";
+          accountsAndIdentities.identities[identity.id] = {
+            email: identity.email,
             prettyName: prettyName,
             prettyNameDebug : prettyNameDebug,
             accountId: arrayMailAccounts[i].id,
+            label: identity.label,
           };
         }
       }

@@ -69,6 +69,7 @@ function fillSelectorList(elementId, toBeSelectedIdentityId) {
 
   let index = 0;
   for (var i in accountsAndIdentities.identities) {
+    const identity = accountsAndIdentities.identities[i];
     let opt = document.createElement("option");
     // accountLabel is the localised "account" text
     // identityLabel is the localised "identity" text
@@ -76,11 +77,14 @@ function fillSelectorList(elementId, toBeSelectedIdentityId) {
     let label1 = document.createElement("label");
     label1.className = "menu-iconic-text";
     label1.id = "labelIdentity"+i;
-    label1.textContent = accountsAndIdentities.identities[i].prettyName + " ";
+    label1.textContent = identity.prettyName + " ";
+    if (identity.label !== "") {
+        label1.textContent += `(${identity.label}) `;
+    }
     let label2 = document.createElement("label");
     label2.className = "menu-description";
     label2.id = "labelAccount"+i;
-    label2.textContent = accountsAndIdentities.accounts[accountsAndIdentities.identities[i].accountId].prettyName;
+    label2.textContent = accountsAndIdentities.accounts[identity.accountId].prettyName;
     opt.value = i;
     opt.appendChild(label1);
     opt.appendChild(label2);
