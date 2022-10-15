@@ -1,24 +1,24 @@
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { MailUtils } = ChromeUtils.import("resource:///modules/MailUtils.jsm");
-var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
+let { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
+let { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+let { MailUtils } = ChromeUtils.import("resource:///modules/MailUtils.jsm");
+let { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
-var guiState = {
+let guiState = {
   currentAccountId: "",
   currentDetectionIdentity: "",
   currentSafetyIdentity: "",
 };
 
-var settings = {
+let settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
   identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
 };
 
-var composeWindowFocus = {};  // key: windowId; store element of compose window which has current focus
-var onRecipientsChangeHookInstalled = {};  // key: windowId; value: bool
+let composeWindowFocus = {};  // key: windowId; store element of compose window which has current focus
+let onRecipientsChangeHookInstalled = {};  // key: windowId; value: bool
 
-var getIdentityForHeaderHookInstalled = false;
+let getIdentityForHeaderHookInstalled = false;
 
 class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
   constructor() {
@@ -34,7 +34,7 @@ class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
   }
 }
 
-var onRecipientsChangedListener = new OnRecipientsChangedListener();
+let onRecipientsChangedListener = new OnRecipientsChangedListener();
 
 function myGetIdentityForHeader(hdr, type, hint = "") {
   // from original getIdentityForHeader
@@ -73,10 +73,10 @@ function myGetIdentityForHeader(hdr, type, hint = "") {
   // call original function
   // we do not modify the result here, simply call original function
   // modification is done later in the ComposeWindow
-  var identity;
-  var matchingHint;
+  let identity;
+  let matchingHint;
   [identity, matchingHint] = MailUtils.origGetIdentityForHeader(hdr, type, hint);
-  var origIdentityId;
+  let origIdentityId;
   if (identity) {
     origIdentityId = identity.key;
   }
@@ -102,19 +102,19 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
           };
           prefs.forEach(pref=>{
             if (pref.startsWith("settings_server")) {
-              var accountId = pref.replace("settings_server", "account");
+              let accountId = pref.replace("settings_server", "account");
               let a = (b.getPrefType(pref) == b.PREF_STRING) ? b.getCharPref(pref).split(/\x01/) : [];
-              var perAccountSettings = {
+              let perAccountSettings = {
                 identityMechanism:  parseInt(a[1], 10),
                 explicitIdentity: a[2],
                 replyFromRecipient: (a[3] == "true")
               };
               settings.accountSettings[accountId] = perAccountSettings;
             } else if (pref.startsWith("settings_id")) {
-              var identityId =  pref.replace("settings_", "");
+              let identityId =  pref.replace("settings_", "");
               let a = (b.getPrefType(pref) == b.PREF_STRING) ? b.getCharPref(pref).split(/\x01/, 3) : [];
               if (a.length >= 2) {
-                var perIdentitySettings = {
+                let perIdentitySettings = {
                   detectable : (a[0] == "true"),
                   detectionAliases : a[1],
                   warningAliases : (a.length == 3)?a[2]:""
@@ -140,7 +140,7 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
         async installOnRecipientsChangedHook(tabId, windowId) {
           if (!onRecipientsChangeHookInstalled[windowId]) {
             onRecipientsChangeHookInstalled[windowId] = true;
-            var win = Services.wm.getOuterWindowWithId(windowId);
+            let win = Services.wm.getOuterWindowWithId(windowId);
             // store old function in window object
             win.origOnRecipientsChanged = win.onRecipientsChanged;
             win.onRecipientsChanged = ( automatic => {
@@ -171,7 +171,7 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
         }).api(),
         //////////////////////////////////////////////////////////////
         async saveCurrentFocus(windowId) {
-          var win = Services.wm.getOuterWindowWithId(windowId);
+          let win = Services.wm.getOuterWindowWithId(windowId);
           composeWindowFocus[windowId] = win.document.activeElement;
         },
         //////////////////////////////////////////////////////////////

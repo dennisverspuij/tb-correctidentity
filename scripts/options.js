@@ -1,6 +1,6 @@
-var settings;
-var accountsAndIdentities;
-var guiState;
+let settings;
+let accountsAndIdentities;
+let guiState;
 
 function notifySettingsChanged() {
   // send update to background script
@@ -25,7 +25,7 @@ function getPerAccountSettingsOrDefault(accountId) {
   if (!(accountId in accountsAndIdentities.accounts)) {
     throw "accountId has unknown value";
   }
-  var perAccountSettings = settings.accountSettings[accountId];
+  let perAccountSettings = settings.accountSettings[accountId];
   if (perAccountSettings === undefined) {
     // not found in settings, set defaults
     perAccountSettings = {
@@ -45,7 +45,7 @@ function getPerIdentitySettingsOrDefault(identityId) {
   if (!(identityId in accountsAndIdentities.identities)) {
     throw "identityId has unknown value";
   }
-  var perIdentitySettings = settings.identitySettings[identityId];
+  let perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // not found in settings, set defaults
     perIdentitySettings = {
@@ -60,7 +60,7 @@ function getPerIdentitySettingsOrDefault(identityId) {
 
 function fillSelectorList(elementId, toBeSelectedIdentityId) {
   // fill explicitId list for that account
-  var selector = document.getElementById(elementId);
+  let selector = document.getElementById(elementId);
 
   // remove all items
   while (selector.options.length) {
@@ -68,7 +68,7 @@ function fillSelectorList(elementId, toBeSelectedIdentityId) {
   }
 
   let index = 0;
-  for (var i in accountsAndIdentities.identities) {
+  for (let i in accountsAndIdentities.identities) {
     let opt = document.createElement("option");
     // accountLabel is the localised "account" text
     // identityLabel is the localised "identity" text
@@ -93,7 +93,7 @@ function fillSelectorList(elementId, toBeSelectedIdentityId) {
 }
 
 function updateGuiAccountChanged(accountId) {
-  var perAccountSettings = getPerAccountSettingsOrDefault(accountId);
+  let perAccountSettings = getPerAccountSettingsOrDefault(accountId);
 
   fillSelectorList("explicitSelector", perAccountSettings.explicitIdentity);
 
@@ -108,14 +108,14 @@ function updateGuiAccountChanged(accountId) {
   document.getElementById("replyFromRecipient").checked =
     perAccountSettings.replyFromRecipient;
 
-  var replyable =
+  let replyable =
     "rss,nntp".indexOf(accountsAndIdentities.accounts[accountId].type) == -1;
   document.getElementById("replyFromRecipient").disabled = !replyable;
 }
 
 function updateGuiDetectionIdentityChanged(newDetectionIdentityId) {
   // update Detection GUI
-  var perIdentitySettings = getPerIdentitySettingsOrDefault(newDetectionIdentityId);
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(newDetectionIdentityId);
 
   document.getElementById("detectable").checked =
     perIdentitySettings.detectable;
@@ -125,14 +125,14 @@ function updateGuiDetectionIdentityChanged(newDetectionIdentityId) {
 
 function updateGuiSafetyIdentityChanged(newSafetyIdentityId) {
   // update Safety GUI
-  var perIdentitySettings = getPerIdentitySettingsOrDefault(newSafetyIdentityId);
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(newSafetyIdentityId);
 
   document.getElementById("warningAliases").value =
     perIdentitySettings.warningAliases;
 }
 
 function updateAdditionalHeaderFields() {
-  var str = "";
+  let str = "";
   for (let i=0; i< settings.additionalHeaderFields.length; i++) {
     // key value
     str = settings.additionalHeaderFields[i][0];
@@ -150,9 +150,9 @@ function updateAdditionalHeaderFields() {
 
 
 function accountSelectorChanged(result) {
-  var sKey = result.target.value;
+  let sKey = result.target.value;
 
-  var perAccountSettings = getPerAccountSettingsOrDefault(
+  let perAccountSettings = getPerAccountSettingsOrDefault(
     guiState.currentAccountId
   );
   // Remember preferences of currently showed account
@@ -170,17 +170,17 @@ function accountSelectorChanged(result) {
 }
 
 function explicitIdentityChanged(result) {
-  var perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
+  let perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
   perAccountSettings.explicitIdentity = result.target.value;
   notifySettingsChanged();
 }
 
 function identityMechanismChanged(result) {
-  var perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
+  let perAccountSettings = getPerAccountSettingsOrDefault(guiState.currentAccountId);
   perAccountSettings.identityMechanism = parseInt(result.target.value, 10);
 
   // Update the form
-  var explicitSelector = document.getElementById("explicitSelector");
+  let explicitSelector = document.getElementById("explicitSelector");
   explicitSelector.disabled = (result.target.value != 1);
   if (explicitSelector.disabled) {
     // If not selected, restore the explicit identity to default identity for the account
@@ -196,7 +196,7 @@ function identityMechanismChanged(result) {
 }
 
 function replyFromRecipientChanged(result) {
-  var perAccountSettings = getPerAccountSettingsOrDefault(
+  let perAccountSettings = getPerAccountSettingsOrDefault(
     guiState.currentAccountId
   );
   perAccountSettings.replyFromRecipient = result.target.checked;
@@ -209,9 +209,9 @@ function replyFromRecipientChanged(result) {
 // example: received#2
 function additionalHeaderFieldsChanged(result) {
   settings.additionalHeaderFields.length = 0;
-  var headerEntries = result.target.value.toLowerCase().split(/\n+/);
+  let headerEntries = result.target.value.toLowerCase().split(/\n+/);
   for (let i = 0; i < headerEntries.length; i++) {
-    var heFields = headerEntries[i].split('#');
+    let heFields = headerEntries[i].split('#');
     if (heFields.length > 1) {
       if (!Number.isNaN(heFields[1])) {
         settings.additionalHeaderFields.push(heFields);
@@ -232,7 +232,7 @@ function selectedDetectionIdentityChanged(result) {
 }
 
 function detectableChanged(result) {
-  var perIdentitySettings = getPerIdentitySettingsOrDefault(
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentDetectionIdentity
   );
   perIdentitySettings.detectable = result.target.checked;
@@ -240,7 +240,7 @@ function detectableChanged(result) {
 }
 
 function detectionAliasesChanged(result) {
-  var perIdentitySettings = getPerIdentitySettingsOrDefault(
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentDetectionIdentity
   );
   perIdentitySettings.detectionAliases = result.target.value;
@@ -255,7 +255,7 @@ function selectedSafetyIdentityChanged(result) {
 }
 
 function warningAliasesChanged(result) {
-  var perIdentitySettings = getPerIdentitySettingsOrDefault(
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentSafetyIdentity
   );
   perIdentitySettings.warningAliases = result.target.value;
@@ -316,7 +316,7 @@ function getSettings() {
       guiState = message.guiState;
 
       // fill settings into GUI
-      var accountSelector = document.getElementById("accountSelector");
+      let accountSelector = document.getElementById("accountSelector");
       while (accountSelector.firstChild) {
         accountSelector.removeChild(accountSelector.firstChild);
       }
@@ -346,7 +346,8 @@ function getSettings() {
   // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
   // var sending = browser.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
   // sending.then(handleResponse, (err) => {console.log("err:", err)});
-  browser.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" }, browser.extension, handleResponse)
+  browser.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" },
+                                                      browser.extension, handleResponse)
 }
 
 function onLoad(event) {

@@ -1,39 +1,39 @@
-var accountsAndIdentities = {
+let accountsAndIdentities = {
   accounts: {}, // key:id, values: prettyName, index, defaultIdentityId, type
   identities: {}, // key:id, values: email, accountId, prettyName, prettyNameDebug
 };
 
-var guiState = {
+let guiState = {
   currentAccountId: "",
   currentDetectionIdentity: "",
   currentSafetyIdentity: "",
 };
 
-var settings = {
+let settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
   identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
   additionalHeaderFields: [],
 };
 
-var initSettingsDone = {
+let initSettingsDone = {
   guiState : false,
   settings : false,
   accountsAndIdentities : false
 }
 
 //capture last recorded state of compose tab to detect changes to "identityId" or to "to"
-var composeTabStatus = {}; // key:tabId values: initialIdentityId, allRecipientsList, changedByUs,
+let composeTabStatus = {}; // key:tabId values: initialIdentityId, allRecipientsList, changedByUs,
 //                             identitySetByUser, origRecipientsList
 
-var dialogResults = {}; // key:windowId
+let dialogResults = {}; // key:windowId
 
 // FIXME: are there somewhere global constants available?
 // used for interfacing to dialog.js
 const BUTTON_OK = 1;
 const BUTTON_CANCEL = 2;
 
-var onSettingsChanged;  // a callback from option.js
+let onSettingsChanged;  // a callback from option.js
 
 function notifySettingsChanged() {
   if (onSettingsChanged !== undefined) {
@@ -78,7 +78,7 @@ function checkSettings(inSettings) {
 
   // fill missing values with defaults
   for (let idx in inSettings.accountSettings) {
-    var as = inSettings.accountSettings[idx];
+    let as = inSettings.accountSettings[idx];
     if (as.identityMechanism === undefined) {
       as.identityMechanism = 0;
     }
@@ -118,7 +118,7 @@ function checkSettings(inSettings) {
 
   // fill missing values with defaults
   for (let idx in inSettings.identitySettings) {
-    var is = inSettings.identitySettings[idx];
+    let is = inSettings.identitySettings[idx];
     if (is.detectable === undefined) {
       is.detectable = true;
     }
@@ -174,10 +174,10 @@ function initSettings() {
     (arrayMailAccounts) => {
       // console.log("arrayMailAccounts:", arrayMailAccounts);
       let iIndex = 0;
-      for (var i in arrayMailAccounts) {
+      for (let i in arrayMailAccounts) {
         // determine default identity of this account
-        var defaultIdentity = arrayMailAccounts[i].identities[0];
-        var defaultIdentityId;
+        let defaultIdentity = arrayMailAccounts[i].identities[0];
+        let defaultIdentityId;
 
         if (defaultIdentity === undefined) {
           defaultIdentityId = "";
@@ -192,11 +192,11 @@ function initSettings() {
           index: iIndex++,
         };
 
-        for (var j in arrayMailAccounts[i].identities) {
+        for (let j in arrayMailAccounts[i].identities) {
           // append account name in italics and in gray as in compose window
-          var prettyName = arrayMailAccounts[i].identities[j].name +
+          let prettyName = arrayMailAccounts[i].identities[j].name +
                            " <"+ arrayMailAccounts[i].identities[j].email + ">";
-          var prettyNameDebug = arrayMailAccounts[i].identities[j].email +
+          let prettyNameDebug = arrayMailAccounts[i].identities[j].email +
                                 " (account: " + arrayMailAccounts[i].name + ")";
           accountsAndIdentities.identities[arrayMailAccounts[i].identities[j].id] = {
             email: arrayMailAccounts[i].identities[j].email,
@@ -272,7 +272,7 @@ function sleep(ms) {
 }
 
 async function windowExists(winId) {
-  var exists = false;
+  let exists = false;
   await browser.windows.get(winId).then(
     (window) => {
       exists = true;
@@ -288,8 +288,8 @@ async function windowExists(winId) {
 // returns true, if "OK" pressed
 async function firePopup(title, text, buttons) {
   // build script which fires alert
-  var winId = "";
-  var result = false;
+  let winId = "";
+  let result = false;
   await browser.windows
     .create({
       type: "popup",
@@ -309,7 +309,7 @@ async function firePopup(title, text, buttons) {
   // wait until window closed
   while (true) {
     // check if window is still open
-    var exists = await windowExists(winId);
+    let exists = await windowExists(winId);
     if (!exists) {
       break;
     }
@@ -361,19 +361,19 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
 // Compute identity based on allRecipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
 function getIdentity(identityId, allRecipientsList, origRecipientsList) {
-  var newIdentityId = identityId;
-  var aliasedId = "";
-  var explicitId = "";
-  var replyId = "";
+  let newIdentityId = identityId;
+  let aliasedId = "";
+  let explicitId = "";
+  let replyId = "";
 
   console.log("getIdentity called with identityId:", identityId,
-    " allRecipientsList:", JSON.stringify(allRecipientsList), " origRecipientsList:", origRecipientsList);
+              " allRecipientsList:", JSON.stringify(allRecipientsList), " origRecipientsList:", origRecipientsList);
 
   console.log(identityId, ":", accountsAndIdentities.identities[identityId].prettyNameDebug);
 
-  var accountId = accountsAndIdentities.identities[identityId].accountId;
+  let accountId = accountsAndIdentities.identities[identityId].accountId;
 
-  var perAccountSettings = settings.accountSettings[accountId];
+  let perAccountSettings = settings.accountSettings[accountId];
 
   if (perAccountSettings !== undefined) {
     switch (perAccountSettings.identityMechanism) {
@@ -386,16 +386,16 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
     if (perAccountSettings.replyFromRecipient) {
       // check if we have a reply hint
       if (origRecipientsList) {
-        for (var origRecipients of origRecipientsList) {
-          var replyHint = origRecipients.toLowerCase();
-          var identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
+        for (let origRecipients of origRecipientsList) {
+          let replyHint = origRecipients.toLowerCase();
+          let identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
           console.log('this is identityEmail: ' + identityEmail);
           if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
             // the current identity email (=sender) is not in the replyHint
             // so check if we find a matching identity
             for (let idxIdentity in settings.identitySettings) {
               let perIdentitySettings = settings.identitySettings[idxIdentity];
-              var curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
+              let curIdentityEmail = accountsAndIdentities.identities[idxIdentity].email.toLowerCase();
               if (perIdentitySettings.detectable) {
                 if ((curIdentityEmail.indexOf("@") >= 0) && (replyHint.indexOf(curIdentityEmail) >= 0)) {
                   // we found an identity that was mentioned in the hint
@@ -412,10 +412,10 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
       }
 
       // check for alias matches
-      var recipientsString = allRecipientsList.join(" ");
+      let recipientsString = allRecipientsList.join(" ");
       if (origRecipientsList) {
         // if we have a origRecipients, search also for origRecipients
-        for (var origRecipient of origRecipientsList) {
+        for (let origRecipient of origRecipientsList) {
           recipientsString = recipientsString + " " + origRecipient;
         }
       }
@@ -423,7 +423,7 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
         let perIdentitySettings = settings.identitySettings[idxIdentity];
         if (perIdentitySettings.detectable) {
           let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-          var isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
+          let isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
           if (isMatch) {
             aliasedId = idxIdentity;
           }
@@ -457,7 +457,7 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
 
 // returns true if ok-to-send
 async function sendConfirm(tabId, identityId, recipients) {
-  var perIdentitySettings = settings.identitySettings[identityId];
+  let perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // nothing configured
     return true;
@@ -465,9 +465,9 @@ async function sendConfirm(tabId, identityId, recipients) {
   let warningAliases = perIdentitySettings.warningAliases.split(/\n+/);
   let warnRecipients = "";
 
-  for (var idxRecipient in recipients) {
-    var recipient = recipients[idxRecipient];
-    var isMatch = patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
+  for (let idxRecipient in recipients) {
+    let recipient = recipients[idxRecipient];
+    let isMatch = patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
     if (isMatch) {
       warnRecipients += "\n" + recipient;
     }
@@ -484,22 +484,22 @@ async function sendConfirm(tabId, identityId, recipients) {
 }
 
 function testGetFull(msgId) {
-   messenger.messages.getFull(msgId).then((msgPart) => {
-      console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
+  messenger.messages.getFull(msgId).then((msgPart) => {
+    console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
   });
 }
 
 function checkComposeTab(tab) {
   messenger.compose.getComposeDetails(tab.id).then((gcd) => {
-    var changed = false;
-    var allRecipientsList = [];
-    var toRecipientsList = [];
-    var ccRecipientsList = [];
-    var entry = composeTabStatus[tab.id];
-    var initialIdentityId = "";
-    var relatedMessageId = "";
-    var currentIdentityId = gcd.identityId;
-    var gcdAllRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
+    let changed = false;
+    let allRecipientsList = [];
+    let toRecipientsList = [];
+    let ccRecipientsList = [];
+    let entry = composeTabStatus[tab.id];
+    let initialIdentityId = "";
+    let relatedMessageId = "";
+    let currentIdentityId = gcd.identityId;
+    let gcdAllRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
     if (entry) {
       if (entry.identitySetByUser) {
         // user has manually modified identity, so do not change it
@@ -537,7 +537,7 @@ function checkComposeTab(tab) {
     };
 
     if (changed) {
-      var origRecipientsList = [];
+      let origRecipientsList = [];
       if (relatedMessageId) {
         testGetFull(relatedMessageId);
         messenger.messages.get(relatedMessageId).then((msgHdr) => {
@@ -550,11 +550,11 @@ function checkComposeTab(tab) {
               // add found headers to begining of origRecipientsList, to keep order, we start with last key
               for (let i = settings.additionalHeaderFields.length - 1; i >= 0; i--) {
                 if (settings.additionalHeaderFields[i][0]) {
-                  var headerArray = msgPart.headers[settings.additionalHeaderFields[i][0]];
+                  let headerArray = msgPart.headers[settings.additionalHeaderFields[i][0]];
                   if (headerArray) {
                     if (settings.additionalHeaderFields[i][1]) {
                       // with occurence number
-                      var oN = settings.additionalHeaderFields[i][1];
+                      let oN = settings.additionalHeaderFields[i][1];
                       if (headerArray.length >= oN) {
                         origRecipientsList.unshift(headerArray[oN-1]);
                       }
@@ -567,21 +567,24 @@ function checkComposeTab(tab) {
                   }
                 }
               }
-              handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+              handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
+                                      allRecipientsList, origRecipientsList);
             }, () => {/* errors are ignored */});
           } else {
-            handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+            handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
+                                    allRecipientsList, origRecipientsList);
           }
         });
       } else {
-        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList);
+        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
+                                allRecipientsList, origRecipientsList);
       }
     }
   }, () => {/* errors are ignored */});
 }
 
 function searchAndRemoveFromRecipientList(recipientsList, email) {
-  for (var recipientIdx = 0;  recipientIdx < recipientsList.length; recipientIdx++) {
+  for (let recipientIdx = 0;  recipientIdx < recipientsList.length; recipientIdx++) {
     if (recipientsList[recipientIdx].includes(email)) {
       // remove from list
       recipientsList.splice(recipientIdx,1);
@@ -591,18 +594,19 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
   return false;
 }
 
-function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId, allRecipientsList, origRecipientsList) {
-  var newIdentityId = getIdentity(initialIdentityId, allRecipientsList, origRecipientsList);
+function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId,
+                                 allRecipientsList, origRecipientsList) {
+  let newIdentityId = getIdentity(initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
-    var details = {
+    let details = {
       identityId : newIdentityId,
     };
 
     // Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
     messenger.identities.get(newIdentityId).then((newIdentity) => {
-      var newIdentityEmail = newIdentity.email;
+      let newIdentityEmail = newIdentity.email;
       if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
         // found in "to"
         details.to = composeTabStatus[tabId].toRecipientsList;
@@ -633,7 +637,7 @@ function onIdentityChangedListener(tab, identityId) {
 
 //we need to wait for confirmations -> async function
 async function onBeforeSendListener(tab, details) {
-  var result = await sendConfirm(tab.id, details.identityId, details.to.concat(details.cc, details.bcc));
+  let result = await sendConfirm(tab.id, details.identityId, details.to.concat(details.cc, details.bcc));
 
   return {
     cancel: !result,

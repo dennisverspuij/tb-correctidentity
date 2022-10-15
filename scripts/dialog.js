@@ -3,7 +3,7 @@ const BUTTON_OK = 1;
 const BUTTON_CANCEL = 2;
 
 function onButtonClicked(event) {
-  var result = 0;
+  let result = 0;
   if (event.target.id === "ok") {
     result |= BUTTON_OK;
   }
@@ -24,12 +24,12 @@ function onButtonClicked(event) {
 
 function onLoad(event) {
   const queryString = window.location.search;
-  var searchParams = new URLSearchParams(queryString);
-  var text = searchParams.get("string");
-  var title = searchParams.get("title");
-  var buttons = searchParams.get("buttons");
+  let searchParams = new URLSearchParams(queryString);
+  let text = searchParams.get("string");
+  let title = searchParams.get("title");
+  let buttons = searchParams.get("buttons");
 
-  var dialogText = document.getElementById("dialogText");
+  let dialogText = document.getElementById("dialogText");
   dialogText.setAttribute('style', 'white-space: pre-line;');
   dialogText.textContent = text;
 
