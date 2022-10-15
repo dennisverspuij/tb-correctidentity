@@ -172,7 +172,6 @@ function initSettings() {
   // get all accounts and identities from thunderbird
   messenger.accounts.list().then(
     (arrayMailAccounts) => {
-      console.log("arrayMailAccounts:", arrayMailAccounts);
       let iIndex = 0;
       for (var i in arrayMailAccounts) {
         // determine default identity of this account
@@ -195,8 +194,8 @@ function initSettings() {
         for (var j in arrayMailAccounts[i].identities) {
           // append account name in italics and in gray as in compose window
           const identity = arrayMailAccounts[i].identities[j];
-          var prettyName = identity.name + " <"+ identity.email + ">";
-          var prettyNameDebug = identity.email + " (account: " + arrayMailAccounts[i].name + ")";
+          var prettyName = `${identity.name} <${identity.email}>`;
+          var prettyNameDebug = `${identity.email} (account: ${arrayMailAccounts[i].name})`;
           accountsAndIdentities.identities[identity.id] = {
             email: identity.email,
             prettyName: prettyName,
