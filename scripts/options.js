@@ -6,6 +6,9 @@ function notifySettingsChanged() {
   // send update to background script
 
   // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
+  // With the direct call we may hand over references to objects which may get "dead" on closing
+  // the config page, so make local copies on the receiver side
+  //
   // browser.runtime.sendMessage({
   //   msgType: "SET_SETTINGS_REQ",
   //   settings: settings,

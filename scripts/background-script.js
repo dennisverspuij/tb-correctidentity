@@ -654,8 +654,9 @@ function handleMessage(request, sender, sendResponse) {
     //  guiState: guiState,
     // });
   } else if (request.msgType === "SET_SETTINGS_REQ") {
-    guiState = request.guiState;
-    settings = request.settings;
+    // for direct calls create a local object copy via JSON stringify/parse
+    guiState = JSON.parse(JSON.stringify(request.guiState));
+    settings = JSON.parse(JSON.stringify(request.settings));
     browser.storage.sync.set({ guiState, settings });
   } else if (request.msgType === "CLOSE_WINDOW") {
     dialogResults[request.windowId] = request.result;
