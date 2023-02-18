@@ -358,7 +358,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
 
 // Compute identity based on allRecipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
-function getIdentity(identityId, allRecipientsList, origRecipientsList) {
+function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
   let newIdentityId = identityId;
   let aliasedId = "";
   let explicitId = "";
@@ -431,10 +431,11 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
   }
 
   // prioritized selection of resulting identity
-  if (replyId !== "") {
+  if ((replyId !== "")  && (!composeTabStatus[tabId].replyHintConsumed)) {
     // return the matched identity from the replyHint
-    console.log("matched identity from the replyHint");
+    console.log("matched identity from the replyHint (high prio");
     newIdentityId = replyId;
+    composeTabStatus[tabId].replyHintConsumed = true;
   } else if (explicitId !== "") {
     // an explicit identity was defined
     console.log("using explicit identity");
@@ -443,6 +444,10 @@ function getIdentity(identityId, allRecipientsList, origRecipientsList) {
     // we have a match from the alias list
     console.log("match from the alias list");
     newIdentityId = aliasedId;
+  } else if ((replyId !== "")  && (composeTabStatus[tabId].replyHintConsumed)) {
+    // return the matched identity from the replyHint
+    console.log("matched identity from the replyHint (low prio)");
+    newIdentityId = replyId;
   } else {
     console.log("using default identity");
   }
@@ -498,6 +503,8 @@ function checkComposeTab(tab) {
     let relatedMessageId = "";
     let currentIdentityId = gcd.identityId;
     let gcdAllRecipientsList = gcd.to.concat(gcd.cc, gcd.bcc);  // we handle "to", "cc" and "bcc" fields
+    let replyHintConsumed = false;
+
     if (entry) {
       if (entry.identitySetByUser) {
         // user has manually modified identity, so do not change it
@@ -508,6 +515,7 @@ function checkComposeTab(tab) {
       initialIdentityId = entry.initialIdentityId;
       allRecipientsList = entry.allRecipientsList;
       relatedMessageId  = entry.relatedMessageId;
+      replyHintConsumed = entry.replyHintConsumed;
 
       // check if recipients have changed
       if (JSON.stringify(allRecipientsList) != JSON.stringify(gcdAllRecipientsList)) {
@@ -522,6 +530,7 @@ function checkComposeTab(tab) {
       toRecipientsList = gcd.to;
       ccRecipientsList = gcd.cc;
       changed = true;
+      replyHintConsumed = false;
     }
 
 
@@ -532,6 +541,7 @@ function checkComposeTab(tab) {
       toRecipientsList  : toRecipientsList,
       ccRecipientsList  : ccRecipientsList,
       relatedMessageId  : relatedMessageId,
+      replyHintConsumed : replyHintConsumed,
     };
 
     if (changed) {
@@ -594,7 +604,7 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
 
 function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId,
                                  allRecipientsList, origRecipientsList) {
-  let newIdentityId = getIdentity(initialIdentityId, allRecipientsList, origRecipientsList);
+  let newIdentityId = getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
