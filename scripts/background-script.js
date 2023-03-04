@@ -26,7 +26,7 @@ let initSettingsDone = {
 let composeTabStatus = {}; // key:tabId values: initialIdentityId, allRecipientsList, changedByUs,
 //                             identitySetByUser, origRecipientsList
 
-let dialogResults = {}; // key:windowId
+var dialogResults = {}; // key:windowId
 
 // FIXME: are there somewhere global constants available?
 // used for interfacing to dialog.js
@@ -433,7 +433,7 @@ function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
   // prioritized selection of resulting identity
   if ((replyId !== "")  && (!composeTabStatus[tabId].replyHintConsumed)) {
     // return the matched identity from the replyHint
-    console.log("matched identity from the replyHint (high prio");
+    console.log("matched identity from the replyHint (high prio)");
     newIdentityId = replyId;
     composeTabStatus[tabId].replyHintConsumed = true;
   } else if (explicitId !== "") {
