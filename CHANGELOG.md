@@ -1,8 +1,11 @@
+# v2.2.2:
+- fix issue with popup dialog on wrong display
+- fix issue after closing addon configuration tab
+
 # v2.2.1:
 - add configuration shortcut icon to toolbar
 - advanced SMTP header field configuration
 - remove found identity from To and cc
-
 
 # v2.1.1:
 - min. version setting 91.3.1 is not valid, so chose 91.0

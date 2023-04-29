@@ -296,11 +296,15 @@ async function firePopup(title, text, buttons) {
   // build script which fires alert
   let winId = "";
   let result = false;
+  let cw = await browser.windows.getCurrent();
+
   await browser.windows
     .create({
       type: "popup",
       width: 400,
       height: 300,
+      left: cw.left + 20,
+      top: cw.top + 20,
       url:
         `dialog.html?buttons=${encodeURIComponent(buttons)}&title=${encodeURIComponent(title)}` +
         `&string=${encodeURIComponent(text)}`,
