@@ -155,18 +155,6 @@ function checkGuiState(inGuiState) {
   return inGuiState;
 }
 
-// migrate settings from "user.pref" (Correct Identity version 1.xx.xx)
-function migrateSettings() {
-  // call experiment API to access old prefs
-  return browser.exp.migratePrefs().then((result) => {
-    guiState = checkGuiState(result.guiState);
-    settings = checkSettings(result.settings);
-  }, error => {
-    console.log("migrateSettings Error", error);
-  }
-  );
-}
-
 //read settings from storage
 function initSettings() {
   // get all accounts and identities from thunderbird
@@ -224,7 +212,7 @@ function initSettings() {
       // console.log("accountsAndIdentities:", accountsAndIdentities);
 
       // get stored settings
-      browser.storage.sync.get("guiState").then(
+      messenger.storage.sync.get("guiState").then(
         (result) => {
           if (result.guiState !== undefined) {
             guiState = checkGuiState(result.guiState);
@@ -244,25 +232,14 @@ function initSettings() {
         },
         (error) => console.log("Error: storage get guiState failed ", error)
       );
-      browser.storage.sync.get("settings").then(
+      messenger.storage.sync.get("settings").then(
         (result) => {
           // checkSettings (also adds defaults if undefined)
           settings = checkSettings(result.settings);
           // should we save, if changed?
 
-          if (settings.migrate === undefined) {
-            // not yet called, call it once
-            migrateSettings().then( () => {
-              settings.migrate = true;
-              console.log("settings migrated");
-              browser.storage.sync.set({ guiState, settings });
-              initSettingsDone.settings = true;
-              notifySettingsChanged();
-            });
-          } else {
-            initSettingsDone.settings = true;
-            notifySettingsChanged();
-          }
+          initSettingsDone.settings = true;
+          notifySettingsChanged();
         },
         (error) => console.log("Error: storage get settings failed ", error)
       );
@@ -279,7 +256,7 @@ function sleep(ms) {
 
 async function windowExists(winId) {
   let exists = false;
-  await browser.windows.get(winId).then(
+  await messenger.windows.get(winId).then(
     (window) => {
       exists = true;
     },
@@ -296,9 +273,9 @@ async function firePopup(title, text, buttons) {
   // build script which fires alert
   let winId = "";
   let result = false;
-  let cw = await browser.windows.getCurrent();
+  let cw = await messenger.windows.getCurrent();
 
-  await browser.windows
+  await messenger.windows
     .create({
       type: "popup",
       width: 400,
@@ -482,7 +459,7 @@ async function sendConfirm(tabId, identityId, recipients) {
 
   return warnRecipients === "" ? true : firePopup(
     "Warning", // TODO: i18n
-    browser.i18n.getMessage("warning", [
+    messenger.i18n.getMessage("warning", [
       accountsAndIdentities.identities[identityId].email,
       warnRecipients,
     ]),
@@ -627,14 +604,7 @@ function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIden
         details.cc = composeTabStatus[tabId].ccRecipientsList;
       }
 
-      // changing identity makes focus jump to "to"
-      // so save focus before changing identity
-      browser.exp.saveCurrentFocus(windowId);
-
       messenger.compose.setComposeDetails(tabId, details);
-
-      // ... and restore focus
-      browser.exp.restoreCurrentFocus(windowId);
     }, () => {/* errors are ignored */});
   }
 }
@@ -671,10 +641,10 @@ function handleMessage(request, sender, sendResponse) {
     // for direct calls create a local object copy via JSON stringify/parse
     guiState = JSON.parse(JSON.stringify(request.guiState));
     settings = JSON.parse(JSON.stringify(request.settings));
-    browser.storage.sync.set({ guiState, settings });
+    messenger.storage.sync.set({ guiState, settings });
   } else if (request.msgType === "CLOSE_WINDOW") {
     dialogResults[request.windowId] = request.result;
-    browser.windows.remove(request.windowId);
+    messenger.windows.remove(request.windowId);
   } else if (request.msgType === "NEW_COMPOSE_TAB_READY") {
     onComposeTabReady(sender.tab);
   } else {
@@ -704,33 +674,32 @@ function handleMessage(request, sender, sendResponse) {
  */
 
 function onRecipientsChanged(tabId) {
-  browser.tabs.get(tabId).then( tab => {
+  messenger.tabs.get(tabId).then( tab => {
     checkComposeTab(tab);
   });
 }
 
 function onComposeTabReady(tab) {
-  browser.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
+  messenger.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
   checkComposeTab(tab);
 }
 
 function browserActionClicked(tab, info) {
   // bring configuration up
-  browser.runtime.openOptionsPage()
+  messenger.runtime.openOptionsPage()
 }
 
 initSettings();
 
-browser.exp.installGetIdentityForHeaderHook();
-browser.exp.onRecipientsChanged.addListener(onRecipientsChanged);
+messenger.exp.onRecipientsChanged.addListener(onRecipientsChanged);
 
-browser.runtime.onMessage.addListener(handleMessage);
+messenger.runtime.onMessage.addListener(handleMessage);
 
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
 messenger.composeScripts.register({ js : [{file: "scripts/compose.js"}] });
 
-browser.browserAction.onClicked.addListener(browserActionClicked);
+messenger.browserAction.onClicked.addListener(browserActionClicked);
 
 // to test empty storage uncomment next line once
-// browser.storage.sync.clear();
+// messenger.storage.sync.clear();

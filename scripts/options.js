@@ -9,12 +9,12 @@ function notifySettingsChanged() {
   // With the direct call we may hand over references to objects which may get "dead" on closing
   // the config page, so make local copies on the receiver side
   //
-  // browser.runtime.sendMessage({
+  // messenger.runtime.sendMessage({
   //   msgType: "SET_SETTINGS_REQ",
   //   settings: settings,
   //   guiState: guiState,
   // });
-  browser.extension.getBackgroundPage().handleMessage({
+  messenger.extension.getBackgroundPage().handleMessage({
     msgType: "SET_SETTINGS_REQ",
     settings: settings,
     guiState: guiState,
@@ -347,10 +347,10 @@ function getSettings() {
   }
 
   // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
-  // var sending = browser.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
+  // var sending = messenger.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
   // sending.then(handleResponse, (err) => {console.log("err:", err)});
-  browser.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" },
-                                                      browser.extension, handleResponse)
+  messenger.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" },
+                                                        messenger.extension, handleResponse)
 }
 
 function onLoad(event) {

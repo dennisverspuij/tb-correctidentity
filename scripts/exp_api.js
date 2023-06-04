@@ -1,24 +1,9 @@
 let { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 let { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-let { MailUtils } = ChromeUtils.import("resource:///modules/MailUtils.jsm");
-let { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
-let guiState = {
-  currentAccountId: "",
-  currentDetectionIdentity: "",
-  currentSafetyIdentity: "",
-};
 
-let settings = {
-  accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
-  identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
-  // migrate   ... property will be dynamically added if old prefs were migrated
-};
-
-let composeWindowFocus = {};  // key: windowId; store element of compose window which has current focus
 let onRecipientsChangeHookInstalled = {};  // key: windowId; value: bool
 
-let getIdentityForHeaderHookInstalled = false;
 
 class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
   constructor() {
@@ -36,103 +21,13 @@ class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
 
 let onRecipientsChangedListener = new OnRecipientsChangedListener();
 
-function myGetIdentityForHeader(hdr, type, hint = "") {
-  // from original getIdentityForHeader
-  // begin
-  let server = null;
-  let folder = hdr.folder;
-  if (folder) {
-    server = folder.server;
-    // modified from original here, we ignore customIdentity
-  }
-
-  if (!server) {
-    let accountKey = hdr.accountKey;
-    if (accountKey) {
-      let account = MailServices.accounts.getAccount(accountKey);
-      if (account) {
-        server = account.incomingServer;
-      }
-    }
-  }
-
-  let hintForIdentity = "";
-  if (type == Ci.nsIMsgCompType.ReplyToList) {
-    hintForIdentity = hint;
-  } else if (
-    type == Ci.nsIMsgCompType.Template ||
-    type == Ci.nsIMsgCompType.EditTemplate ||
-    type == Ci.nsIMsgCompType.EditAsNew
-  ) {
-    hintForIdentity = hdr.author;
-  } else {
-    hintForIdentity = `${hdr.recipients},${hdr.ccList}`;  // + "," + hint; modified from original
-  }
-  // end
-
-  // call original function
-  // we do not modify the result here, simply call original function
-  // modification is done later in the ComposeWindow
-  let identity;
-  let matchingHint;
-  [identity, matchingHint] = MailUtils.origGetIdentityForHeader(hdr, type, hint);
-
-  return [identity, matchingHint];
-}
-
 var exp = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
     context.callOnClose(this);
     return {
       exp: {
         //////////////////////////////////////////////////////////////
-        async migratePrefs() {
-          // Services.wm.getMostRecentWindow("mail:3pane").alert("Hello !");
-          let b=Services.prefs.getBranch("CorrectIdentity.");
-          let prefs=b.getChildList("");
-          // global settings
-          guiState = {
-            currentAccountId: b.getCharPref("selectedAccount", "").replace("server", "account"),
-            currentDetectionIdentity: b.getCharPref("selectedIdentity", ""),
-            currentSafetyIdentity: b.getCharPref("selectedSafetyIdentity", "")
-          };
-          prefs.forEach(pref=>{
-            if (pref.startsWith("settings_server")) {
-              let accountId = pref.replace("settings_server", "account");
-              let a = (b.getPrefType(pref) == b.PREF_STRING) ? b.getCharPref(pref).split(/\x01/) : [];
-              let perAccountSettings = {
-                identityMechanism:  parseInt(a[1], 10),
-                explicitIdentity: a[2],
-                replyFromRecipient: (a[3] == "true")
-              };
-              settings.accountSettings[accountId] = perAccountSettings;
-            } else if (pref.startsWith("settings_id")) {
-              let identityId =  pref.replace("settings_", "");
-              let a = (b.getPrefType(pref) == b.PREF_STRING) ? b.getCharPref(pref).split(/\x01/, 3) : [];
-              if (a.length >= 2) {
-                let perIdentitySettings = {
-                  detectable : (a[0] == "true"),
-                  detectionAliases : a[1],
-                  warningAliases : (a.length == 3)?a[2]:""
-                };
-                settings.identitySettings[identityId] = perIdentitySettings;
-              }
-            }
-          });
-          return {
-            guiState : guiState,
-            settings :settings
-          };
-        },
-        //////////////////////////////////////////////////////////////
-        async installGetIdentityForHeaderHook() {
-          if (!getIdentityForHeaderHookInstalled) {
-            MailUtils.origGetIdentityForHeader = MailUtils.getIdentityForHeader;
-            MailUtils.getIdentityForHeader = myGetIdentityForHeader;
-            getIdentityForHeaderHookInstalled = true;
-          }
-        },
-        //////////////////////////////////////////////////////////////
+        // note: would no longer be needed, if https://bugzilla.mozilla.org/show_bug.cgi?id=1700672 is fixed
         async installOnRecipientsChangedHook(tabId, windowId) {
           if (!onRecipientsChangeHookInstalled[windowId]) {
             onRecipientsChangeHookInstalled[windowId] = true;
@@ -151,6 +46,7 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
           }
         },
         //////////////////////////////////////////////////////////////
+        // note: would no longer be needed, if https://bugzilla.mozilla.org/show_bug.cgi?id=1700672 is fixed
         onRecipientsChanged: new ExtensionCommon.EventManager({
           context,
           name: "exp.onRecipientsChanged",
@@ -166,25 +62,7 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
           },
         }).api(),
         //////////////////////////////////////////////////////////////
-        async saveCurrentFocus(windowId) {
-          let win = Services.wm.getOuterWindowWithId(windowId);
-          composeWindowFocus[windowId] = win.document.activeElement;
-        },
-        //////////////////////////////////////////////////////////////
-        async restoreCurrentFocus(windowId) {
-          composeWindowFocus[windowId].focus();
-        },
-        //////////////////////////////////////////////////////////////
       }
     };
-  }
-  close() {
-    // cleanup installed hooks
-    if (getIdentityForHeaderHookInstalled) {
-      MailUtils.getIdentityForHeader = MailUtils.origGetIdentityForHeader;
-      MailUtils.origGetIdentityForHeader = undefined;
-
-      getIdentityForHeaderHookInstalled = false;
-    }
   }
 };

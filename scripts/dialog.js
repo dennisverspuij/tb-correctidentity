@@ -10,15 +10,15 @@ function onButtonClicked(event) {
   if (event.target.id === "cancel") {
     result |= BUTTON_CANCEL;
   }
-  browser.windows.getCurrent().then((window) => {
+  messenger.windows.getCurrent().then((window) => {
     // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
-    // browser.runtime.sendMessage({
+    // messenger.runtime.sendMessage({
     //   msgType: "CLOSE_WINDOW",
     //   windowId: window.id,
     //   result: result,
     // });
-    browser.extension.getBackgroundPage().dialogResults[window.id] = result;
-    browser.extension.getBackgroundPage().browser.windows.remove(window.id);
+    messenger.extension.getBackgroundPage().dialogResults[window.id] = result;
+    messenger.extension.getBackgroundPage().messenger.windows.remove(window.id);
   });
 }
 
