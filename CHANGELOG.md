@@ -1,6 +1,17 @@
-# v2.2.2:
+# v2.3.1:
 - fix issue with popup dialog on wrong display
 - fix issue after closing addon configuration tab
+- add eslint.rc
+- change German locales to use spelling "E-Mail"
+- Thunderbird version 115 support
+- remove no longer needed experiment APIs (still one remains)
+- convert "var" to "let" where appropiate
+- use template literals instead of string concatenation
+- use "messenger" instead of "browser" as root for extension APIs
+- remove configuration migration from version 1 addon
+- allow changing sender identity during adding of recipients even if 
+  sender identity was already changed by the addon when a "reply-to" 
+  window was opened
 
 # v2.2.1:
 - add configuration shortcut icon to toolbar
