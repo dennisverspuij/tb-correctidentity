@@ -1,5 +1,9 @@
+# v2.3.2:
+- use async / await where possible
+- some lint warnings addressed (comma, semicolon placement)
+
 # v2.3.1:
-- fix issue with popup dialog on wrong display
+- fix issue with popup dialog on wrong display with multi-monitor setup
 - fix issue after closing addon configuration tab
 - add eslint.rc
 - change German locales to use spelling "E-Mail"

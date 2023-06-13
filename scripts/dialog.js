@@ -2,7 +2,7 @@
 const BUTTON_OK = 1;
 const BUTTON_CANCEL = 2;
 
-function onButtonClicked(event) {
+async function onButtonClicked(event) {
   let result = 0;
   if (event.target.id === "ok") {
     result |= BUTTON_OK;
@@ -10,7 +10,8 @@ function onButtonClicked(event) {
   if (event.target.id === "cancel") {
     result |= BUTTON_CANCEL;
   }
-  messenger.windows.getCurrent().then((window) => {
+  try {
+    let window = await messenger.windows.getCurrent();
     // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
     // messenger.runtime.sendMessage({
     //   msgType: "CLOSE_WINDOW",
@@ -19,14 +20,15 @@ function onButtonClicked(event) {
     // });
     messenger.extension.getBackgroundPage().dialogResults[window.id] = result;
     messenger.extension.getBackgroundPage().messenger.windows.remove(window.id);
-  });
+  } catch (error) {
+    console.log("Error: windows.getCurrent failed ", error);
+  }
 }
 
 function onLoad(event) {
   const queryString = window.location.search;
   let searchParams = new URLSearchParams(queryString);
   let text = searchParams.get("string");
-  let title = searchParams.get("title");
   let buttons = searchParams.get("buttons");
 
   let dialogText = document.getElementById("dialogText");

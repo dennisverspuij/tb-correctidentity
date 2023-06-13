@@ -1,26 +1,26 @@
 let accountsAndIdentities = {
   accounts: {}, // key:id, values: prettyName, index, defaultIdentityId, type
-  identities: {}, // key:id, values: email, accountId, prettyName, prettyNameDebug
+  identities: {} // key:id, values: email, accountId, prettyName, prettyNameDebug
 };
 
 let guiState = {
   currentAccountId: "",
   currentDetectionIdentity: "",
-  currentSafetyIdentity: "",
+  currentSafetyIdentity: ""
 };
 
 let settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
   identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
-  additionalHeaderFields: [],
+  additionalHeaderFields: []
 };
 
 let initSettingsDone = {
   guiState : false,
   settings : false,
   accountsAndIdentities : false
-}
+};
 
 //capture last recorded state of compose tab to detect changes to "identityId" or to "to"
 let composeTabStatus = {}; // key:tabId values: initialIdentityId, allRecipientsList, changedByUs,
@@ -42,7 +42,7 @@ function notifySettingsChanged() {
         msgType: "GET_SETTINGS_REP",
         settings: settings,
         accountsAndIdentities: accountsAndIdentities,
-        guiState: guiState,
+        guiState: guiState
       });
     }
   }
@@ -156,98 +156,97 @@ function checkGuiState(inGuiState) {
 }
 
 //read settings from storage
-function initSettings() {
-  // get all accounts and identities from thunderbird
-  messenger.accounts.list().then(
-    (arrayMailAccounts) => {
-      // console.log("arrayMailAccounts:", arrayMailAccounts);
-      let iIndex = 0;
-      for (let i in arrayMailAccounts) {
-        // determine default identity of this account
-        let defaultIdentity = arrayMailAccounts[i].identities[0];
-        let defaultIdentityId;
+async function initSettings() {
+  try {
+    // get all accounts and identities from thunderbird
+    let arrayMailAccounts = await messenger.accounts.list();
+    // console.log("arrayMailAccounts:", arrayMailAccounts);
+    let iIndex = 0;
+    for (let i in arrayMailAccounts) {
+      // determine default identity of this account
+      let defaultIdentity = arrayMailAccounts[i].identities[0];
+      let defaultIdentityId;
 
-        if (defaultIdentity === undefined) {
-          defaultIdentityId = "";
-        } else {
-          defaultIdentityId = defaultIdentity.id;
+      if (defaultIdentity === undefined) {
+        defaultIdentityId = "";
+      } else {
+        defaultIdentityId = defaultIdentity.id;
+      }
+
+      accountsAndIdentities.accounts[arrayMailAccounts[i].id] = {
+        prettyName: arrayMailAccounts[i].name,
+        defaultIdentityId: defaultIdentityId,
+        type: arrayMailAccounts[i].type,
+        index: iIndex++,
+      };
+
+      for (let j in arrayMailAccounts[i].identities) {
+        const identity = arrayMailAccounts[i].identities[j];
+        let prettyName = `${identity.name} <${identity.email}>`;
+        let prettyNameDebug = `${identity.email}`;
+
+        if (identity.label !== "") {
+          prettyName += ` (${identity.label})`;
+          prettyNameDebug += ` (${identity.label})`;
         }
 
-        accountsAndIdentities.accounts[arrayMailAccounts[i].id] = {
-          prettyName: arrayMailAccounts[i].name,
-          defaultIdentityId: defaultIdentityId,
-          type: arrayMailAccounts[i].type,
-          index: iIndex++,
+        prettyNameDebug += `(account: ${arrayMailAccounts[i].name})`;
+
+        accountsAndIdentities.identities[identity.id] = {
+          email: identity.email,
+          prettyName: prettyName,
+          prettyNameDebug : prettyNameDebug,
+          accountId: arrayMailAccounts[i].id,
         };
-
-        for (let j in arrayMailAccounts[i].identities) {
-          const identity = arrayMailAccounts[i].identities[j];
-          let prettyName = `${identity.name} <${identity.email}>`;
-          let prettyNameDebug = `${identity.email}`;
-
-          if (identity.label !== "") {
-            prettyName += ` (${identity.label})`;
-            prettyNameDebug += ` (${identity.label})`;
-          }
-
-          prettyNameDebug += `(account: ${arrayMailAccounts[i].name})`;
-
-          accountsAndIdentities.identities[identity.id] = {
-            email: identity.email,
-            prettyName: prettyName,
-            prettyNameDebug : prettyNameDebug,
-            accountId: arrayMailAccounts[i].id,
-          };
-        }
       }
-
-      // replace undefined defaultIdentityId with first known identity
-      for (let idx in accountsAndIdentities.accounts) {
-        if (accountsAndIdentities.accounts[idx].defaultIdentityId === "") {
-          accountsAndIdentities.accounts[idx].defaultIdentityId = Object.keys(accountsAndIdentities.identities)[0];
-        }
-      }
-
-      initSettingsDone.accountsAndIdentities = true;
-      // console.log("accountsAndIdentities:", accountsAndIdentities);
-
-      // get stored settings
-      messenger.storage.sync.get("guiState").then(
-        (result) => {
-          if (result.guiState !== undefined) {
-            guiState = checkGuiState(result.guiState);
-          } else {
-            // defaults
-            guiState.currentAccountId = Object.keys(
-              accountsAndIdentities.accounts
-            )[0];
-            guiState.currentDetectionIdentity = Object.keys(
-              accountsAndIdentities.identities
-            )[0];
-            guiState.currentSafetyIdentity = Object.keys(
-              accountsAndIdentities.identities
-            )[0];
-          }
-          initSettingsDone.guiState = true;
-        },
-        (error) => console.log("Error: storage get guiState failed ", error)
-      );
-      messenger.storage.sync.get("settings").then(
-        (result) => {
-          // checkSettings (also adds defaults if undefined)
-          settings = checkSettings(result.settings);
-          // should we save, if changed?
-
-          initSettingsDone.settings = true;
-          notifySettingsChanged();
-        },
-        (error) => console.log("Error: storage get settings failed ", error)
-      );
-    },
-    (error) => {
-      console.error(`Error failureCallback: ${error}`);
     }
-  );
+
+    // replace undefined defaultIdentityId with first known identity
+    for (let idx in accountsAndIdentities.accounts) {
+      if (accountsAndIdentities.accounts[idx].defaultIdentityId === "") {
+        accountsAndIdentities.accounts[idx].defaultIdentityId = Object.keys(accountsAndIdentities.identities)[0];
+      }
+    }
+
+    initSettingsDone.accountsAndIdentities = true;
+    // console.log("accountsAndIdentities:", accountsAndIdentities);
+  } catch (error) {
+    console.error(`Error failureCallback: ${error}`);
+  }
+
+  // get stored settings
+  try {
+    let result = await messenger.storage.sync.get("guiState");
+    if (result.guiState !== undefined) {
+      guiState = checkGuiState(result.guiState);
+    } else {
+      // defaults
+      guiState.currentAccountId = Object.keys(
+        accountsAndIdentities.accounts
+      )[0];
+      guiState.currentDetectionIdentity = Object.keys(
+        accountsAndIdentities.identities
+      )[0];
+      guiState.currentSafetyIdentity = Object.keys(
+        accountsAndIdentities.identities
+      )[0];
+    }
+    initSettingsDone.guiState = true;
+  } catch (error) {
+    console.log("Error: storage get guiState failed ", error);
+  }
+
+  try {
+    let result = await messenger.storage.sync.get("settings");
+    // checkSettings (also adds defaults if undefined)
+    settings = checkSettings(result.settings);
+    // should we save, if changed?
+
+    initSettingsDone.settings = true;
+    notifySettingsChanged();
+  } catch (error) {
+    console.log("Error: storage get settings failed ", error);
+  }
 }
 
 function sleep(ms) {
@@ -255,53 +254,53 @@ function sleep(ms) {
 }
 
 async function windowExists(winId) {
-  let exists = false;
-  await messenger.windows.get(winId).then(
-    (window) => {
-      exists = true;
-    },
-    () => {
-      exists = false;
-    }
-  );
-  return exists;
+  try {
+    let window = await messenger.windows.get(winId);
+    return !!window;
+  } catch (ex) {
+    return false;
+  }
 }
 
 // does not exit until window closed
 // returns true, if "OK" pressed
 async function firePopup(title, text, buttons) {
-  // build script which fires alert
-  let winId = "";
-  let result = false;
-  let cw = await messenger.windows.getCurrent();
+  try {
+    // build script which fires alert
+    let winId = "";
+    let result = false;
+    let cw = await messenger.windows.getCurrent();
 
-  await messenger.windows
-    .create({
-      type: "popup",
-      width: 400,
-      height: 300,
-      left: cw.left + 20,
-      top: cw.top + 20,
-      url:
-        `dialog.html?buttons=${encodeURIComponent(buttons)}&title=${encodeURIComponent(title)}` +
-        `&string=${encodeURIComponent(text)}`,
-    })
-    .then((window) => {
-      winId = window.id;
-    });
-  // wait until window closed
-  while (true) {
-    // check if window is still open
-    let exists = await windowExists(winId);
-    if (!exists) {
-      break;
+    let window = await messenger.windows
+      .create({
+        type: "popup",
+        width: 400,
+        height: 300,
+        left: cw.left + 20,
+        top: cw.top + 20,
+        url:
+          `dialog.html?buttons=${encodeURIComponent(buttons)}&title=${encodeURIComponent(title)}` +
+          `&string=${encodeURIComponent(text)}`,
+      });
+    winId = window.id;
+
+    // wait until window closed
+    while (true) {
+      // check if window is still open
+      let exists = await windowExists(winId);
+      if (!exists) {
+        break;
+      }
+      await sleep(1000);
     }
-    await sleep(1000);
+    if (dialogResults[winId] !== undefined) {
+      result = (dialogResults[winId] & BUTTON_OK) !== 0;
+    }
+    return result;
+  } catch (error) {
+    console.log("Error: firePopup failed ", error);
+    return false;
   }
-  if (dialogResults[winId] !== undefined) {
-    result = (dialogResults[winId] & BUTTON_OK) !== 0;
-  }
-  return result;
 }
 
 function patternSearch(haystack, needles, warnIdentityId, warnText) {
@@ -311,7 +310,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
     if (needle.match(/^\s*$/)) {
       continue; // skip empty lines
     }
-    let isRegex = needle.match(/^\s*\/(.*)\/\s*$/)
+    let isRegex = needle.match(/^\s*\/(.*)\/\s*$/);
     if (isRegex) {
       // maybe we have a RegExp
       try {
@@ -440,7 +439,7 @@ function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
 }
 
 // returns true if ok-to-send
-async function sendConfirm(tabId, identityId, recipients) {
+async function sendConfirm(identityId, recipients) {
   let perIdentitySettings = settings.identitySettings[identityId];
   if (perIdentitySettings === undefined) {
     // nothing configured
@@ -467,14 +466,18 @@ async function sendConfirm(tabId, identityId, recipients) {
   );
 }
 
-function testGetFull(msgId) {
-  messenger.messages.getFull(msgId).then((msgPart) => {
+async function testGetFull(msgId) {
+  try {
+    let msgPart = await messenger.messages.getFull(msgId);
     console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
-  });
+  } catch (error) {
+    console.log("Error: messages.getFull failed ", error);
+  }
 }
 
-function checkComposeTab(tab) {
-  messenger.compose.getComposeDetails(tab.id).then((gcd) => {
+async function checkComposeTab(tab) {
+  try {
+    let gcd = await messenger.compose.getComposeDetails(tab.id);
     let changed = false;
     let allRecipientsList = [];
     let toRecipientsList = [];
@@ -529,47 +532,41 @@ function checkComposeTab(tab) {
       let origRecipientsList = [];
       if (relatedMessageId) {
         testGetFull(relatedMessageId);
-        messenger.messages.get(relatedMessageId).then((msgHdr) => {
-          origRecipientsList = msgHdr.recipients;
+        let msgHdr = await messenger.messages.get(relatedMessageId);
+        origRecipientsList = msgHdr.recipients;
 
-          if (settings.additionalHeaderFields) {
-            // we should also collect information from other header fields
-            messenger.messages.getFull(relatedMessageId).then((msgPart) => {
-              console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
-              // add found headers to begining of origRecipientsList, to keep order, we start with last key
-              for (let i = settings.additionalHeaderFields.length - 1; i >= 0; i--) {
-                if (settings.additionalHeaderFields[i][0]) {
-                  let headerArray = msgPart.headers[settings.additionalHeaderFields[i][0]];
-                  if (headerArray) {
-                    if (settings.additionalHeaderFields[i][1]) {
-                      // with occurence number
-                      let oN = settings.additionalHeaderFields[i][1];
-                      if (headerArray.length >= oN) {
-                        origRecipientsList.unshift(headerArray[oN-1]);
-                      }
-                    } else {
-                      // without occurence number: take all
-                      for (let j = 0; j < headerArray.length; j++) {
-                        origRecipientsList.unshift(headerArray[j]);
-                      }
-                    }
+        if (settings.additionalHeaderFields) {
+          // we should also collect information from other header fields
+          let msgPart = await messenger.messages.getFull(relatedMessageId);
+          console.log("getFull(msgId): MessagePart.headers", msgPart.headers);
+          // add found headers to begining of origRecipientsList, to keep order, we start with last key
+          for (let i = settings.additionalHeaderFields.length - 1; i >= 0; i--) {
+            if (settings.additionalHeaderFields[i][0]) {
+              let headerArray = msgPart.headers[settings.additionalHeaderFields[i][0]];
+              if (headerArray) {
+                if (settings.additionalHeaderFields[i][1]) {
+                  // with occurence number
+                  let oN = settings.additionalHeaderFields[i][1];
+                  if (headerArray.length >= oN) {
+                    origRecipientsList.unshift(headerArray[oN-1]);
+                  }
+                } else {
+                  // without occurence number: take all
+                  for (let j = 0; j < headerArray.length; j++) {
+                    origRecipientsList.unshift(headerArray[j]);
                   }
                 }
               }
-              handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
-                                      allRecipientsList, origRecipientsList);
-            }, () => {/* errors are ignored */});
-          } else {
-            handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
-                                    allRecipientsList, origRecipientsList);
+            }
           }
-        });
-      } else {
-        handleComposeTabChanged(tab.id, tab.windowId, initialIdentityId, currentIdentityId,
-                                allRecipientsList, origRecipientsList);
+        }
       }
+      handleComposeTabChanged(tab.id, initialIdentityId, currentIdentityId,
+                              allRecipientsList, origRecipientsList);
     }
-  }, () => {/* errors are ignored */});
+  } catch (error) {
+    /* errors are ignored */
+  }
 }
 
 function searchAndRemoveFromRecipientList(recipientsList, email) {
@@ -583,8 +580,8 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
   return false;
 }
 
-function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIdentityId,
-                                 allRecipientsList, origRecipientsList) {
+async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentityId,
+                                       allRecipientsList, origRecipientsList) {
   let newIdentityId = getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
@@ -594,7 +591,8 @@ function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIden
     };
 
     // Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
-    messenger.identities.get(newIdentityId).then((newIdentity) => {
+    try {
+      let newIdentity = await messenger.identities.get(newIdentityId);
       let newIdentityEmail = newIdentity.email;
       if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
         // found in "to"
@@ -605,7 +603,9 @@ function handleComposeTabChanged(tabId, windowId, initialIdentityId, currentIden
       }
 
       messenger.compose.setComposeDetails(tabId, details);
-    }, () => {/* errors are ignored */});
+    } catch (error) {
+      /* errors are ignored */
+    }
   }
 }
 
@@ -619,7 +619,7 @@ function onIdentityChangedListener(tab, identityId) {
 
 //we need to wait for confirmations -> async function
 async function onBeforeSendListener(tab, details) {
-  let result = await sendConfirm(tab.id, details.identityId, details.to.concat(details.cc, details.bcc));
+  let result = await sendConfirm(details.identityId, details.to.concat(details.cc, details.bcc));
 
   return {
     cancel: !result,
@@ -673,10 +673,13 @@ function handleMessage(request, sender, sendResponse) {
  * ReplyToList              = 13;
  */
 
-function onRecipientsChanged(tabId) {
-  messenger.tabs.get(tabId).then( tab => {
+async function onRecipientsChanged(tabId) {
+  try {
+    let tab = await messenger.tabs.get(tabId);
     checkComposeTab(tab);
-  });
+  } catch(error) {
+    console.log("Error: tabs.get failed ", error);
+  }
 }
 
 function onComposeTabReady(tab) {
@@ -686,7 +689,7 @@ function onComposeTabReady(tab) {
 
 function browserActionClicked(tab, info) {
   // bring configuration up
-  messenger.runtime.openOptionsPage()
+  messenger.runtime.openOptionsPage();
 }
 
 initSettings();

@@ -350,7 +350,7 @@ function getSettings() {
   // var sending = messenger.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
   // sending.then(handleResponse, (err) => {console.log("err:", err)});
   messenger.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" },
-                                                        messenger.extension, handleResponse)
+                                                        messenger.extension, handleResponse);
 }
 
 function onLoad(event) {

@@ -8,8 +8,10 @@ module.exports = {
     "es6": true,
     "webextensions": true
   },
+  "plugins": ["promise"],
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:promise/recommended"
   ],
   "rules": {
     "max-len": ["warn", { "code": 120 }],
