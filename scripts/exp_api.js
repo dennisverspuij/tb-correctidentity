@@ -1,5 +1,4 @@
 let { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-let { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 
 let onRecipientsChangeHookInstalled = {};  // key: windowId; value: bool
