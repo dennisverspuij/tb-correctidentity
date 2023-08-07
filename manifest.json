@@ -7,12 +7,12 @@
   "applications": {
     "gecko": {
       "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
-      "strict_min_version": "91.0",
+      "strict_min_version": "102.0",
       "strict_max_version": "115.*"
     }
   },
   "default_locale": "en-US",
-  "permissions": ["accountsRead", "messagesRead", "compose", "tabs", "storage"],
+  "permissions": ["accountsRead", "messagesRead", "compose", "tabs", "storage", "addressBooks"],
   "experiment_apis": {
     "exp": {
       "schema": "schema.json",
@@ -24,7 +24,7 @@
     }
   },
   "background": {
-    "scripts": ["scripts/background-script.js"]
+    "scripts": ["scripts/ical.js","scripts/background-script.js"]
   },
   "options_ui": {
     "page": "options.html",

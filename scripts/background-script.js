@@ -303,7 +303,7 @@ async function firePopup(title, text, buttons) {
   }
 }
 
-function patternSearch(haystack, needles, warnIdentityId, warnText) {
+async function patternSearch(haystack, needles, warnIdentityId, warnText) {
   for (let i in needles) {
     let needle = needles[i];
     // check search terms
@@ -329,6 +329,25 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
           BUTTON_OK
         );
       }
+    } else if (needle.startsWith("addressbook=")) {
+      // get name, remove leading or trailing quotes
+      let addressbookName = needle.substring("addressbook=".length).replaceAll("\"", "");
+      let addressbooks = await messenger.addressBooks.list();
+      for (let abIdx in addressbooks) {
+        if (addressbooks[abIdx].name == addressbookName) {
+          contacts = await  messenger.contacts.list(addressbooks[abIdx].id);
+          for (let ctctIdx in contacts) {
+            let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
+            let email = vCard.getAllProperties("email")
+            for (let entryIdx in email) {
+              if (haystack.toLowerCase().indexOf(email[entryIdx].jCal[3]) >= 0) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      return false;
     } else if (haystack.toLowerCase().indexOf(needle) >= 0) {
       return true;
     }
@@ -338,7 +357,7 @@ function patternSearch(haystack, needles, warnIdentityId, warnText) {
 
 // Compute identity based on allRecipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
-function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
+async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
   let newIdentityId = identityId;
   let aliasedId = "";
   let explicitId = "";
@@ -401,7 +420,7 @@ function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
         let perIdentitySettings = settings.identitySettings[idxIdentity];
         if (perIdentitySettings.detectable) {
           let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-          let isMatch = patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
+          let isMatch = await patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
           if (isMatch) {
             aliasedId = idxIdentity;
           }
@@ -450,7 +469,7 @@ async function sendConfirm(identityId, recipients) {
 
   for (let idxRecipient in recipients) {
     let recipient = recipients[idxRecipient];
-    let isMatch = patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
+    let isMatch = await patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
     if (isMatch) {
       warnRecipients += `\n${recipient}`;
     }
@@ -582,7 +601,7 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
 
 async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentityId,
                                        allRecipientsList, origRecipientsList) {
-  let newIdentityId = getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
+  let newIdentityId = await getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
