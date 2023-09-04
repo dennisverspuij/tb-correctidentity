@@ -347,7 +347,6 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
           }
         }
       }
-      return false;
     } else if (haystack.toLowerCase().indexOf(needle) >= 0) {
       return true;
     }
