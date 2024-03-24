@@ -314,7 +314,7 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
     if (isRegex) {
       // maybe we have a RegExp
       try {
-        const regex = new RegExp(isRegex[1], 'i');
+        const regex = new RegExp(isRegex[1], 'i');  // flag 'i': case insensitive
         if (haystack.match(regex)) {
           return true;
         }
@@ -340,14 +340,14 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
             let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
             let email = vCard.getAllProperties("email")
             for (let entryIdx in email) {
-              if (haystack.toLowerCase().indexOf(email[entryIdx].jCal[3]) >= 0) {
+              if (haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) >= 0) {
                 return true;
               }
             }
           }
         }
       }
-    } else if (haystack.toLowerCase().indexOf(needle) >= 0) {
+    } else if (haystack.toLowerCase().indexOf(needle.toLowerCase()) >= 0) {
       return true;
     }
   }
