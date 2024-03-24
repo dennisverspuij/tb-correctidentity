@@ -1,3 +1,9 @@
+# v2.4.0:
+- add adressbook match feature
+- correct case insensitivity
+- fix config page width adjustments
+- strict_max_version increased to 126.*
+
 # v2.3.2:
 - use async / await where possible
 - some lint warnings addressed (comma, semicolon placement)

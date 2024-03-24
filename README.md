@@ -1,8 +1,13 @@
-Thunderbird Add-on "Correct Identity" (v2.2.x)
+Thunderbird Add-on "Correct Identity" (v2.4.x)
 ==============================================
 
-This add-on version works with Thunderbird versions >= 91.3.1.  
-The previous version v2.0.1 supported Thunderbird version >= 78.0
+This add-on version works with Thunderbird versions >= 102.0
+
+Version Support History:  
+Last version v2.3.2 supported Thunderbird version >= 91.0  
+Version v2.1.1 supported Thunderbird version >= 91.0  
+Version v2.0.1 supported Thunderbird version >= 78.0  
+
 
 It's a **perfect alternative/continuation**
 
@@ -37,9 +42,18 @@ Features
 * Choose the initial "from" identity when composing a new email
 * Choose the "from" identity when replying to a message
     * based on the original recipients of the replied-to message
+    * **NEW in 2.4.x:** based on addressbook entries
     * based on non-standard SMTP header fields of the replied-to message (**new feature**: "Advanced: Additional mail headers")
 * Automatically change the "from" identity when addressing specific recipients
 * Warn if specific recipients are included in a email send from a specific identity
+
+### **NEW in 2.4.x:** Addressbook Match
+Instead of using individual match entries, also a complete addressbook can be checked for a match.
+As an example you can add the following line to the text field:
+addressbook="My Private Address Book"
+
+The string in quotes is the name of the address book as given in the
+address book pane. Can be copied from address book properties.
 
 ### Advanced: Additional mail headers
 [Email header fields](https://en.wikipedia.org/wiki/Email#Header_fields) are keywords in the SMTP (Simple Mail Transfer Protocol) message. E.g. "**To**" identifies the email recipient.
