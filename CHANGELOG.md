@@ -1,3 +1,6 @@
+# v2.4.1:
+- strict_max_version increased to 128.*
+
 # v2.4.0:
 - add adressbook match feature
 - correct case insensitivity
