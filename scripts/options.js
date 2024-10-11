@@ -138,7 +138,7 @@ function updateAdditionalHeaderFields() {
   let str = "";
   for (let i=0; i< settings.additionalHeaderFields.length; i++) {
     // key value
-    str = settings.additionalHeaderFields[i][0];
+    str += settings.additionalHeaderFields[i][0];
 
     // occurence value
     if (settings.additionalHeaderFields[i][1]) {
