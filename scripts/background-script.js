@@ -614,6 +614,18 @@ async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentity
     try {
       let newIdentity = await messenger.identities.get(newIdentityId);
       let newIdentityEmail = newIdentity.email;
+
+      // Use custom original sender address if Identity Email is not equal to Original Recipient Email (first entry of the list)
+      let origRecipientEmail = origRecipientsList[0];
+      if (newIdentityEmail !== origRecipientEmail) {
+        console.log("newIdentityEmail: ", newIdentityEmail);
+        console.log("origRecipientEmail: ", origRecipientEmail);
+        console.log("Mismatch! Setting sender email to origRecipientEmail (" + origRecipientEmail + ")");
+        
+        details.from = newIdentity.name +' <'+ origRecipientEmail + '>';
+        newIdentityEmail = origRecipientEmail;
+      }
+
       if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
         // found in "to"
         details.to = composeTabStatus[tabId].toRecipientsList;
