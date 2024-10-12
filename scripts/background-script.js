@@ -528,8 +528,6 @@ async function checkComposeTab(tab) {
       // check if recipients have changed
       if (JSON.stringify(allRecipientsList) != JSON.stringify(gcdAllRecipientsList)) {
         allRecipientsList = gcdAllRecipientsList;
-        toRecipientsList = gcd.to;
-        ccRecipientsList = gcd.cc;
         changed = true;
       }
     } else {
