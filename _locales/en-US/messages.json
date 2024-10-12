@@ -71,6 +71,12 @@
   "CorrectIdentity.replyFromRecipient": {
     "message": "attempt to find and use an identity that appears in its recipient list"
   },
+  "CorrectIdentity.keepRecipientAddress": {
+    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+  },
+  "CorrectIdentity.removeSenderFromRecipients": {
+    "message": "remove the identity from the recipient list"
+  },
   "CorrectIdentity.safetyCaption": {
     "message": "Safety"
   },
