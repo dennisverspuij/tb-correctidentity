@@ -11,7 +11,7 @@ let guiState = {
 
 let settings = {
   accountSettings: {},  // key: accountId; values: identityMechanism, explicitIdentity, replyFromRecipient
-  identitySettings: {}, // key: identityId; values: detectable, detectionAliases, warningAliases
+  identitySettings: {}, // key: identityId; values: detectable, keepRecipientAddress, removeSenderFromRecipients, detectionAliases, warningAliases
   // migrate   ... property will be dynamically added if old prefs were migrated
   additionalHeaderFields: []
 };
@@ -121,6 +121,12 @@ function checkSettings(inSettings) {
     let is = inSettings.identitySettings[idx];
     if (is.detectable === undefined) {
       is.detectable = true;
+    }
+    if (is.keepRecipientAddress === undefined) {
+      is.keepRecipientAddress = false;
+    }
+    if (is.removeSenderFromRecipients === undefined) {
+      is.removeSenderFromRecipients = true;
     }
     if (is.detectionAliases === undefined) {
       is.detectionAliases = "";
@@ -610,28 +616,36 @@ async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentity
       identityId : newIdentityId,
     };
 
-    // Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
+    // Use custom original sender address if Identity Email is not equal to Original Recipient Email (first entry of the list)
+    // Plus: Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
+    // Both: If configured, respect the settings.
     try {
       let newIdentity = await messenger.identities.get(newIdentityId);
       let newIdentityEmail = newIdentity.email;
+      let perIdentitySettings = settings.identitySettings[newIdentityId];
 
-      // Use custom original sender address if Identity Email is not equal to Original Recipient Email (first entry of the list)
-      let origRecipientEmail = origRecipientsList[0];
-      if (newIdentityEmail !== origRecipientEmail) {
-        console.log("newIdentityEmail: ", newIdentityEmail);
-        console.log("origRecipientEmail: ", origRecipientEmail);
-        console.log("Mismatch! Setting sender email to origRecipientEmail (" + origRecipientEmail + ")");
-        
-        details.from = newIdentity.name +' <'+ origRecipientEmail + '>';
-        newIdentityEmail = origRecipientEmail;
+      if (perIdentitySettings.keepRecipientAddress) {
+        // Keep original sender address (first entry of the list)
+        let origRecipientEmail = origRecipientsList[0];
+        if (newIdentityEmail !== origRecipientEmail) {
+          console.log("newIdentityEmail: ", newIdentityEmail);
+          console.log("origRecipientEmail: ", origRecipientEmail);
+          console.log("Mismatch! Setting sender email to origRecipientEmail (" + origRecipientEmail + ")");
+          
+          details.from = newIdentity.name +' <'+ origRecipientEmail + '>';
+          newIdentityEmail = origRecipientEmail;
+        }
       }
 
-      if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
-        // found in "to"
-        details.to = composeTabStatus[tabId].toRecipientsList;
-      } else if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].ccRecipientsList, newIdentityEmail)) {
-        // found in "cc"
-        details.cc = composeTabStatus[tabId].ccRecipientsList;
+      if (perIdentitySettings.removeSenderFromRecipients) {
+        // remove sender address from recipients
+        if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].toRecipientsList, newIdentityEmail)) {
+          // found in "to"
+          details.to = composeTabStatus[tabId].toRecipientsList;
+        } else if (searchAndRemoveFromRecipientList(composeTabStatus[tabId].ccRecipientsList, newIdentityEmail)) {
+          // found in "cc"
+          details.cc = composeTabStatus[tabId].ccRecipientsList;
+        }
       }
 
       messenger.compose.setComposeDetails(tabId, details);
