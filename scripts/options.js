@@ -52,7 +52,8 @@ function getPerIdentitySettingsOrDefault(identityId) {
   if (perIdentitySettings === undefined) {
     // not found in settings, set defaults
     perIdentitySettings = {
-      detectable: true,
+      detectable, removeSenderFromRecipients: true,
+      keepRecipientAddress: false,
       detectionAliases: "",
       warningAliases: "",
     };
@@ -122,6 +123,10 @@ function updateGuiDetectionIdentityChanged(newDetectionIdentityId) {
 
   document.getElementById("detectable").checked =
     perIdentitySettings.detectable;
+  document.getElementById("removeSenderFromRecipients").checked =
+    perIdentitySettings.removeSenderFromRecipients;
+  document.getElementById("keepRecipientAddress").checked =
+    perIdentitySettings.keepRecipientAddress;
   document.getElementById("detectionAliases").value =
     perIdentitySettings.detectionAliases;
 }
@@ -242,6 +247,22 @@ function detectableChanged(result) {
   notifySettingsChanged();
 }
 
+function keepRecipientAddressChanged(result) {
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(
+    guiState.currentDetectionIdentity
+  );
+  perIdentitySettings.keepRecipientAddress = result.target.checked;
+  notifySettingsChanged();
+}
+
+function removeSenderFromRecipientsChanged(result) {
+  let perIdentitySettings = getPerIdentitySettingsOrDefault(
+    guiState.currentDetectionIdentity
+  );
+  perIdentitySettings.removeSenderFromRecipients = result.target.checked;
+  notifySettingsChanged();
+}
+
 function detectionAliasesChanged(result) {
   let perIdentitySettings = getPerIdentitySettingsOrDefault(
     guiState.currentDetectionIdentity
@@ -298,6 +319,12 @@ function installConfigPageEventListners() {
   document
     .getElementById("detectable")
     .addEventListener("change", detectableChanged);
+  document
+    .getElementById("keepRecipientAddress")
+    .addEventListener("change", keepRecipientAddressChanged);
+  document
+    .getElementById("removeSenderFromRecipients")
+    .addEventListener("change", removeSenderFromRecipientsChanged);
   document
     .getElementById("detectionAliases")
     .addEventListener("change", detectionAliasesChanged);

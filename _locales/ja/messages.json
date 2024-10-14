@@ -47,6 +47,12 @@
   "CorrectIdentity.replyFromRecipient": {
     "message": "返信元のメッセージからアイデンティティの同一性を検出して適用する"
   },
+  "CorrectIdentity.keepRecipientAddress": {
+    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+  },
+  "CorrectIdentity.removeSenderFromRecipients": {
+    "message": "remove the identity from the recipient list"
+  },
   "CorrectIdentity.safetyCaption": {
     "message": "安全"
   },

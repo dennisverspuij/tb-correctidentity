@@ -47,6 +47,12 @@
   "CorrectIdentity.replyFromRecipient": {
     "message": "detecteer en gebruik de identiteit die voorkomt in de ontvangerslijst"
   },
+  "CorrectIdentity.keepRecipientAddress": {
+    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+  },
+  "CorrectIdentity.removeSenderFromRecipients": {
+    "message": "remove the identity from the recipient list"
+  },
   "CorrectIdentity.safetyCaption": {
     "message": "Veiligheid"
   },
