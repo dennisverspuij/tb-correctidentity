@@ -50,7 +50,7 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
           context,
           name: "exp.onRecipientsChanged",
           register(fire) {
-            function callback(event, tabId) {
+            function callback(_event, tabId) {
               return fire.async(tabId);
             }
 

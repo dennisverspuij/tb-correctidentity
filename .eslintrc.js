@@ -17,7 +17,7 @@ module.exports = {
     "max-len": ["warn", { "code": 120 }],
     "no-console": 0,
     "no-var": 1,
-    "no-unused-vars": ["warn", { "vars": "all", "args": "all" } ],
+    "no-unused-vars": ["warn", { "vars": "all", "args": "all" , "varsIgnorePattern": "^_" , "argsIgnorePattern": "^_" } ],
     "no-undef": ["warn"],
     "no-proto": ["error"],
     "no-trailing-spaces" : ["error"],

@@ -161,7 +161,7 @@ function checkGuiState(inGuiState) {
   return inGuiState;
 }
 
-//read settings from storage
+// read settings from storage
 async function initSettings() {
   try {
     // get all accounts and identities from thunderbird
@@ -309,6 +309,30 @@ async function firePopup(title, text, buttons) {
   }
 }
 
+
+// check if text element at idx could be an email address
+function getMatchedMailAddress(haystack, idx) {
+  // cut at tabs (used as separator)) left and right
+  let spaceIdx = haystack.indexOf("\t", idx);
+  if (spaceIdx > 0) {
+    // cut at end
+    haystack = haystack.substring(0, spaceIdx);
+  }
+  spaceIdx = haystack.lastIndexOf("\t");
+  if (spaceIdx > 0) {
+    // remove before
+    haystack = haystack.substring(spaceIdx + 1);
+  }
+
+  // eslint-disable-next-line
+  let emailValidationRegex = /^(?:([^<]*?)\s*<)?((?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\]))>?$/;
+  if (haystack.match(emailValidationRegex)) {
+    return haystack;
+  }
+
+  return "";
+}
+
 async function patternSearch(haystack, needles, warnIdentityId, warnText) {
   for (let i in needles) {
     let needle = needles[i];
@@ -321,8 +345,10 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
       // maybe we have a RegExp
       try {
         const regex = new RegExp(isRegex[1], 'i');  // flag 'i': case insensitive
-        if (haystack.match(regex)) {
-          return true;
+        let res = haystack.match(regex)
+        if (res) {
+          let matchedMailAddress = getMatchedMailAddress(haystack, res[1])
+          return [true, matchedMailAddress];
         }
       } catch (err) {
         // called non-blocking
@@ -346,25 +372,30 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
             let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
             let email = vCard.getAllProperties("email")
             for (let entryIdx in email) {
-              if (haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) >= 0) {
-                return true;
+              let matchIdx = haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) ;
+              if (matchIdx >= 0) {
+                let matchedMailAddress = getMatchedMailAddress(haystack, matchIdx)
+                return [true, matchedMailAddress];
               }
             }
           }
         }
       }
     } else if (haystack.toLowerCase().indexOf(needle.toLowerCase()) >= 0) {
-      return true;
+      let matchedMailAddress = getMatchedMailAddress(haystack, haystack.toLowerCase().indexOf(needle.toLowerCase()));
+      return [true, matchedMailAddress];
     }
   }
-  return false;
+  return [false, ""];
 }
 
 // Compute identity based on allRecipientsList, explicitIdentity,
 // replyFromRecipient, and detectionAliases.
 async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsList) {
   let newIdentityId = identityId;
+  let newFromAddress = "";  // only used if keepRecipientAddress is enabled
   let aliasedId = "";
+  let aliasFromAddress = "";  // only used if keepRecipientAddress is enabled
   let explicitId = "";
   let replyId = "";
 
@@ -388,8 +419,8 @@ async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsL
     if (perAccountSettings.replyFromRecipient) {
       // check if we have a reply hint
       if (origRecipientsList) {
-        for (let origRecipients of origRecipientsList) {
-          let replyHint = origRecipients.toLowerCase();
+        for (let origRecipient of origRecipientsList) {
+          let replyHint = origRecipient.toLowerCase();
           let identityEmail = accountsAndIdentities.identities[identityId].email.toLowerCase();
           console.log(`this is identityEmail: ${identityEmail}`);
           if (identityEmail.indexOf("@") === -1 || replyHint.indexOf(identityEmail) === -1) {
@@ -414,20 +445,26 @@ async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsL
       }
 
       // check for alias matches
-      let recipientsString = allRecipientsList.join(" ");
+      // use tab to separate entries in concatenated string
+      let recipientsString = allRecipientsList.join("\t");
       if (origRecipientsList) {
         // if we have a origRecipients, search also for origRecipients
         for (let origRecipient of origRecipientsList) {
-          recipientsString = `${recipientsString} ${origRecipient}`;
+          // use tab to separate entries in concatenated string
+          recipientsString = `${recipientsString}\t${origRecipient}`;
         }
       }
       for (let idxIdentity in settings.identitySettings) {
         let perIdentitySettings = settings.identitySettings[idxIdentity];
         if (perIdentitySettings.detectable) {
           let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-          let isMatch = await patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
+          let [isMatch, matchedMailAddress] = await patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
           if (isMatch) {
             aliasedId = idxIdentity;
+            if (perIdentitySettings.keepRecipientAddress) {
+              aliasFromAddress = matchedMailAddress;
+            }
+            break;
           }
         }
       }
@@ -447,7 +484,8 @@ async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsL
   } else if (aliasedId !== "") {
     // we have a match from the alias list
     console.log("match from the alias list");
-    newIdentityId = aliasedId;
+    newIdentityId  = aliasedId;
+    newFromAddress = aliasFromAddress;
   } else if ((replyId !== "")  && (composeTabStatus[tabId].replyHintConsumed)) {
     // return the matched identity from the replyHint
     console.log("matched identity from the replyHint (low prio)");
@@ -458,8 +496,11 @@ async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsL
 
   console.log("getIdentity returns newIdentityId:", newIdentityId);
   console.log(newIdentityId, ":", accountsAndIdentities.identities[newIdentityId].prettyNameDebug);
+  if (newFromAddress !=="") {
+    console.log("getIdentity returns also newFromAddress:", newFromAddress);
+  }
 
-  return newIdentityId;
+  return [newIdentityId, newFromAddress];
 }
 
 // returns true if ok-to-send
@@ -474,7 +515,7 @@ async function sendConfirm(identityId, recipients) {
 
   for (let idxRecipient in recipients) {
     let recipient = recipients[idxRecipient];
-    let isMatch = await patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
+    let [isMatch, _matchedMailAddress] = await patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
     if (isMatch) {
       warnRecipients += `\n${recipient}`;
     }
@@ -559,7 +600,8 @@ async function checkComposeTab(tab) {
       if (relatedMessageId) {
         testGetFull(relatedMessageId);
         let msgHdr = await messenger.messages.get(relatedMessageId);
-        origRecipientsList = msgHdr.recipients;
+        // recipients is only "to", append also "cc"
+        origRecipientsList = msgHdr.recipients.concat(msgHdr.ccList);
 
         if (settings.additionalHeaderFields) {
           // we should also collect information from other header fields
@@ -608,7 +650,7 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
 
 async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentityId,
                                        allRecipientsList, origRecipientsList) {
-  let newIdentityId = await getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
+  let [newIdentityId, newFromAddress] = await getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
@@ -625,15 +667,12 @@ async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentity
       let perIdentitySettings = settings.identitySettings[newIdentityId];
 
       if (perIdentitySettings.keepRecipientAddress) {
-        // Keep original sender address (first entry of the list)
-        let origRecipientEmail = origRecipientsList[0];
-        if (newIdentityEmail !== origRecipientEmail) {
-          console.log("newIdentityEmail: ", newIdentityEmail);
-          console.log("origRecipientEmail: ", origRecipientEmail);
-          console.log("Mismatch! Setting sender email to origRecipientEmail (" + origRecipientEmail + ")");
-          
-          details.from = newIdentity.name +' <'+ origRecipientEmail + '>';
-          newIdentityEmail = origRecipientEmail;
+        // Keep matched entry as from address
+        if (newFromAddress !== "") {
+          details.from     = newFromAddress;
+
+          // overwrite for removal below
+          newIdentityEmail = newFromAddress;
         }
       }
 
@@ -655,7 +694,7 @@ async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentity
   }
 }
 
-function onIdentityChangedListener(tab, identityId) {
+function onIdentityChangedListener(tab, _identityId) {
   if (composeTabStatus[tab.id].changedByUs) {
     composeTabStatus[tab.id].changedByUs = false;
   } else {
@@ -664,7 +703,7 @@ function onIdentityChangedListener(tab, identityId) {
 }
 
 //we need to wait for confirmations -> async function
-async function onBeforeSendListener(tab, details) {
+async function onBeforeSendListener(_tab, details) {
   let result = await sendConfirm(details.identityId, details.to.concat(details.cc, details.bcc));
 
   return {
@@ -733,7 +772,7 @@ function onComposeTabReady(tab) {
   checkComposeTab(tab);
 }
 
-function browserActionClicked(tab, info) {
+function browserActionClicked(_tab, _info) {
   // bring configuration up
   messenger.runtime.openOptionsPage();
 }

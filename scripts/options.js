@@ -380,7 +380,7 @@ function getSettings() {
                                                         messenger.extension, handleResponse);
 }
 
-function onLoad(event) {
+function onLoad(_event) {
   i18n.updateDocument();  // from i18n.js
   getSettings();
 }

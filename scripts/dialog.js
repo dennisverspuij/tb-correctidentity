@@ -25,7 +25,7 @@ async function onButtonClicked(event) {
   }
 }
 
-function onLoad(event) {
+function onLoad(_event) {
   const queryString = window.location.search;
   let searchParams = new URLSearchParams(queryString);
   let text = searchParams.get("string");

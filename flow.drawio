@@ -1,0 +1,314 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17" pages="2">
+  <diagram name="Seite-1" id="TWlw46WBpx_OqOrm2mM5">
+    <mxGraphModel dx="1114" dy="701" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-7" value="Account" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="60" y="30" width="180" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-6" value="Folder" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="60" y="60" width="160" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-16" value="Mail" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="60" y="90" width="140" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-1" value="From" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="120" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-2" value="To" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="150" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-3" value="Cc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="180" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-4" value="Bcc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="210" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-8" value="Header Infos" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="240" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-9" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="370" width="120" height="189" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-11" value="new mail" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="ofYrZ5Fs4kSovqnf_Asc-6" target="ofYrZ5Fs4kSovqnf_Asc-9" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="499" as="sourcePoint" />
+            <mxPoint x="440" y="339" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-13" value="reply&lt;br&gt;(sinfgle recipient)&amp;nbsp;" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="ofYrZ5Fs4kSovqnf_Asc-16" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="299" as="sourcePoint" />
+            <mxPoint x="520" y="298.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-15" value="reply all" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="ofYrZ5Fs4kSovqnf_Asc-16" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="99" as="sourcePoint" />
+            <mxPoint x="520" y="98.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-17" value="To" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="450" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-18" value="1 Unchanged&lt;br&gt;&lt;div style=&quot;&quot;&gt;2 configured identity&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;align=left;" parent="1" edge="1">
+          <mxGeometry x="-0.4657" y="-9" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="220" y="412.5" as="sourcePoint" />
+            <mxPoint x="520" y="417.5" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-19" value="Initial&lt;br&gt;Compose Mail" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="530" y="10" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-20" value="Edit&lt;br&gt;Mail" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="760" y="10" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-21" value="Final&lt;br&gt;Compose Mail" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="980" y="10" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-22" value="Change To" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="160" as="sourcePoint" />
+            <mxPoint x="910" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-23" value="Change Cc" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="201" as="sourcePoint" />
+            <mxPoint x="910" y="201" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-24" value="Change Bcc" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="240.41" as="sourcePoint" />
+            <mxPoint x="910" y="240.41" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-25" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="975" y="160" width="120" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-26" value="To" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="975" y="231" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-27" value="Cc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="480" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-28" value="Bcc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="510" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-29" value="Cc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="975" y="261" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-30" value="Bcc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="975" y="291" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-33" value="From" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="520" y="400" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ofYrZ5Fs4kSovqnf_Asc-34" value="From" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="975" y="180" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rctedKlTucAQ27yKR5pu-1" value="Change From" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="120" as="sourcePoint" />
+            <mxPoint x="910" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="dCO_NJq7pbXLf-h05g3x" name="Seite-2">
+    <mxGraphModel dx="1114" dy="701" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="MnN1jMmCk5FKW969nDbl-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-38" target="MnN1jMmCk5FKW969nDbl-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="30" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-6" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-2" target="MnN1jMmCk5FKW969nDbl-14" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-8" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-2" target="MnN1jMmCk5FKW969nDbl-32" edge="1">
+          <mxGeometry x="-0.9423" relative="1" as="geometry">
+            <mxPoint x="720" y="603.3333333333334" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-2" value="config&lt;br style=&quot;font-size: 11px;&quot;&gt;present for&lt;br style=&quot;font-size: 11px;&quot;&gt;account?" style="whiteSpace=wrap;html=1;fontSize=11;strokeWidth=2;shape=mxgraph.flowchart.decision;" parent="1" vertex="1">
+          <mxGeometry x="40" y="120" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-17" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-14" target="MnN1jMmCk5FKW969nDbl-18" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-20" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-14" target="MnN1jMmCk5FKW969nDbl-21" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-14" value="detectable&lt;br style=&quot;font-size: 5px;&quot;&gt;identity found in&amp;nbsp;&lt;br style=&quot;font-size: 5px;&quot;&gt;orig. recipients&amp;nbsp;&lt;span style=&quot;background-color: initial; font-size: 5px;&quot;&gt;&lt;b&gt;and&lt;/b&gt;&lt;/span&gt;&lt;div style=&quot;font-size: 5px;&quot;&gt;replyFromRecipient&lt;br style=&quot;font-size: 5px;&quot;&gt;set for account&lt;br style=&quot;font-size: 5px;&quot;&gt;&lt;b&gt;and&lt;/b&gt;&amp;nbsp;is new&lt;br style=&quot;font-size: 5px;&quot;&gt;compose&lt;br style=&quot;font-size: 5px;&quot;&gt;window&lt;/div&gt;" style="whiteSpace=wrap;html=1;fontSize=5;strokeWidth=2;shape=mxgraph.flowchart.decision;" parent="1" vertex="1">
+          <mxGeometry x="40" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-18" target="MnN1jMmCk5FKW969nDbl-39" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-18" value="Use detected identity from original recipients as sender-identity" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="20" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-27" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-19" target="MnN1jMmCk5FKW969nDbl-26" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-31" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-19" target="MnN1jMmCk5FKW969nDbl-29" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-19" value="&amp;nbsp;alias of detectable&lt;br&gt;identity found in&amp;nbsp;&lt;br&gt;recipients?" style="whiteSpace=wrap;html=1;fontSize=7;strokeWidth=2;shape=mxgraph.flowchart.decision;" parent="1" vertex="1">
+          <mxGeometry x="359" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-24" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-21" target="MnN1jMmCk5FKW969nDbl-23" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-25" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-21" target="MnN1jMmCk5FKW969nDbl-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-21" value="Explicit sender-Identity defined for account?" style="whiteSpace=wrap;html=1;fontSize=8;strokeWidth=2;shape=mxgraph.flowchart.decision;" parent="1" vertex="1">
+          <mxGeometry x="200" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-23" target="MnN1jMmCk5FKW969nDbl-39" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-23" value="Use explicit sender-identity for account" style="whiteSpace=wrap;html=1;rounded=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="180" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-26" target="MnN1jMmCk5FKW969nDbl-39" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="374" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-26" value="Use detected identitiy &quot;by aliases&quot; as sender-identity" style="whiteSpace=wrap;html=1;fontSize=12;rounded=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="339" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-28" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-29" target="MnN1jMmCk5FKW969nDbl-30" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-33" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-29" target="MnN1jMmCk5FKW969nDbl-32" edge="1">
+          <mxGeometry x="-0.8095" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-29" value="detectable&lt;br&gt;identity found in&amp;nbsp;&lt;br&gt;orig. recipients &lt;b&gt;and&lt;/b&gt;&lt;div&gt;replyFromRecipient&lt;br style=&quot;font-size: 5px;&quot;&gt;set for account&lt;br style=&quot;font-size: 5px;&quot;&gt;(not new window)&lt;/div&gt;" style="whiteSpace=wrap;html=1;fontSize=5;strokeWidth=2;shape=mxgraph.flowchart.decision;" parent="1" vertex="1">
+          <mxGeometry x="520" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-30" target="MnN1jMmCk5FKW969nDbl-39" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-30" value="Use detected identity from original recipients as sender-identity" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="500" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-32" target="MnN1jMmCk5FKW969nDbl-39" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="720" y="560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-32" value="Use default sender-identity&lt;br&gt;(as chosen by Thunderbird)" style="whiteSpace=wrap;html=1;fontSize=12;rounded=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;" parent="1" vertex="1">
+          <mxGeometry x="660" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-53" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-39" target="MnN1jMmCk5FKW969nDbl-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-55" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-39" target="MnN1jMmCk5FKW969nDbl-54" edge="1">
+          <mxGeometry x="-0.775" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-39" value="keepRecipientAddress&lt;br&gt;set for chosen identity?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=7;" parent="1" vertex="1">
+          <mxGeometry x="30" y="590" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-57" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-52" target="MnN1jMmCk5FKW969nDbl-54" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="260" y="770.9999999999998" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-52" value="use first orig. recepient address as &quot;from&quot;-entry" style="whiteSpace=wrap;html=1;fontSize=7;strokeWidth=2;rounded=1;absoluteArcSize=1;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="180" y="610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-59" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-54" target="MnN1jMmCk5FKW969nDbl-60" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="186" y="910.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-70" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-54" target="MnN1jMmCk5FKW969nDbl-69" edge="1">
+          <mxGeometry x="-0.7037" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-54" value="removeSenderFromRecipients&lt;br style=&quot;font-size: 6px;&quot;&gt;set for chosen identity?" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;fontSize=6;" parent="1" vertex="1">
+          <mxGeometry x="30" y="790" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-63" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-60" target="MnN1jMmCk5FKW969nDbl-62" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-65" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="MnN1jMmCk5FKW969nDbl-60" target="MnN1jMmCk5FKW969nDbl-64" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-60" value="chosen&lt;br&gt;identity in&amp;nbsp;&lt;br&gt;&quot;to&quot;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="190" y="790" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Dn0Mg6g5TV3J3-UXettb-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="MnN1jMmCk5FKW969nDbl-62" target="MnN1jMmCk5FKW969nDbl-69">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="96" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-62" value="Remove chosen sender-identity from &quot;to&quot;-entries" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;absoluteArcSize=1;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="180" y="950" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-67" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="MnN1jMmCk5FKW969nDbl-64" target="MnN1jMmCk5FKW969nDbl-68" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="399" y="1000" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-64" value="chosen&lt;br&gt;identity in&amp;nbsp;&lt;br&gt;&quot;cc&quot;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.decision;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="349" y="790" width="100" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-68" value="Remove chosen sender-identity from &quot;cc&quot;-entries" style="whiteSpace=wrap;html=1;strokeWidth=2;rounded=1;absoluteArcSize=1;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="339" y="1010" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-69" value="use new sender-identity and other entries (if modified)" style="whiteSpace=wrap;html=1;fontSize=12;strokeWidth=2;rounded=1;absoluteArcSize=1;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="20" y="1100" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_dimPcUMpfP3j_Ia5tK0-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" target="MnN1jMmCk5FKW969nDbl-38" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80" y="30" as="sourcePoint" />
+            <mxPoint x="80" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MnN1jMmCk5FKW969nDbl-38" value="Compose&lt;div&gt;Window&lt;/div&gt;&lt;div&gt;Changed&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_1;whiteSpace=wrap;" parent="1" vertex="1">
+          <mxGeometry x="30" y="20" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Dn0Mg6g5TV3J3-UXettb-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="MnN1jMmCk5FKW969nDbl-68" target="MnN1jMmCk5FKW969nDbl-69">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="308" y="1040" as="sourcePoint" />
+            <mxPoint x="212" y="1180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Dn0Mg6g5TV3J3-UXettb-4" value="Also use &quot;detected&quot; identity if no alias matches for another identity after editing" style="shape=callout;whiteSpace=wrap;html=1;perimeter=calloutPerimeter;position2=0.42;" vertex="1" parent="1">
+          <mxGeometry x="522" y="190" width="120" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
