@@ -48,10 +48,10 @@
     "message": "tenter de trouver et d’utiliser une identité qui apparaîtrait dans la liste des destinataires du message."
   },
   "CorrectIdentity.keepRecipientAddress": {
-    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+    "message": "utiliser comme adresse d'expéditeur l'adresse trouvé dans la liste de destinataires, même si elle ne correspond pas à l'identité (par exemple dans le cas d'un compte de messagerie catch-all)"
   },
   "CorrectIdentity.removeSenderFromRecipients": {
-    "message": "remove the identity from the recipient list"
+    "message": "supprimer cette identité de la liste des destinataires (alors qu'elle est utilisée comme expéditeur)"
   },
   "CorrectIdentity.safetyCaption": {
     "message": "Sécurité"

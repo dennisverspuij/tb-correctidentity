@@ -72,10 +72,10 @@
     "message": "attempt to find and use an identity that appears in its recipient list"
   },
   "CorrectIdentity.keepRecipientAddress": {
-    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+    "message": "use the found matching address from the recipient list as \"from\", even if it does not match this identity (e.g. for mail servers with catch-all addresses)"
   },
   "CorrectIdentity.removeSenderFromRecipients": {
-    "message": "remove the identity from the recipient list"
+    "message": "remove this identity from the recipient list (while used as \"from\" identity)"
   },
   "CorrectIdentity.safetyCaption": {
     "message": "Safety"

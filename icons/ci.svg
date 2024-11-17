@@ -7,19 +7,7 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
 
-   <!--   actually we want...
 
    <text x="32" y="52" font-family="Verdana" font-size="55" fill="context-stroke" text-anchor="middle">Ci</text>
 
-   ... but for some reason the coloring from theme does not work as expected -->
-
-  <path
-     style="fill:none;stroke:context-stroke;stroke-width:5;stroke-linecap:butt"
-     d="M 38.025369,39.49677 C 37.995725,51.14246 17.859266,56.117774 13.68186,39.38653 13.41864,38.332289 13.287808,26.977201 13.519437,25.956523 17.313986,9.2357469 38.062589,13.04449 37.96737,25.292595"/>
-  <path
-     style="fill:none;stroke:context-stroke;stroke-width:5;stroke-linecap:butt"
-     d="m 49.929838,22.976291 0.0143,29.18702"/>
-  <path
-     style="fill:none;stroke:context-stroke;stroke-width:5;stroke-linecap:round"
-     d="m 49.705534,15.111668 0.451679,0.02588"/>
 </svg>

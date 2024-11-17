@@ -48,10 +48,10 @@
     "message": "detecteer en gebruik de identiteit die voorkomt in de ontvangerslijst"
   },
   "CorrectIdentity.keepRecipientAddress": {
-    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+    "message": "een erkend (en mogelijk ander) mailadres gebruiken als \"van\" samen met deze identiteit (bijv. voor mailservers met een “catch-all” configuratie)"
   },
   "CorrectIdentity.removeSenderFromRecipients": {
-    "message": "remove the identity from the recipient list"
+    "message": "identiteit verwijderen uit de ontvangerslijst (bij gebruik als afzender)"
   },
   "CorrectIdentity.safetyCaption": {
     "message": "Veiligheid"

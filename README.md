@@ -1,4 +1,4 @@
-Thunderbird Add-on "Correct Identity" (v2.4.x)
+Thunderbird Add-on "Correct Identity" (v2.5.x)
 ==============================================
 
 This add-on version works with Thunderbird versions >= 102.0
@@ -44,8 +44,18 @@ Features
     * based on the original recipients of the replied-to message
     * **NEW in 2.4.x:** based on addressbook entries
     * based on non-standard SMTP header fields of the replied-to message (**new feature**: "Advanced: Additional mail headers")
+    * **NEW in 2.5.x:** use any matched address as "from" to support "catch-all" mail server configurations
 * Automatically change the "from" identity when addressing specific recipients
 * Warn if specific recipients are included in a email send from a specific identity
+
+### **NEW in 2.5.x:** Use matching address as "from"
+In mail servers with "catch-all" configuration, all mails with any destination email address received by that server are forwarded to a single mailbox. E.g. \*@mailbox.test with "\*" being any local part of the address. 
+
+Examples: `info@mailbox.test, unknown.user@mailbox.test, some.random.address@mailbox.test` etc.
+
+Correct identity addon allow to use that address as "from" when replying such an email. E.g. use "mailbox.test" as detection search pattern and choose "use the found ... as from" option.
+In this use case, the "from" email-address is different from the selected sender identity. If you like to keep your sender identity hidden from the final mail recipients, please check if your mail server does not leak that information in the outgoing emails (e.g. by checking the "source" view of a received sample email).
+
 
 ### **NEW in 2.4.x:** Addressbook Match
 Instead of using individual match entries, also a complete addressbook can be checked for a match.
@@ -93,7 +103,7 @@ Steps for installation (local build):
 4. Open Thunderbird, go to /Add-ons/, and click /Install add-on from file/
 5. Choose the .xpi file in the repository folder
 
-The .xpi files come in two flavours:
+The .xpi files come in two flavors:
 * correct_identity_vX.Y.Z.xpi is a version which could (in theory) be released to the [official Thunderbird add-on store](https://addons.thunderbird.net/)
 * correct_identity_vX.Y.Z_dev.xpi has the same content, but has no limitation on the highest supported Thunderbird version ("strict_max_version"). Use this version to test this add-on on newer Thunderbird versions not known at date of the add-on release. (Feedback welcome).
 
@@ -117,6 +127,18 @@ Development & Contributing
 Note that you have to generate a .xpi file *with the same name* whenever you change the source code. You can use a file watcher like inotify to automate this.
 
 In Menu /Extras/ → /Development Tools/ you'll also find a dev console and more debugging tools.
+
+
+Flowchart
+---------
+
+The configuration options are sometimes confusing. A more formal description of the detection mechanism can be found in the flowchart below. But first we "label" the configuration options in the config page.
+
+![Configuration Window](images/flow-configs.png)
+
+Flow diagram to determine the final "from" identity and email-address:
+![Flow Diagram](images/flow-flow.png)
+
 
 
 Acknowledgment

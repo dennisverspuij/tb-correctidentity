@@ -48,10 +48,10 @@
     "message": "返信元のメッセージからアイデンティティの同一性を検出して適用する"
   },
   "CorrectIdentity.keepRecipientAddress": {
-    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+    "message": "受信者リストで一致したアドレスは、たとえそのアドレスがこのアイデンティティに一致しなくても（例えば、キャッチオール・アドレスを持つメールサーバーの場合）、「送信者」アドレスとして使われる"
   },
   "CorrectIdentity.removeSenderFromRecipients": {
-    "message": "remove the identity from the recipient list"
+    "message": "このアイデンティティを受信者リストから削除する（送信者として使用する"
   },
   "CorrectIdentity.safetyCaption": {
     "message": "安全"

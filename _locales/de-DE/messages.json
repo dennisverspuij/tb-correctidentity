@@ -71,10 +71,10 @@
     "message": "versuchen, die Identität zu suchen und zu benutzen, die in der Empfängerliste erscheint"
   },
   "CorrectIdentity.keepRecipientAddress": {
-    "message": "keep the sender address that appears in its recipient list, even if it does not match the identity (e.g., for catch-all adresses)"
+    "message": "verwende eine erkannte (und ggf. abweichende) Mailadresse als \"von\" zusammen mit dieser Identität (z.B. für Mailserver mit \"catch-all\" Konfiguration)"
   },
   "CorrectIdentity.removeSenderFromRecipients": {
-    "message": "remove the identity from the recipient list"
+    "message": "entferne die Identität aus der Empfängerliste (Wenn sie als Absender benutzt wird)"
   },
   "CorrectIdentity.safetyCaption": {
     "message": "Sicherheit"
