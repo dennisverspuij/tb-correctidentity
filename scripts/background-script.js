@@ -381,6 +381,29 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
           }
         }
       }
+    } else if (needle.startsWith("mailinglist=")) {
+      // get name, remove leading or trailing quotes
+      let mailinglistName = needle.substring("mailinglist=".length).replaceAll("\"", "");
+      let addressbooks = await messenger.addressBooks.list();
+      for (let abIdx in addressbooks) {
+        let mailingLists = await messenger.mailingLists.list(addressbooks[abIdx].id)
+        for (let mlIdx in mailingLists) {
+          if (mailingLists[mlIdx].name == mailinglistName) {
+            contacts = await  messenger.mailingLists.listMembers(mailingLists[mlIdx].id)
+            for (let ctctIdx in contacts) {
+              let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
+              let email = vCard.getAllProperties("email")
+              for (let entryIdx in email) {
+                let matchIdx = haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) ;
+                if (matchIdx >= 0) {
+                  let matchedMailAddress = getMatchedMailAddress(haystack, matchIdx)
+                  return [true, matchedMailAddress];
+                }
+              }
+            }
+          }
+        }
+      }
     } else if (haystack.toLowerCase().indexOf(needle.toLowerCase()) >= 0) {
       let matchedMailAddress = getMatchedMailAddress(haystack, haystack.toLowerCase().indexOf(needle.toLowerCase()));
       return [true, matchedMailAddress];
@@ -458,7 +481,8 @@ async function getIdentity(tabId, identityId, allRecipientsList, origRecipientsL
         let perIdentitySettings = settings.identitySettings[idxIdentity];
         if (perIdentitySettings.detectable) {
           let detectionAliases = perIdentitySettings.detectionAliases.split(/\n+/);
-          let [isMatch, matchedMailAddress] = await patternSearch(recipientsString, detectionAliases, idxIdentity, "Detection"); // TODO: i18n
+          let [isMatch, matchedMailAddress] = await patternSearch(recipientsString, detectionAliases,
+                                                                  idxIdentity, "Detection"); // TODO: i18n
           if (isMatch) {
             aliasedId = idxIdentity;
             if (perIdentitySettings.keepRecipientAddress) {
@@ -515,7 +539,8 @@ async function sendConfirm(identityId, recipients) {
 
   for (let idxRecipient in recipients) {
     let recipient = recipients[idxRecipient];
-    let [isMatch, _matchedMailAddress] = await patternSearch(recipient, warningAliases, identityId, "Safety"); // TODO: i18n
+    let [isMatch, _matchedMailAddress] = await patternSearch(recipient, warningAliases,
+                                                             identityId, "Safety"); // TODO: i18n
     if (isMatch) {
       warnRecipients += `\n${recipient}`;
     }
@@ -650,7 +675,8 @@ function searchAndRemoveFromRecipientList(recipientsList, email) {
 
 async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentityId,
                                        allRecipientsList, origRecipientsList) {
-  let [newIdentityId, newFromAddress] = await getIdentity(tabId, initialIdentityId, allRecipientsList, origRecipientsList);
+  let [newIdentityId, newFromAddress] = await getIdentity(tabId, initialIdentityId,
+                                                          allRecipientsList, origRecipientsList);
   if (newIdentityId !== currentIdentityId) {
     // change identityId
     composeTabStatus[tabId].changedByUs = true;
@@ -658,7 +684,8 @@ async function handleComposeTabChanged(tabId, initialIdentityId, currentIdentity
       identityId : newIdentityId,
     };
 
-    // Use custom original sender address if Identity Email is not equal to Original Recipient Email (first entry of the list)
+    // Use custom original sender address if Identity Email is not equal to Original
+    // Recipient Email (first entry of the list)
     // Plus: Check if newIdentityId was in "to", "cc" or "cc". Remove it from there
     // Both: If configured, respect the settings.
     try {

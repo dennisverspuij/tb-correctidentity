@@ -43,6 +43,7 @@ Features
 * Choose the "from" identity when replying to a message
     * based on the original recipients of the replied-to message
     * **NEW in 2.4.x:** based on addressbook entries
+    * **NEW in 2.5.1:** based on mailinglist entries
     * based on non-standard SMTP header fields of the replied-to message (**new feature**: "Advanced: Additional mail headers")
     * **NEW in 2.5.x:** use any matched address as "from" to support "catch-all" mail server configurations
 * Automatically change the "from" identity when addressing specific recipients
@@ -59,11 +60,20 @@ In this use case, the "from" email-address is different from the selected sender
 
 ### **NEW in 2.4.x:** Addressbook Match
 Instead of using individual match entries, also a complete addressbook can be checked for a match.
-As an example you can add the following line to the text field:
+As an example you can add the following line to the text field:  
 addressbook="My Private Address Book"
 
 The string in quotes is the name of the address book as given in the
 address book pane. Can be copied from address book properties.
+
+### **NEW in 2.5.1:** Mailinglist Match
+Similar to the Addressbook Match, also a complete mailinglist can be checked for a match.
+As an example you can add the following line to the text field:  
+mailinglist="My Mailing List"
+
+The string in quotes is the name of the mailinglist.
+Mailinglists are defined within addressbooks. The add-on looks into all addressbooks and checks contacts from all matching mailinglists. (But Thunderbird may prevent creating a mailinglist with the same name in a different addressbook)
+
 
 ### Advanced: Additional mail headers
 [Email header fields](https://en.wikipedia.org/wiki/Email#Header_fields) are keywords in the SMTP (Simple Mail Transfer Protocol) message. E.g. "**To**" identifies the email recipient.
