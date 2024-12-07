@@ -53,7 +53,7 @@ In mail servers with "catch-all" configuration, all mails with any destination e
 
 Examples: `info@mailbox.test, unknown.user@mailbox.test, some.random.address@mailbox.test` etc.
 
-Correct identity addon allow to use that address as "from" when replying such an email. E.g. use "mailbox.test" as detection search pattern and choose "use the found ... as from" option.
+Correct identity addon allows to use that address as "from" when replying such an email. E.g. use "mailbox.test" as detection search pattern and choose "use the found ... as from" option.
 In this use case, the "from" email-address is different from the selected sender identity. If you like to keep your sender identity hidden from the final mail recipients, please check if your mail server does not leak that information in the outgoing emails (e.g. by checking the "source" view of a received sample email).
 
 
