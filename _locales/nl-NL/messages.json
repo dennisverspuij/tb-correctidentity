@@ -12,7 +12,7 @@
     "message": "Geef aliassen, domeinen of simpelweg woorden op waarmee de identiteit additioneel gedetecteerd mag worden. Aliassen worden alleen benut als geen van de adressen van de identiteiten zelf gedetecteerd worden."
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../)."
+    "message": "Begin aliassen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../). Adressbooks en mailinglists kunnen ook als criteria worden gebruikt."
   },
   "CorrectIdentity.detectionCaption": {
     "message": "Detectie"
@@ -66,7 +66,7 @@
     "message": "Je wordt gewaarschuwd voordat je gaat versturen naar ontvangers die overeenkomen met de volgende zoektermen."
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "Begin zoektermen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../)."
+    "message": "Begin zoektermen telkens op een nieuwe regel, ze zijn niet hoofdlettergevoelig. Je kunt regular expressions gebruiken door ze tussen forward slashes te plaatsen (/.../). Adressbooks en mailinglists kunnen ook als criteria worden gebruikt."
   },
   "CorrectIdentity.width": {
     "message": "554"

@@ -12,7 +12,7 @@
     "message": "Spécifier les alias, domaines ou simplement les mots qui, une fois trouvés dans la liste des destinataires, sélectionneront cette identité. Les alias ne seront essayés que lorsque la détection aura échouée sur toutes les adresses des identités activées."
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "Les alias sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier des expressions régulières entre des barres obliques (/.../)."
+    "message": "Les alias sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier des expressions régulières entre des barres obliques (/.../). Addressbooks et mailinglists peuvent également être utilisés pour rechercher des correspondances."
   },
   "CorrectIdentity.detectionCaption": {
     "message": "Détection"
@@ -66,7 +66,7 @@
     "message": "Vous serez averti avant l’envoi aux destinataires dont les noms ou/et les adresses correspondent à l’un des termes de recherche suivants :"
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "Les termes de recherche sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier spécifier des expressions régulières entre des barres obliques (/.../)."
+    "message": "Les termes de recherche sont sensibles à la casse des caractères, et doivent être séparés par des retours à la ligne. Vous pouvez spécifier spécifier des expressions régulières entre des barres obliques (/.../). Addressbooks et mailinglists peuvent également être utilisés pour rechercher des correspondances."
   },
   "CorrectIdentity.width": {
     "message": "554"

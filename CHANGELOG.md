@@ -1,3 +1,11 @@
+# v2.5.2:
+- strict_max_version increased to 134.*
+- add catch-all server support (use found matching address instead of an identity configured in Thunderbird)
+- add mailinglist match feature
+- revert configuration shortcut icon to SVG graphics
+- minor bugfixes
+- documentation updates (including a flowchart for the procedure, how the add-on determines the "from" address)
+
 # v2.4.1:
 - strict_max_version increased to 128.*
 

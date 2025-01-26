@@ -35,7 +35,7 @@
     "message": "Geben Sie Suchwörter oder Domains ein. Wenn diese in der Empfängerliste gefunden werden, wird zur entsprechenden Identität gewechselt. Suchwörter werden nur benutzt, wenn die Einstellungen \"Auswahl\" oben kein Ergebnis liefern."
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/). Adressbücher und Mailinglists können auch als Kriterium verwendet werden."
   },
   "CorrectIdentity.detectionCaption": {
     "message": "Erkennung"
@@ -89,7 +89,7 @@
     "message": "Sie werden gewarnt werden beim Senden an Empfänger deren Namen und/oder Adressen übereinstimmen mit einem der folgenden Suchwörter."
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/)."
+    "message": "Jedes Suchwort muss in einer eigenen Zeile stehen. Groß-/Kleinschreibung spielt keine Rolle. Sie können reguläre Ausdrücke innerhalb von Schrägstrichen verwenden (/…/). Adressbücher und Mailinglists können auch als Kriterium verwendet werden."
   },
   "CorrectIdentity.width": {
     "message": "554"

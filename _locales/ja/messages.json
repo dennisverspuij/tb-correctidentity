@@ -12,7 +12,7 @@
     "message": "別名としてドメインまたはリストの中にあるアイデンティティに関連付ける単語を指定してください。この別名は検出可能なアイデンティティアドレスでの検出に失敗したときに適用が試みられます。"
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)"
+    "message": "別名は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../). Adressbooks や mailinglistsトも検索に使用できる。"
   },
   "CorrectIdentity.detectionCaption": {
     "message": "検出"
@@ -66,7 +66,7 @@
     "message": "あなたが前に、名前および/またはアドレス次の用語のいずれかと一致した受信者に送信する警告が表示されます。"
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "検索用語は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../)"
+    "message": "検索用語は改行で区切ってください。スラッシュの間に正規表現を指定することができます。(/.../). Adressbooks や mailinglistsトも検索に使用できる。"
   },
   "CorrectIdentity.width": {
     "message": "554"

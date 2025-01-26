@@ -36,7 +36,7 @@
     "message": "Specify search terms or domains that, when found in the recipient list, will resolve to this identity. Search terms are tried only if the \"Selection\" settings above don't yield a result."
   },
   "CorrectIdentity.aliasesTooltip": {
-    "message": "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/…/)."
+    "message": "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/…/). Addressbooks and mailinglists can also be used for matches."
   },
   "CorrectIdentity.detectionCaption": {
     "message": "Detection"
@@ -90,7 +90,7 @@
     "message": "You will be warned prior to sending to recipients whose names and/or addresses match one of the following search terms."
   },
   "CorrectIdentity.warningAliasesTooltip": {
-    "message": "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/…/)."
+    "message": "Search terms are case insensitive and must be separated by new lines. You can specify regular expressions between forward slashes (/…/). Addressbooks and mailinglists can also be used for matches."
   },
   "CorrectIdentity.width": {
     "message": "554"
