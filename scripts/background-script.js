@@ -367,9 +367,9 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
       let addressbooks = await messenger.addressBooks.list();
       for (let abIdx in addressbooks) {
         if (addressbooks[abIdx].name == addressbookName) {
-          contacts = await  messenger.contacts.list(addressbooks[abIdx].id);
+          contacts = await  messenger.addressBooks.contacts.list(addressbooks[abIdx].id);
           for (let ctctIdx in contacts) {
-            let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
+            let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].vCard));
             let email = vCard.getAllProperties("email")
             for (let entryIdx in email) {
               let matchIdx = haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) ;
@@ -386,12 +386,12 @@ async function patternSearch(haystack, needles, warnIdentityId, warnText) {
       let mailinglistName = needle.substring("mailinglist=".length).replaceAll("\"", "");
       let addressbooks = await messenger.addressBooks.list();
       for (let abIdx in addressbooks) {
-        let mailingLists = await messenger.mailingLists.list(addressbooks[abIdx].id)
+        let mailingLists = await messenger.addressBooks.mailingLists.list(addressbooks[abIdx].id)
         for (let mlIdx in mailingLists) {
           if (mailingLists[mlIdx].name == mailinglistName) {
-            contacts = await  messenger.mailingLists.listMembers(mailingLists[mlIdx].id)
+            contacts = await  messenger.addressBooks.mailingLists.listMembers(mailingLists[mlIdx].id)
             for (let ctctIdx in contacts) {
-              let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].properties.vCard));
+              let vCard = new ICAL.Component(ICAL.parse(contacts[ctctIdx].vCard));
               let email = vCard.getAllProperties("email")
               for (let entryIdx in email) {
                 let matchIdx = haystack.toLowerCase().indexOf(email[entryIdx].jCal[3].toLowerCase()) ;
@@ -818,9 +818,18 @@ messenger.runtime.onMessage.addListener(handleMessage);
 
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
-messenger.composeScripts.register({ js : [{file: "scripts/compose.js"}] });
 
-messenger.browserAction.onClicked.addListener(browserActionClicked);
+messenger.action.onClicked.addListener(browserActionClicked);
 
-// to test empty storage uncomment next line once
-// messenger.storage.sync.clear();
+messenger.runtime.onInstalled.addListener(() => {
+  console.log('onInstalled called');
+});
+
+messenger.runtime.onStartup.addListener(() => {
+  console.log('onStartup called');
+});
+
+browser.scripting.compose.registerScripts([{
+  id: "compose-script-example-1",
+  js: ["scripts/compose.js"]
+}]).catch(console.info);

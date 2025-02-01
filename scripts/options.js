@@ -373,11 +373,9 @@ function getSettings() {
     }
   }
 
-  // circumvent bug in Thunderbird: replace sendMessage() with direct call into backgroundScript()
-  // var sending = messenger.runtime.sendMessage({ msgType: "GET_SETTINGS_REQ" });
-  // sending.then(handleResponse, (err) => {console.log("err:", err)});
-  messenger.extension.getBackgroundPage().handleMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" },
-                                                        messenger.extension, handleResponse);
+  messenger.runtime.sendMessage({ msgType: "REGISTER_ON_SETTINGS_CHANGED_HANDLER" })
+    .then(handleResponse, (err) => {console.log("err:", err)})
+    .catch(() => null);
 }
 
 function onLoad(_event) {

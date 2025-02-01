@@ -1,10 +1,10 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
   "version": "_VERSION_WILL_BE_FILLED_BY_MAKE_XPI_SCRIPT_",
   "author": "L. Dreier",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
       "strict_min_version": "115.0",
@@ -28,11 +28,10 @@
   },
   "options_ui": {
     "page": "options.html",
-    "open_in_tab" : false,
-    "browser_style": true
+    "open_in_tab" : false
   },
-  "browser_action": {
-    "browser_style": true,
+  "action": {
+    "allowed_spaces": [],
     "default_icon": "icons/ci.svg",
     "default_label": "",
     "default_title": "__MSG_extensionName__"
