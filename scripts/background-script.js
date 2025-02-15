@@ -628,6 +628,12 @@ async function checkComposeTab(tab) {
         // recipients is only "to", append also "cc"
         origRecipientsList = msgHdr.recipients.concat(msgHdr.ccList);
 
+        if (gcd.type === "forward") {
+          // append also the original author
+          // (for "reply-to", the author is also detected, but via the automatically generated "to" entry)
+          origRecipientsList = origRecipientsList.concat(msgHdr.author);
+        }
+
         if (settings.additionalHeaderFields) {
           // we should also collect information from other header fields
           let msgPart = await messenger.messages.getFull(relatedMessageId);
