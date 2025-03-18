@@ -1,12 +1,13 @@
-Thunderbird Add-on "Correct Identity" (v2.5.x)
+Thunderbird Add-on "Correct Identity" (v2.6.x)
 ==============================================
 
-This add-on version works with Thunderbird versions >= 102.0
+This add-on version works with Thunderbird versions >= 115.0
+(Tested up to version 137)
 
 Version Support History:  
-Last version v2.3.2 supported Thunderbird version >= 91.0  
-Version v2.1.1 supported Thunderbird version >= 91.0  
-Version v2.0.1 supported Thunderbird version >= 78.0  
+Version v2.5.3 supports Thunderbird version >= 102.0  
+Version v2.3.2 supports Thunderbird version >= 91.0  
+Version v2.0.1 supports Thunderbird version >= 78.0  
 
 
 It's a **perfect alternative/continuation**
