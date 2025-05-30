@@ -116,7 +116,9 @@ Steps for installation (local build):
 
 The .xpi files come in two flavors:
 * correct_identity_vX.Y.Z.xpi is a version which could (in theory) be released to the [official Thunderbird add-on store](https://addons.thunderbird.net/)
+<a name="dev_artifact">
 * correct_identity_vX.Y.Z_dev.xpi has the same content, but has no limitation on the highest supported Thunderbird version ("strict_max_version"). Use this version to test this add-on on newer Thunderbird versions not known at date of the add-on release. (Feedback welcome).
+</a>
 
 The add-on can now be configured in the add-on manager tab.
 

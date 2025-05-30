@@ -8,7 +8,7 @@
     "gecko": {
       "id": "{47ef7cc0-2201-11da-8cd6-0800200c9a66}",
       "strict_min_version": "115.0",
-      "strict_max_version": "138.*"
+      "strict_max_version": "141.*"
     }
   },
   "default_locale": "en-US",
