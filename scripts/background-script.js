@@ -48,6 +48,21 @@ function notifySettingsChanged() {
   }
 }
 
+// defaults
+const accountSettingDefaults   = {
+  "identityMechanism":0,
+  // explicitIdentity is the defaultIdentityId from resp. account
+  "replyFromRecipient":true,
+}
+
+const identitySettingsDefaults = {
+  "detectable":true,
+  "keepRecipientAddress":false,
+  "removeSenderFromRecipients":true,
+  "detectionAliases":"",
+  "warningAliases":"",
+}
+
 // check that all fields are present and valid(e.g. for upgrades)
 function checkSettings(inSettings) {
   if (inSettings === undefined) {
@@ -80,13 +95,13 @@ function checkSettings(inSettings) {
   for (let idx in inSettings.accountSettings) {
     let as = inSettings.accountSettings[idx];
     if (as.identityMechanism === undefined) {
-      as.identityMechanism = 0;
+      as.identityMechanism = accountSettingDefaults.identityMechanism;
     }
     if (as.explicitIdentity === undefined) {
       as.explicitIdentity = accountsAndIdentities.accounts[idx].defaultIdentityId;
     }
     if (as.replyFromRecipient === undefined) {
-      as.replyFromRecipient = true;
+      as.replyFromRecipient = accountSettingDefaults.replyFromRecipient;
     }
   }
 
@@ -120,22 +135,70 @@ function checkSettings(inSettings) {
   for (let idx in inSettings.identitySettings) {
     let is = inSettings.identitySettings[idx];
     if (is.detectable === undefined) {
-      is.detectable = true;
+      is.detectable = identitySettingsDefaults.detectable;
     }
     if (is.keepRecipientAddress === undefined) {
-      is.keepRecipientAddress = false;
+      is.keepRecipientAddress = identitySettingsDefaults.keepRecipientAddress;
     }
     if (is.removeSenderFromRecipients === undefined) {
-      is.removeSenderFromRecipients = true;
+      is.removeSenderFromRecipients = identitySettingsDefaults.removeSenderFromRecipients;
     }
     if (is.detectionAliases === undefined) {
-      is.detectionAliases = "";
+      is.detectionAliases = identitySettingsDefaults.detectionAliases;
     }
     if (is.warningAliases === undefined) {
-      is.warningAliases = "";
+      is.warningAliases = identitySettingsDefaults.warningAliases;
     }
   }
   return inSettings;
+}
+
+
+function cleanSettings(inSettings) {
+  // make a deep copy via string conversion
+  let settingsTmp    = JSON.parse(JSON.stringify(inSettings));
+
+  // remove defaults from account settings
+  for (let idx in settingsTmp.accountSettings) {
+    if (settingsTmp.accountSettings[idx].identityMechanism === accountSettingDefaults.identityMechanism) {
+      delete settingsTmp.accountSettings[idx].identityMechanism
+    }
+    if (settingsTmp.accountSettings[idx].explicitIdentity === accountsAndIdentities.accounts[idx].defaultIdentityId) {
+      delete settingsTmp.accountSettings[idx].explicitIdentity
+    }
+    if (settingsTmp.accountSettings[idx].replyFromRecipient === accountSettingDefaults.replyFromRecipient) {
+      delete settingsTmp.accountSettings[idx].replyFromRecipient
+    }
+
+    if (Object.keys(settingsTmp.accountSettings[idx]).length === 0) {
+      delete settingsTmp.accountSettings[idx]
+    }
+  }
+
+  // remove defaults from identity settings
+  for (let idx in settingsTmp.identitySettings) {
+    if (settingsTmp.identitySettings[idx].detectable === identitySettingsDefaults.detectable) {
+      delete settingsTmp.identitySettings[idx].detectable
+    }
+    if (settingsTmp.identitySettings[idx].keepRecipientAddress === identitySettingsDefaults.keepRecipientAddress) {
+      delete settingsTmp.identitySettings[idx].keepRecipientAddress
+    }
+    if (settingsTmp.identitySettings[idx].removeSenderFromRecipients === identitySettingsDefaults.removeSenderFromRecipients) {
+      delete settingsTmp.identitySettings[idx].removeSenderFromRecipients
+    }
+    if (settingsTmp.identitySettings[idx].detectionAliases === identitySettingsDefaults.detectionAliases) {
+      delete settingsTmp.identitySettings[idx].detectionAliases
+    }
+    if (settingsTmp.identitySettings[idx].warningAliases === identitySettingsDefaults.warningAliases) {
+      delete settingsTmp.identitySettings[idx].warningAliases
+    }
+
+    if (Object.keys(settingsTmp.identitySettings[idx]).length === 0) {
+      delete settingsTmp.identitySettings[idx]
+    }
+  }
+
+  return settingsTmp;
 }
 
 // check that all fields are present and valid(e.g. for upgrades)
@@ -759,7 +822,11 @@ function handleMessage(request, sender, sendResponse) {
     // for direct calls create a local object copy via JSON stringify/parse
     guiState = JSON.parse(JSON.stringify(request.guiState));
     settings = JSON.parse(JSON.stringify(request.settings));
-    messenger.storage.sync.set({ guiState, settings });
+    let cleanedSettings = cleanSettings(settings);
+    messenger.storage.sync.set({
+      "guiState" : guiState,
+      "settings" : cleanedSettings
+    });
   } else if (request.msgType === "CLOSE_WINDOW") {
     dialogResults[request.windowId] = request.result;
     messenger.windows.remove(request.windowId);
