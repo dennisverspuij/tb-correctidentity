@@ -872,6 +872,19 @@ function onComposeTabReady(tab) {
   checkComposeTab(tab);
 }
 
+async function installHooksOnExistingComposeTabs() {
+  let tabs = await messenger.tabs.query({});
+  for (let tab of tabs) {
+    try {
+      await messenger.compose.getComposeDetails(tab.id);
+      messenger.exp.installOnRecipientsChangedHook(tab.id, tab.windowId);
+      checkComposeTab(tab);
+    } catch (_error) {
+      // Tab is not a compose tab.
+    }
+  }
+}
+
 function browserActionClicked(_tab, _info) {
   // bring configuration up
   messenger.runtime.openOptionsPage();
@@ -886,8 +899,14 @@ messenger.runtime.onMessage.addListener(handleMessage);
 messenger.compose.onIdentityChanged.addListener(onIdentityChangedListener);
 messenger.compose.onBeforeSend.addListener(onBeforeSendListener);
 messenger.composeScripts.register({ js : [{file: "scripts/compose.js"}] });
+installHooksOnExistingComposeTabs();
 
 messenger.browserAction.onClicked.addListener(browserActionClicked);
+messenger.tabs.onRemoved.addListener((_tabId, removeInfo) => {
+  if (removeInfo.isWindowClosing) {
+    messenger.exp.uninstallOnRecipientsChangedHook(removeInfo.windowId);
+  }
+});
 
 // to test empty storage uncomment next line once
 // messenger.storage.sync.clear();

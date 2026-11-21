@@ -1,9 +1,5 @@
 let { ExtensionCommon } = ChromeUtils.importESModule("resource://gre/modules/ExtensionCommon.sys.mjs");
 
-
-let onRecipientsChangeHookInstalled = {};  // key: windowId; value: bool
-
-
 class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
   constructor() {
     super();
@@ -19,6 +15,20 @@ class OnRecipientsChangedListener extends ExtensionCommon.EventEmitter {
 }
 
 let onRecipientsChangedListener = new OnRecipientsChangedListener();
+let onRecipientsChangedWindowIds = new Set();
+
+function restoreOnRecipientsChangedHook(windowId) {
+  try {
+    let win = Services.wm.getOuterWindowWithId(windowId);
+    if (win && win.origOnRecipientsChanged) {
+      win.onRecipientsChanged = win.origOnRecipientsChanged;
+      delete win.origOnRecipientsChanged;
+    }
+  } catch (_error) {
+    // The window was already closed or destroyed.
+  }
+  onRecipientsChangedWindowIds.delete(windowId);
+}
 
 var exp = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
@@ -28,21 +38,29 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
         //////////////////////////////////////////////////////////////
         // note: would no longer be needed, if https://bugzilla.mozilla.org/show_bug.cgi?id=1700672 is fixed
         async installOnRecipientsChangedHook(tabId, windowId) {
-          if (!onRecipientsChangeHookInstalled[windowId]) {
-            onRecipientsChangeHookInstalled[windowId] = true;
-            let win = Services.wm.getOuterWindowWithId(windowId);
-            // store old function in window object
-            win.origOnRecipientsChanged = win.onRecipientsChanged;
-            win.onRecipientsChanged = ( automatic => {
-              // emit event to background script
-              if (!automatic) {
-                onRecipientsChangedListener.emit("recipientsChanged", tabId);
-              }
-
-              // call original function, we need the window from the outer function
-              win.origOnRecipientsChanged(automatic);
-            });
+          let win = Services.wm.getOuterWindowWithId(windowId);
+          if (!win) {
+            // The window was already closed or destroyed.
+            onRecipientsChangedWindowIds.delete(windowId);
+            return;
           }
+          if (!win.origOnRecipientsChanged) {
+            win.origOnRecipientsChanged = win.onRecipientsChanged;
+          }
+
+          win.onRecipientsChanged = ( automatic => {
+            // emit event to background script
+            if (!automatic) {
+              onRecipientsChangedListener.emit("recipientsChanged", tabId);
+            }
+
+            // call original function, we need the window from the outer function
+            win.origOnRecipientsChanged(automatic);
+          });
+          onRecipientsChangedWindowIds.add(windowId);
+        },
+        async uninstallOnRecipientsChangedHook(windowId) {
+          restoreOnRecipientsChangedHook(windowId);
         },
         //////////////////////////////////////////////////////////////
         // note: would no longer be needed, if https://bugzilla.mozilla.org/show_bug.cgi?id=1700672 is fixed
@@ -63,5 +81,12 @@ var exp = class extends ExtensionCommon.ExtensionAPI {
         //////////////////////////////////////////////////////////////
       }
     };
+  }
+
+  close() {
+    for (let windowId of onRecipientsChangedWindowIds) {
+      restoreOnRecipientsChangedHook(windowId);
+    }
+    onRecipientsChangedWindowIds.clear();
   }
 };

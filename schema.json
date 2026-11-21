@@ -17,6 +17,18 @@
             "type": "integer"
           }
         ]
+      },
+      {
+        "name": "uninstallOnRecipientsChangedHook",
+        "description": "uninstall Hook",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
       }
     ],
     "events": [
