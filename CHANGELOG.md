@@ -1,3 +1,42 @@
+# v2.6.11:
+- fix lifecycle issues of onRecipientsChanged
+
+# v2.6.10:
+- strict_max_version increased to 162.*
+
+# v2.6.9:
+- strict_max_version increased to 159.*
+
+# v2.6.8:
+- strict_max_version increased to 156.*
+
+# v2.6.7:
+- strict_max_version increased to 153.*
+
+# v2.6.6:
+- strict_max_version increased to 150.*
+
+# v2.6.5:
+- strict_max_version increased to 148.*
+
+# v2.6.4:
+- remove defaults from settings before writing to storage
+
+# v2.6.3:
+- strict_max_version changed to 140.*
+
+# v2.6.2:
+- strict_max_version increased to 141.*
+
+# v2.6.1:
+- strict_max_version increased to 138.*
+
+# v2.6.0:
+- fix support for Thunderbird version 136
+
+# v2.5.3:
+- use the original author for detection in forwarded messages
+
 # v2.5.2:
 - strict_max_version increased to 134.*
 - add catch-all server support (use found matching address instead of an identity configured in Thunderbird)
